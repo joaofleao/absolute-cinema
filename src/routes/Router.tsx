@@ -3,10 +3,7 @@ import { StatusBar, Text, View } from 'react-native';
 import * as Fonts from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-// import Navigation from './Navigation';
 import useStyles from './styles';
-// import ToastNotification from '@components/ToastNotification';
-// import LoadingModal from '@containers/LoadingModal';
 import { useTheme } from '@providers/theme';
 import print from '@utils/print';
 import Navigation from './Navigation';
@@ -19,13 +16,9 @@ SplashScreen.setOptions({
   fade: true,
 });
 
-const Router = (): React.ReactElement => {
+const Router = (): React.ReactNode => {
   const [appIsReady, setAppIsReady] = React.useState(true);
-
-  // const announcements = useAnnouncements()
-
   const styles = useStyles();
-
   const { colors } = useTheme();
 
   React.useEffect(() => {
@@ -49,9 +42,10 @@ const Router = (): React.ReactElement => {
     if (appIsReady) SplashScreen.hide();
   }, [appIsReady]);
 
-  // if (!appIsReady) {
-  //   return null;
-  // }
+  if (!appIsReady) {
+    return null;
+  }
+
   return (
     <>
       <StatusBar
@@ -59,11 +53,6 @@ const Router = (): React.ReactElement => {
         backgroundColor={colors.background.default}
         barStyle={'light-content'}
       />
-
-      {/* <LoadingModal /> */}
-      {/* <NewVersionModal /> */}
-      {/* <NetworkModal /> */}
-      {/* <ToastNotification /> */}
 
       <View onLayout={onLayoutRootView} style={styles.container}>
         {Navigation}

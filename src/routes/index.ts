@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type StackProps = {
   home: undefined;
-  movie: { message: string };
+  movie: undefined;
 };
 
 export const routes: { [K in keyof StackProps]: K } = {

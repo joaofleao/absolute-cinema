@@ -5,8 +5,9 @@ const colors = {
   background: {
     default: '#000000',
   },
-  foregound: {
+  foreground: {
     default: '#FFFFFF',
+    light: '#494A49',
   },
 };
 
