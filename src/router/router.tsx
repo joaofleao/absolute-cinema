@@ -1,13 +1,15 @@
 import React from 'react'
-import { SafeAreaView, StatusBar } from 'react-native'
+import { StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
+import { LinearGradient } from 'expo-linear-gradient'
 import * as SplashScreen from 'expo-splash-screen'
 
 import useStyles from './styles'
+import { StackProps } from './types'
 import { fontImports, useTheme } from '@providers/theme'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { routes, StackProps } from '@router'
+import { routes } from '@router'
 import Home from '@screens/home'
 import Movie from '@screens/movie'
 import print from '@utils/print'
@@ -27,9 +29,8 @@ SplashScreen.setOptions({
 })
 
 const Router = (): React.ReactNode => {
-  const [appIsReady, setAppIsReady] = React.useState(true)
-  const styles = useStyles()
   const { colors } = useTheme()
+  const styles = useStyles()
 
   React.useEffect(() => {
     async function prepare(): Promise<void> {
@@ -41,20 +42,12 @@ const Router = (): React.ReactNode => {
       } catch (e: any) {
         print('error on start', e, 'blue')
       } finally {
-        setAppIsReady(true)
+        SplashScreen.hide()
       }
     }
 
     prepare()
   }, [])
-
-  const onLayoutRootView = React.useCallback(() => {
-    if (appIsReady) SplashScreen.hide()
-  }, [appIsReady])
-
-  if (!appIsReady) {
-    return null
-  }
 
   return (
     <NavigationContainer>
@@ -64,10 +57,7 @@ const Router = (): React.ReactNode => {
         barStyle={'light-content'}
       />
 
-      <SafeAreaView
-        onLayout={onLayoutRootView}
-        style={styles.container}
-      >
+      <View style={styles.container}>
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
             name={routes.home}
@@ -78,7 +68,26 @@ const Router = (): React.ReactNode => {
             component={Movie}
           />
         </Stack.Navigator>
-      </SafeAreaView>
+
+        <LinearGradient
+          colors={[
+            'rgba(0, 0, 0, 0.60)',
+            'rgba(0, 0, 0, 0.30)',
+            'rgba(0, 0, 0, 0.15)',
+            'rgba(0, 0, 0, 0)',
+          ]}
+          style={styles.topBlur}
+        />
+        <LinearGradient
+          colors={[
+            'rgba(0, 0, 0, 0)',
+            'rgba(0, 0, 0, 0.15)',
+            'rgba(0, 0, 0, 0.30)',
+            'rgba(0, 0, 0, 0.60)',
+          ]}
+          style={styles.bottomBlur}
+        />
+      </View>
     </NavigationContainer>
   )
 }

@@ -7,7 +7,7 @@ const colors = {
   },
   foreground: {
     default: '#FFFFFF',
-    light: '#611717ff',
+    light: '#a25959ff',
   },
 }
 

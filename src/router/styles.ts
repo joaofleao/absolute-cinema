@@ -1,18 +1,30 @@
 import { StyleSheet, ViewStyle } from 'react-native'
-
-import { useTheme } from '@providers/theme'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type StylesReturn = {
   container: ViewStyle
+  topBlur: ViewStyle
+  bottomBlur: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors } = useTheme()
-
+  const { top, bottom } = useSafeAreaInsets()
   return StyleSheet.create({
     container: {
-      backgroundColor: colors.background.default,
       flex: 1,
+    },
+    topBlur: {
+      position: 'absolute',
+      top: 0,
+      height: top * 2,
+      width: '100%',
+      // backgroundColor: 'red',
+    },
+    bottomBlur: {
+      position: 'absolute',
+      bottom: 0,
+      height: bottom * 2,
+      width: '100%',
     },
   })
 }

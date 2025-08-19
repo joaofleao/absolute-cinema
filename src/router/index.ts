@@ -6,4 +6,3 @@ export const routes: { [K in keyof StackProps]: K } = {
 }
 
 export * from './types'
-export { default } from './router'

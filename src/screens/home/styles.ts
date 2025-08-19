@@ -1,4 +1,5 @@
 import { ImageStyle, StyleSheet, ViewStyle } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useTheme } from '@providers/theme'
 
@@ -12,9 +13,14 @@ type StylesReturn = {
 
 const useStyles = (): StylesReturn => {
   const { colors } = useTheme()
+  const { top, bottom, right, left } = useSafeAreaInsets()
 
   return StyleSheet.create({
     root: {
+      paddingTop: top,
+      paddingBottom: bottom,
+      paddingRight: right,
+      paddingLeft: left,
       backgroundColor: colors.background.default,
       flex: 1,
     },

@@ -1,7 +1,8 @@
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
 
 import { ThemeProvider } from '@providers/theme'
-import Router from '@router'
+import Router from '@router/router'
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
   unsavedChangesWarning: false,
@@ -11,7 +12,9 @@ export default function App(): React.ReactElement {
   return (
     <ConvexProvider client={convex}>
       <ThemeProvider>
-        <Router />
+        <SafeAreaProvider>
+          <Router />
+        </SafeAreaProvider>
       </ThemeProvider>
     </ConvexProvider>
   )

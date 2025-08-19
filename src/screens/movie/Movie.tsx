@@ -57,6 +57,7 @@ const Movie: ScreenType<'movie'> = ({ navigation, route }) => {
       />
 
       <Button
+        color={theme.colors.foreground.light}
         title="Home"
         onPress={() => navigation.goBack()}
       />
