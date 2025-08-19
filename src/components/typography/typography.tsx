@@ -1,7 +1,7 @@
-import { Text } from 'react-native';
+import { Text } from 'react-native'
 
-import useStyles from './styles';
-import { TypographyProps } from './types';
+import useStyles from './styles'
+import { TypographyProps } from './types'
 
 const Typography = ({
   display,
@@ -14,7 +14,7 @@ const Typography = ({
   light,
   ...props
 }: TypographyProps): React.ReactElement => {
-  const styles = useStyles();
+  const styles = useStyles()
 
   return (
     <Text
@@ -30,7 +30,7 @@ const Typography = ({
       ]}
       {...props}
     />
-  );
-};
+  )
+}
 
-export default Typography;
+export default Typography

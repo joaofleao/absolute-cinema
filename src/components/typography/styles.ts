@@ -1,20 +1,20 @@
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native'
 
-import { useTheme } from '@providers/theme';
+import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
-  display: TextStyle;
-  header: TextStyle;
-  description: TextStyle;
-  section: TextStyle;
-  primary: TextStyle;
-  secondary: TextStyle;
-  title: TextStyle;
-  light: TextStyle;
-};
+  display: TextStyle
+  header: TextStyle
+  description: TextStyle
+  section: TextStyle
+  primary: TextStyle
+  secondary: TextStyle
+  title: TextStyle
+  light: TextStyle
+}
 
 const useStyles = (): StylesReturn => {
-  const { colors, fonts } = useTheme();
+  const { colors, fonts } = useTheme()
 
   return StyleSheet.create({
     display: {
@@ -70,7 +70,7 @@ const useStyles = (): StylesReturn => {
     light: {
       color: colors.foreground.light,
     },
-  });
-};
+  })
+}
 
-export default useStyles;
+export default useStyles

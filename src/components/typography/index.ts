@@ -1,2 +1,2 @@
-export { default } from './typography';
-export * from './types';
+export * from './types'
+export { default } from './typography'
