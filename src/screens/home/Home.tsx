@@ -14,7 +14,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       <View style={style.header}>
         <Image
           style={style.logo}
-          // source={require('../../assets/mascot.png')}
+          source={require('@assets/mascot.png')}
         />
 
         <View style={style.title}>
