@@ -1,26 +1,12 @@
-import { useTheme } from '@providers/theme';
-import { routes, ScreenType } from '@routes';
-import { Button, View } from 'react-native';
-import { useEffect } from 'react';
-import { Dimensions, StyleSheet, Image } from 'react-native';
-import {
-  // Reanimated,
-  useSharedValue,
-  withTiming,
-  // interpolate,
-  // useAnimatedStyle,
-  runOnJS,
-} from 'react-native-reanimated';
+import { Button, Image, View } from 'react-native'
+
+import { useTheme } from '@providers/theme'
+import { ScreenType } from '@router'
 
 // const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-const ANIMATION_CONFIG = { duration: 300 };
 
 const Movie: ScreenType<'movie'> = ({ navigation, route }) => {
-  const theme = useTheme();
-
-  const x = useSharedValue(0);
-  const y = useSharedValue(0);
-  const animated = useSharedValue(0);
+  const theme = useTheme()
 
   // const { mediaUrl, mediaSpecs } = route.params;
 
@@ -49,16 +35,6 @@ const Movie: ScreenType<'movie'> = ({ navigation, route }) => {
   //   overflow: 'hidden',
   // }));
 
-  const handleGoBack = () => {
-    animated.value = withTiming(0, ANIMATION_CONFIG, () => {
-      runOnJS(navigation.goBack)();
-    });
-  };
-
-  useEffect(() => {
-    animated.value = withTiming(1, ANIMATION_CONFIG);
-  }, []);
-
   return (
     <View
       style={{
@@ -80,11 +56,14 @@ const Movie: ScreenType<'movie'> = ({ navigation, route }) => {
         resizeMode="cover"
       />
 
-      <Button title="Home" onPress={() => navigation.goBack()} />
+      <Button
+        title="Home"
+        onPress={() => navigation.goBack()}
+      />
       {/* </Reanimated.View> */}
       {/* </Reanimated.View> */}
     </View>
-  );
-};
+  )
+}
 
-export default Movie;
+export default Movie

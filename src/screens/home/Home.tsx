@@ -1,61 +1,59 @@
-import Mascot from '@assets/logo/Mascot';
-import Typography from '@components/typography';
-import { useTheme } from '@providers/theme';
-import { routes, ScreenType } from '@routes';
-import { Button, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Button, Image, ScrollView, View } from 'react-native'
+
+import useStyle from './styles'
+import DottedText from '@components/dotted_text'
+import Row from '@components/row'
+import Typography from '@components/typography'
+import { routes, ScreenType } from '@router'
 
 const Home: ScreenType<'home'> = ({ navigation, route }) => {
-  const theme = useTheme();
+  const style = useStyle()
 
-  const ball = (
-    <View
-      style={{
-        width: 6,
-        height: 6,
-        backgroundColor: theme.colors.foreground.light,
-        borderRadius: '100%',
-      }}
-    />
-  );
   return (
-    <View
-      style={{
-        backgroundColor: theme.colors.background.default,
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <View style={{ alignItems: 'center', gap: 16 }}>
-        <Animated.View sharedTransitionTag="heythere">
-          <Mascot />
-        </Animated.View>
+    <ScrollView style={style.root}>
+      <View style={style.header}>
+        <Image
+          style={style.logo}
+          // source={require('../../assets/mascot.png')}
+        />
 
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Typography title light>
+        <View style={style.title}>
+          <Typography
+            title
+            light
+          >
             absolute
           </Typography>
           <Typography display>CINEMA</Typography>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Typography title>just</Typography>
-            {ball}
-            <Typography title>a</Typography>
-            {ball}
-            <Typography title>movie</Typography>
-            {ball}
-            <Typography title>app</Typography>
-          </View>
         </View>
 
-        <Button
-          title="Movie"
-          onPress={() => navigation.navigate(routes.movie)}
-        />
+        <Row>
+          <Button
+            title="2025"
+            onPress={() => {
+              return navigation.navigate(routes.movie)
+            }}
+          />
+          <Button
+            title="Watched"
+            onPress={() => {
+              return navigation.navigate(routes.movie)
+            }}
+          />
+          <Button
+            title="By Date"
+            onPress={() => {
+              return navigation.navigate(routes.movie)
+            }}
+          />
+        </Row>
       </View>
-    </View>
-  );
-};
 
-export default Home;
+      <View style={style.content}>
+        <DottedText>No Movies yet</DottedText>
+      </View>
+    </ScrollView>
+  )
+}
+
+export default Home
