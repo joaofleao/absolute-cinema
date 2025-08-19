@@ -9,7 +9,7 @@ const colors = {
     default: '#FFFFFF',
     light: '#494A49',
   },
-};
+}
 
-export { colors };
-export type ColorsType = typeof colors;
+export { colors }
+export type ColorsType = typeof colors

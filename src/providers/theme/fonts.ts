@@ -14,9 +14,9 @@ export const fonts = {
     bold: 'Inconsolata_SemiExpanded-Bold',
     black: 'Inconsolata_SemiExpanded-Black',
   },
-};
+}
 
-export type FontsType = typeof fonts;
+export type FontsType = typeof fonts
 
 export const fontImports = {
   'BaskervvilleSC-Regular': require('@assets/fonts/BaskervvilleSC-Regular.ttf'),
@@ -28,4 +28,4 @@ export const fontImports = {
   'Inconsolata-Regular': require('@assets/fonts/Inconsolata-Regular.ttf'),
   'Inconsolata-Bold': require('@assets/fonts/Inconsolata-Bold.ttf'),
   'Inconsolata-Black': require('@assets/fonts/Inconsolata-Black.ttf'),
-};
+}
