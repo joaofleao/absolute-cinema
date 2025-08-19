@@ -1,13 +1,13 @@
 const colors = {
   accent: {
-    default: '#F7B239',
+    default: '#000000',
   },
   background: {
-    default: '#000000',
+    default: '#791B1B',
   },
   foreground: {
     default: '#FFFFFF',
-    light: '#494A49',
+    light: '#611717ff',
   },
 }
 
