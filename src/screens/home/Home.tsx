@@ -1,5 +1,6 @@
-import { Dimensions, Image, ScrollView, View } from 'react-native'
+import { Button, Dimensions, Image, ScrollView, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
+import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
 import Bar from '@components/bar'
@@ -10,6 +11,7 @@ import { ScreenType } from '@router'
 
 const Home: ScreenType<'home'> = ({ navigation, route }) => {
   const styles = useStyles()
+  const { t, i18n } = useTranslation()
 
   const { width } = Dimensions.get('window')
 
@@ -35,7 +37,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
               title
               light
             >
-              absolute
+              ABSOLUTE
             </Typography>
             <Typography display>CINEMA</Typography>
           </View>
@@ -44,11 +46,18 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         <View style={styles.content}>
           <Bar.Root>
             <Bar.Item icon={<IconChevron />}>2025</Bar.Item>
-            <Bar.Item icon={<IconChevron />}>watched</Bar.Item>
-            <Bar.Item icon={<IconArrow />}>by date</Bar.Item>
+            <Bar.Item icon={<IconChevron />}>{t('home:watched')}</Bar.Item>
+            <Bar.Item icon={<IconArrow />}>{t('home:by_date')}</Bar.Item>
           </Bar.Root>
 
-          <DottedText>no movies yet</DottedText>
+          <DottedText>{t('home:empty_state')}</DottedText>
+
+          <Button
+            title="Translate"
+            onPress={() => {
+              i18n.changeLanguage(i18n.language === 'en-US' ? 'pt-BR' : 'en-US')
+            }}
+          />
         </View>
       </View>
     </ScrollView>

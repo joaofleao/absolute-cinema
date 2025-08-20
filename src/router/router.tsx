@@ -3,9 +3,13 @@ import { StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as SplashScreen from 'expo-splash-screen'
+import { use as run } from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
 import useStyles from './styles'
 import { StackProps } from './types'
+import enUS from '@i18n/locales/en-us.json'
+import ptBR from '@i18n/locales/pt-br.json'
 import { fontImports, useTheme } from '@providers/theme'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -20,6 +24,32 @@ const screenOptions = {
   // tabBarHideOnKeyboard: true,
   headerShown: false,
 }
+
+const resources = {
+  'pt-BR': ptBR,
+  'en-US': enUS,
+}
+
+const initI18n = async (): Promise<void> => {
+  // const json = await AsyncStorage.getItem('userData')
+  // const savedLanguage = JSON.parse(json)?.language
+
+  // if (!user.language) {
+  //   savedLanguage = Localization.locale
+  // }
+
+  run(initReactI18next).init({
+    // compatibilityJSON: 'v3',
+    resources,
+    // lng: savedLanguage,
+    fallbackLng: 'en-US',
+    interpolation: {
+      escapeValue: false,
+    },
+  })
+}
+
+initI18n()
 
 SplashScreen.preventAutoHideAsync()
 
