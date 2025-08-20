@@ -10,6 +10,7 @@ type StylesReturn = {
   primary: TextStyle
   secondary: TextStyle
   title: TextStyle
+  custom: TextStyle
   light: TextStyle
 }
 
@@ -63,6 +64,14 @@ const useStyles = (): StylesReturn => {
       color: colors.foreground.default,
       fontFamily: fonts.tertiary.bold,
       fontSize: 16,
+      lineHeight: 24,
+      letterSpacing: 2,
+      textTransform: 'uppercase',
+    },
+    custom: {
+      color: colors.foreground.default,
+      fontFamily: fonts.tertiary.bold,
+      fontSize: 12,
       lineHeight: 24,
       letterSpacing: 2,
       textTransform: 'uppercase',

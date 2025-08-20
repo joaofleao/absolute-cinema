@@ -8,5 +8,6 @@ export interface TypographyProps extends TextProps {
   primary?: boolean
   secondary?: boolean
   title?: boolean
+  custom?: boolean
   light?: boolean
 }

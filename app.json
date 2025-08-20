@@ -5,7 +5,6 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/app/icon.png",
-    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "plugins": [
       [
@@ -37,7 +36,8 @@
         "foregroundImage": "./src/assets/app/adaptive-icon.png",
         "backgroundColor": "#791B1B"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.joaofleao.absolutecinema"
     },
     "web": {
       "favicon": "./src/assets/app/favicon.png"

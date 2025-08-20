@@ -3,11 +3,15 @@ const colors = {
     default: '#000000',
   },
   background: {
-    default: '#791B1B',
+    default: '#000000',
+  },
+  container: {
+    default: 'rgba(32,32,36,0.5)',
+    stroke: 'rgba(32,32,36,1)',
   },
   foreground: {
     default: '#FFFFFF',
-    light: '#a25959ff',
+    light: 'rgba(255,255,255,0.4)',
   },
 }
 

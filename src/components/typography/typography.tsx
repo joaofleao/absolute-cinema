@@ -11,6 +11,7 @@ const Typography = ({
   primary,
   secondary,
   title,
+  custom,
   light,
   ...props
 }: TypographyProps): React.ReactElement => {
@@ -26,6 +27,7 @@ const Typography = ({
         primary && styles.primary,
         secondary && styles.secondary,
         title && styles.title,
+        custom && styles.custom,
         light && styles.light,
       ]}
       {...props}

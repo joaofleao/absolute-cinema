@@ -1,18 +1,28 @@
-import { Button, Image, ScrollView, View } from 'react-native'
+import { Dimensions, Image, ScrollView, View } from 'react-native'
+import RadialGradient from 'react-native-radial-gradient'
 
 import useStyles from './styles'
+import Bar from '@components/bar'
 import DottedText from '@components/dotted_text'
-import Row from '@components/row'
+import { IconArrow, IconChevron } from '@components/icon'
 import Typography from '@components/typography'
-import { useTheme } from '@providers/theme'
-import { routes, ScreenType } from '@router'
+import { ScreenType } from '@router'
 
 const Home: ScreenType<'home'> = ({ navigation, route }) => {
   const styles = useStyles()
-  const theme = useTheme()
+
+  const { width } = Dimensions.get('window')
 
   return (
     <ScrollView style={styles.root}>
+      <View style={styles.gradientContainer}>
+        <RadialGradient
+          style={styles.gradient}
+          colors={['#481010', '#000000']}
+          radius={300}
+          center={[width / 2, width]}
+        />
+      </View>
       <View>
         <View style={styles.header}>
           <Image
@@ -29,33 +39,15 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
             </Typography>
             <Typography display>CINEMA</Typography>
           </View>
-
-          <Row>
-            <Button
-              color={theme.colors.foreground.light}
-              title="2025"
-              onPress={() => {
-                return navigation.navigate(routes.movie)
-              }}
-            />
-            <Button
-              color={theme.colors.foreground.light}
-              title="Watched"
-              onPress={() => {
-                return navigation.navigate(routes.movie)
-              }}
-            />
-            <Button
-              color={theme.colors.foreground.light}
-              title="By Date"
-              onPress={() => {
-                return navigation.navigate(routes.movie)
-              }}
-            />
-          </Row>
         </View>
 
         <View style={styles.content}>
+          <Bar.Root>
+            <Bar.Item icon={<IconChevron />}>2025</Bar.Item>
+            <Bar.Item icon={<IconChevron />}>watched</Bar.Item>
+            <Bar.Item icon={<IconArrow />}>by date</Bar.Item>
+          </Bar.Root>
+
           <DottedText>no movies yet</DottedText>
         </View>
       </View>

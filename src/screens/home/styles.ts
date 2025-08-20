@@ -1,4 +1,4 @@
-import { ImageStyle, StyleSheet, ViewStyle } from 'react-native'
+import { Dimensions, ImageStyle, StyleSheet, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useTheme } from '@providers/theme'
@@ -9,10 +9,13 @@ type StylesReturn = {
   title: ViewStyle
   header: ViewStyle
   content: ViewStyle
+  gradient: ViewStyle
+  gradientContainer: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
   const { colors } = useTheme()
+  const { width } = Dimensions.get('window')
   const { top, bottom, right, left } = useSafeAreaInsets()
 
   return StyleSheet.create({
@@ -23,14 +26,16 @@ const useStyles = (): StylesReturn => {
       paddingLeft: left,
       backgroundColor: colors.background.default,
       flex: 1,
+      position: 'relative',
     },
     logo: {
       width: 153,
       height: 118,
     },
     header: {
+      position: 'relative',
       alignItems: 'center',
-      gap: 16,
+      gap: 20,
       paddingBlock: 60,
     },
     title: {
@@ -40,6 +45,16 @@ const useStyles = (): StylesReturn => {
     content: {
       alignItems: 'center',
       justifyContent: 'center',
+      gap: 48,
+    },
+    gradientContainer: {
+      position: 'absolute',
+      alignSelf: 'center',
+      top: -width / 2,
+    },
+    gradient: {
+      height: width * 2,
+      width: width,
     },
   })
 }
