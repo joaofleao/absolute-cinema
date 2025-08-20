@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-const getKeys = (obj, prefix = ''): string[] => {
+const getKeys = (obj, prefix = '') => {
   return Object.keys(obj).flatMap((key) => {
     const value = obj[key]
     const fullKey = prefix ? `${prefix}.${key}` : key
