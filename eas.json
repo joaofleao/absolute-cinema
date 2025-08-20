@@ -5,17 +5,7 @@
     "requireCommit": true
   },
   "build": {
-    "device": {
-      "ios": {
-        "image": "latest"
-      },
-      "android": {
-        "image": "latest"
-      },
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "simulator": {
+    "development": {
       "ios": {
         "image": "latest"
       },
