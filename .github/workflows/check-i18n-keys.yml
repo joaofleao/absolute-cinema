@@ -23,4 +23,4 @@ jobs:
 
       - name: Compare i18n JSON keys
         run: |
-          node .github/scripts/compare-i18n.js
+          node .github/scripts/compare-i18n.ts
