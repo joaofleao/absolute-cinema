@@ -1,8 +1,8 @@
-import { auth } from "./auth";
-import router from "./router";
+import { auth } from './auth'
+import router from './router'
 
-const http = router;
+const http = router
 
-auth.addHttpRoutes(http);
+auth.addHttpRoutes(http)
 
-export default http;
+export default http

@@ -1,5 +1,5 @@
-import { httpRouter } from "convex/server";
+import { httpRouter } from 'convex/server'
 
-const http = httpRouter();
+const http = httpRouter()
 
-export default http;
+export default http
