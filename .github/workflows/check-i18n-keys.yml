@@ -1,0 +1,26 @@
+name: Check i18n JSON Key Consistency
+
+on:
+  pull_request:
+    paths:
+      - 'src/i18n/locales/pt-br.json'
+      - 'src/i18n/locales/en-us.json'
+  push:
+    paths:
+      - 'src/i18n/locales/pt-br.json'
+      - 'src/i18n/locales/en-us.json'
+
+jobs:
+  check-keys:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compare i18n JSON keys
+        run: |
+          node .github/scripts/compare-i18n.js
