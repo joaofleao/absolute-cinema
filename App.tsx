@@ -1,3 +1,4 @@
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
 
@@ -10,12 +11,14 @@ const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
 
 export default function App(): React.ReactElement {
   return (
-    <ConvexProvider client={convex}>
-      <ThemeProvider>
-        <SafeAreaProvider>
-          <Router />
-        </SafeAreaProvider>
-      </ThemeProvider>
-    </ConvexProvider>
+    <KeyboardProvider>
+      <ConvexProvider client={convex}>
+        <ThemeProvider>
+          <SafeAreaProvider>
+            <Router />
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </ConvexProvider>
+    </KeyboardProvider>
   )
 }

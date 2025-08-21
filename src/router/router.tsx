@@ -16,6 +16,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { routes } from '@router'
 import Home from '@screens/home'
 import Movie from '@screens/movie'
+import Search from '@screens/search/search'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
@@ -59,6 +60,7 @@ SplashScreen.setOptions({
 })
 
 const Router = (): React.ReactNode => {
+  const [appReady, setAppReady] = React.useState(false)
   const { colors } = useTheme()
   const styles = useStyles()
 
@@ -72,12 +74,14 @@ const Router = (): React.ReactNode => {
       } catch (e: any) {
         print('error on start', e, 'blue')
       } finally {
-        SplashScreen.hide()
+        setAppReady(true)
       }
     }
 
     prepare()
   }, [])
+
+  if (!appReady) return null
 
   return (
     <NavigationContainer>
@@ -87,15 +91,32 @@ const Router = (): React.ReactNode => {
         barStyle={'light-content'}
       />
 
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        onLayout={SplashScreen.hideAsync}
+      >
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
             name={routes.home}
             component={Home}
           />
           <Stack.Screen
+            name={routes.search}
+            component={Search}
+            options={
+              {
+                // gestureEnabled: true,
+                // gestureDirection: 'horizontal',
+                // presentation: 'pageSheet',
+              }
+            }
+          />
+          <Stack.Screen
             name={routes.movie}
             component={Movie}
+            options={{
+              presentation: 'modal',
+            }}
           />
         </Stack.Navigator>
 

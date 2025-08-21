@@ -14,13 +14,14 @@ const useStyles = (): StylesReturn => {
       flex: 1,
     },
     topBlur: {
+      pointerEvents: 'none',
       position: 'absolute',
       top: 0,
       height: top * 2,
       width: '100%',
-      // backgroundColor: 'red',
     },
     bottomBlur: {
+      pointerEvents: 'none',
       position: 'absolute',
       bottom: 0,
       height: bottom * 2,

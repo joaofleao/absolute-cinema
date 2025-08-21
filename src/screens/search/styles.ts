@@ -1,43 +1,38 @@
-import { Dimensions, ImageStyle, StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
+  safeArea: ViewStyle
   root: ViewStyle
-  logo: ImageStyle
   title: ViewStyle
   header: ViewStyle
   content: ViewStyle
-  gradient: ViewStyle
-  gradientContainer: ViewStyle
   footer: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
   const { colors } = useTheme()
-  const { width } = Dimensions.get('window')
+
   const { top, bottom, right, left } = useSafeAreaInsets()
 
   return StyleSheet.create({
-    root: {
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.background.default,
       paddingTop: top,
       paddingBottom: bottom,
       paddingRight: right,
       paddingLeft: left,
-      backgroundColor: colors.background.default,
-      flex: 1,
-      position: 'relative',
     },
-    logo: {
-      width: 153,
-      height: 118,
+    root: {
+      flex: 1,
     },
     header: {
-      position: 'relative',
       alignItems: 'center',
       gap: 20,
-      paddingBlock: 60,
+      paddingBlock: 20,
     },
     title: {
       alignItems: 'center',
@@ -48,22 +43,9 @@ const useStyles = (): StylesReturn => {
       justifyContent: 'center',
       gap: 48,
     },
-    gradientContainer: {
-      position: 'absolute',
-      alignSelf: 'center',
-      top: -width / 2,
-    },
-    gradient: {
-      height: width * 2,
-      width: width,
-    },
     footer: {
-      position: 'absolute',
-      bottom,
       paddingHorizontal: 20,
-      paddingBottom: 20,
-      maxWidth: '100%',
-      alignSelf: 'flex-end',
+      paddingVertical: 12,
     },
   })
 }
