@@ -1,9 +1,11 @@
-import { StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
+  icon: ViewStyle
+  input: TextStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -11,17 +13,29 @@ const useStyles = (): StylesReturn => {
 
   return StyleSheet.create({
     root: {
-      color: colors.foreground.default,
-      fontFamily: fonts.secondary.regular,
       borderColor: colors.container.stroke,
       borderWidth: 1,
       width: '100%',
-      padding: 8,
       borderRadius: 12,
       backgroundColor: colors.container.default,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8,
+    },
+    icon: {
+      position: 'absolute',
+      right: 8,
+      pointerEvents: 'box-none',
+    },
+    input: {
+      height: 40,
+      letterSpacing: 1,
+      color: colors.foreground.default,
+      fontFamily: fonts.secondary.regular,
+      padding: 8,
+      paddingRight: 8 + 24 + 4,
+      paddingLeft: 12,
+      fontSize: 14,
+      flex: 1,
     },
   })
 }

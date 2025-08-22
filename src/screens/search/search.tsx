@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { useKeyboardHandler } from 'react-native-keyboard-controller'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
@@ -28,25 +28,16 @@ const useGradualAnimation = (): { height: SharedValue<number> } => {
 
 const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
-
-  const scrollViewRef = useRef<ScrollView>(null)
-
   const { height } = useGradualAnimation()
-
   const keyboardView = useAnimatedStyle(() => {
     return { height: Math.abs(height.value) }
   }, [])
 
-  useEffect(() => {
-    scrollViewRef?.current?.scrollToEnd({ animated: true })
-  }, [])
+  const [searchText, setSearchText] = useState('')
 
   return (
     <View style={styles.safeArea}>
-      <ScrollView
-        style={styles.root}
-        ref={scrollViewRef}
-      >
+      <ScrollView style={styles.root}>
         <View>
           <View style={styles.header}>
             <View style={styles.title}>
@@ -92,11 +83,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
       </ScrollView>
       <View style={styles.footer}>
         <SearchInput
-          onFocus={() => {
-            setTimeout(() => {
-              scrollViewRef?.current?.scrollToEnd({ animated: true })
-            }, 200)
-          }}
+          value={searchText}
+          onChangeText={setSearchText}
         />
       </View>
       <Animated.View style={keyboardView} />
