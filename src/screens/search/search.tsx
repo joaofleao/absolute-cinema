@@ -13,6 +13,7 @@ import DottedText from '@components/dotted_text'
 import { IconAddCircle, IconCheckCircle } from '@components/icon'
 import SearchInput from '@components/search_input'
 import Typography from '@components/typography'
+import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
 
 const useGradualAnimation = (): { height: SharedValue<number> } => {
@@ -68,6 +69,7 @@ const genreMap: Record<number, string> = {
 const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { t } = useTranslation()
+  const theme = useTheme()
 
   const { height } = useGradualAnimation()
   const keyboardView = useAnimatedStyle(() => {
@@ -137,10 +139,13 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
                 <View
                   key={movie.id}
                   style={{
-                    flexDirection: 'row',
-                    flex: 1,
                     padding: 8,
-                    borderRadius: 20,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: theme.colors.container.stroke,
+                    backgroundColor: theme.colors.container.default,
+                    flexDirection: 'row',
+                    alignItems: 'center',
                     gap: 20,
                   }}
                 >
