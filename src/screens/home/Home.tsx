@@ -1,11 +1,11 @@
-import { Button, Dimensions, Image, ScrollView, View } from 'react-native'
+import { Dimensions, Image, ScrollView, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
 import Bar from '@components/bar'
 import DottedText from '@components/dotted_text'
-import { IconArrow, IconChevron, IconMagnifyingGlass } from '@components/icon'
+import { IconArrow, IconChevron, IconLanguages, IconMagnifyingGlass } from '@components/icon'
 import IconButton from '@components/icon_button'
 import Typography from '@components/typography'
 import { routes, ScreenType } from '@router'
@@ -53,17 +53,16 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
             </Bar.Root>
 
             <DottedText>{t('home:empty_state')}</DottedText>
-
-            <Button
-              title="Translate"
-              onPress={() => {
-                i18n.changeLanguage(i18n.language === 'en-US' ? 'pt-BR' : 'en-US')
-              }}
-            />
           </View>
         </View>
       </ScrollView>
       <View style={styles.footer}>
+        <IconButton
+          icon={<IconLanguages />}
+          onPress={() => {
+            i18n.changeLanguage(i18n.language === 'en-US' ? 'pt-BR' : 'en-US')
+          }}
+        />
         <IconButton
           onPress={() => navigation.navigate(routes.search)}
           icon={<IconMagnifyingGlass />}

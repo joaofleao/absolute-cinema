@@ -1,10 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { useState } from 'react'
+import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { useKeyboardHandler } from 'react-native-keyboard-controller'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useAction, useMutation } from 'convex/react'
+import { useTranslation } from 'react-i18next'
 
+import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
+import Button from '@components/button'
+import DottedText from '@components/dotted_text'
+import { IconAddCircle, IconCheckCircle } from '@components/icon'
 import SearchInput from '@components/search_input'
 import Typography from '@components/typography'
 import { ScreenType } from '@router'
@@ -26,14 +32,89 @@ const useGradualAnimation = (): { height: SharedValue<number> } => {
   return { height }
 }
 
+interface TMDBMovie {
+  id: number
+  title: string
+  overview: string
+  poster_path?: string
+  backdrop_path?: string
+  release_date: string
+  vote_average: number
+  genre_ids: number[]
+}
+
+const genreMap: Record<number, string> = {
+  28: 'Action',
+  12: 'Adventure',
+  16: 'Animation',
+  35: 'Comedy',
+  80: 'Crime',
+  99: 'Documentary',
+  18: 'Drama',
+  10751: 'Family',
+  14: 'Fantasy',
+  36: 'History',
+  27: 'Horror',
+  10402: 'Music',
+  9648: 'Mystery',
+  10749: 'Romance',
+  878: 'Science Fiction',
+  10770: 'TV Movie',
+  53: 'Thriller',
+  10752: 'War',
+  37: 'Western',
+}
+
 const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
+  const { t } = useTranslation()
+
   const { height } = useGradualAnimation()
   const keyboardView = useAnimatedStyle(() => {
     return { height: Math.abs(height.value) }
   }, [])
 
-  const [searchText, setSearchText] = useState('')
+  const [results, setResults] = useState<TMDBMovie[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const searchMovies = useAction(api.movies.searchMovies)
+  const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
+  const addToWatchlist = useMutation(api.movies.addToWatchlist)
+
+  const handleSearch = async (query: string): Promise<void> => {
+    if (!query.trim()) return
+    setLoading(true)
+    try {
+      const searchResults = await searchMovies({ query: query.trim() })
+      setResults(searchResults)
+    } catch {
+      Alert.alert('Failed to search movies. Please check your TMDB API key.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAddToWatchlist = async (movie: TMDBMovie): Promise<void> => {
+    try {
+      const genres = movie.genre_ids.map((id) => genreMap[id]).filter(Boolean)
+
+      const movieId = await getOrCreateMovie({
+        tmdbId: movie.id,
+        title: movie.title,
+        overview: movie.overview,
+        posterPath: movie.poster_path,
+        backdropPath: movie.backdrop_path,
+        releaseDate: movie.release_date,
+        voteAverage: movie.vote_average,
+        genres,
+      })
+
+      await addToWatchlist({ movieId })
+      Alert.alert(`Added "${movie.title}" to your watchlist`)
+    } catch (error: any) {
+      Alert.alert(error.message || 'Failed to add movie to watchlist')
+    }
+  }
 
   return (
     <View style={styles.safeArea}>
@@ -51,40 +132,67 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
           </View>
 
           <View style={styles.content}>
-            <Image
-              style={{
-                aspectRatio: 9 / 16,
-                height: 400,
-                borderRadius: 20,
-              }}
-              source={require('@assets/movie.png')}
-              resizeMode="cover"
-            />
-            <Image
-              style={{
-                aspectRatio: 9 / 16,
-                height: 400,
-                borderRadius: 20,
-              }}
-              source={require('@assets/movie.png')}
-              resizeMode="cover"
-            />
-            <Image
-              style={{
-                aspectRatio: 9 / 16,
-                height: 400,
-                borderRadius: 20,
-              }}
-              source={require('@assets/movie.png')}
-              resizeMode="cover"
-            />
+            {results.length > 0 &&
+              results.map((movie) => (
+                <View
+                  key={movie.id}
+                  style={{
+                    flexDirection: 'row',
+                    flex: 1,
+                    padding: 8,
+                    borderRadius: 20,
+                    gap: 20,
+                  }}
+                >
+                  {movie.poster_path ? (
+                    <Image
+                      style={{ width: 100, aspectRatio: 27 / 40, borderRadius: 8 }}
+                      source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
+                      alt={movie.title}
+                    />
+                  ) : (
+                    <View style={{ width: 100, aspectRatio: 9 / 16, borderRadius: 4 }} />
+                  )}
+
+                  <View style={{ flex: 1, justifyContent: 'space-around' }}>
+                    <Typography custom>{movie.title}</Typography>
+                    <Typography
+                      custom
+                      light
+                    >
+                      {new Date(movie.release_date).getFullYear()} • ⭐{' '}
+                      {movie.vote_average.toFixed(1)}
+                    </Typography>
+                    <View style={{ flexDirection: 'row', gap: 8 }}>
+                      <Button
+                        onPress={() => handleAddToWatchlist(movie)}
+                        title={t('search:save')}
+                        icon={<IconAddCircle />}
+                      />
+                      <Button
+                        onPress={() => handleAddToWatchlist(movie)}
+                        title={t('search:watch')}
+                        icon={<IconCheckCircle />}
+                      />
+                    </View>
+                  </View>
+                </View>
+              ))}
+
+            {loading && <ActivityIndicator />}
+
+            {results.length === 0 && !loading && (
+              <View style={{ paddingVertical: 200 }}>
+                <DottedText>{t('search:empty_state')}</DottedText>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
       <View style={styles.footer}>
         <SearchInput
-          value={searchText}
-          onChangeText={setSearchText}
+          debounce={2000}
+          onChangeText={handleSearch}
         />
       </View>
       <Animated.View style={keyboardView} />

@@ -4,8 +4,7 @@ import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
-  leading: ViewStyle
-  trailing: ViewStyle
+  icon: ViewStyle
   input: TextStyle
 }
 
@@ -22,20 +21,10 @@ const useStyles = (): StylesReturn => {
       flexDirection: 'row',
       alignItems: 'center',
     },
-    leading: {
-      position: 'absolute',
-      left: 8,
-    },
-    trailing: {
+    icon: {
       position: 'absolute',
       right: 8,
-
-      padding: 4,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: colors.container.stroke,
-      backgroundColor: colors.container.default,
-      alignItems: 'center',
+      pointerEvents: 'box-none',
     },
     input: {
       height: 40,
@@ -44,7 +33,7 @@ const useStyles = (): StylesReturn => {
       fontFamily: fonts.secondary.regular,
       padding: 8,
       paddingRight: 8 + 24 + 4,
-      paddingLeft: 8 + 24 + 4,
+      paddingLeft: 12,
       fontSize: 14,
       flex: 1,
     },

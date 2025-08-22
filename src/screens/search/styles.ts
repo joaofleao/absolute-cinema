@@ -41,7 +41,8 @@ const useStyles = (): StylesReturn => {
     content: {
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 48,
+      gap: 12,
+      paddingHorizontal: 12,
     },
     footer: {
       paddingHorizontal: 20,

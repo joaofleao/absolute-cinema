@@ -7,5 +7,9 @@
     "by_date": "Por Data",
     "empty_state": "Sem filmes ainda"
   },
-  "search": {}
+  "search": {
+    "empty_state": "Nenhum filme encontrado",
+    "save": "Salvar",
+    "watch": "Assistir"
+  }
 }

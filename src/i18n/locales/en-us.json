@@ -7,5 +7,9 @@
     "by_date": "By Date",
     "empty_state": "No movies yet"
   },
-  "search": {}
+  "search": {
+    "empty_state": "No movies found",
+    "save": "Save",
+    "watch": "Watch"
+  }
 }

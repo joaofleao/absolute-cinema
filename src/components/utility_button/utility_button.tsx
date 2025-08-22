@@ -1,11 +1,12 @@
 import React, { useRef } from 'react'
-import { Keyboard, Pressable, TextInput, View } from 'react-native'
+import { Pressable, TextInput, View } from 'react-native'
 
 import useStyles from './styles'
 import { SearchInputProps } from './types'
 import { IconMagnifyingGlass, IconX } from '@components/icon'
 import { useStrings } from '@providers/strings'
 import { useTheme } from '@providers/theme'
+
 const SearchInput = ({
   debounce = 0,
   onChangeText,
@@ -29,20 +30,14 @@ const SearchInput = ({
     debouncer(text)
   }
 
-  const handleClear = (): void => {
-    inputRef.current?.clear()
-    Keyboard.dismiss()
-  }
-
   return (
     <View style={styles.root}>
       <Pressable
         onPress={() => inputRef.current?.focus()}
-        style={styles.leading}
+        style={styles.icon}
       >
         <IconMagnifyingGlass color={colors.foreground.default} />
       </Pressable>
-
       <TextInput
         ref={inputRef}
         placeholder={search.placeholder}
@@ -53,15 +48,11 @@ const SearchInput = ({
         onChangeText={handleChangeText}
         {...props}
       />
-
       <Pressable
-        onPress={handleClear}
-        style={styles.trailing}
+        onPress={() => inputRef.current?.focus()}
+        style={styles.icon}
       >
-        <IconX
-          color={colors.foreground.default}
-          size={16}
-        />
+        <IconX color={colors.foreground.default} />
       </Pressable>
     </View>
   )

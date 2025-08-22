@@ -58,6 +58,9 @@ const useStyles = (): StylesReturn => {
       width: width,
     },
     footer: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      width: '100%',
       position: 'absolute',
       bottom,
       paddingHorizontal: 20,
