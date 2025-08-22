@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, View } from 'react-native'
 import { useKeyboardHandler } from 'react-native-keyboard-controller'
+import RadialGradient from 'react-native-radial-gradient'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAction, useMutation } from 'convex/react'
@@ -118,12 +119,22 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     }
   }
 
+  const { width } = Dimensions.get('window')
+
   return (
     <View style={styles.safeArea}>
       <ScrollView style={styles.root}>
         <View>
           <View style={styles.header}>
             <View style={styles.title}>
+              <View style={styles.gradientContainer}>
+                <RadialGradient
+                  style={styles.gradient}
+                  colors={['#481010', '#000000']}
+                  radius={300}
+                  center={[width / 2, width]}
+                />
+              </View>
               <Typography
                 title
                 light
