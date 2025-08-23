@@ -5,7 +5,7 @@ import useStyles from './styles'
 import Typography from '@components/typography'
 import { routes, ScreenType } from '@router'
 
-const Movie: ScreenType<'movie'> = ({ navigation, route }) => {
+const PasswordRecovery: ScreenType<'password_recovery'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { t, i18n } = useTranslation()
 
@@ -40,4 +40,4 @@ const Movie: ScreenType<'movie'> = ({ navigation, route }) => {
   )
 }
 
-export default Movie
+export default PasswordRecovery

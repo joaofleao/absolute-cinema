@@ -3,6 +3,7 @@ import RadialGradient from 'react-native-radial-gradient'
 import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
+import Avatar from '@components/avatar'
 import Bar from '@components/bar'
 import DottedText from '@components/dotted_text'
 import { IconArrow, IconChevron, IconLanguages, IconMagnifyingGlass } from '@components/icon'
@@ -58,15 +59,20 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       </ScrollView>
       <View style={styles.footer}>
         <IconButton
+          onPress={() => navigation.navigate(routes.search)}
+          icon={<IconMagnifyingGlass />}
+        />
+      </View>
+
+      <View style={styles.head}>
+        <IconButton
           icon={<IconLanguages />}
           onPress={() => {
             i18n.changeLanguage(i18n.language === 'en-US' ? 'pt-BR' : 'en-US')
           }}
         />
-        <IconButton
-          onPress={() => navigation.navigate(routes.search)}
-          icon={<IconMagnifyingGlass />}
-        />
+
+        <Avatar onPress={() => navigation.navigate(routes.login)} />
       </View>
     </>
   )

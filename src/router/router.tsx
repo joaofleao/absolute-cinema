@@ -15,8 +15,11 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { routes } from '@router'
 import Home from '@screens/home'
+import Login from '@screens/login'
 import Movie from '@screens/movie'
+import PasswordRecovery from '@screens/password_recovery'
 import Search from '@screens/search/search'
+import SignUp from '@screens/sign_up'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
@@ -101,22 +104,24 @@ const Router = (): React.ReactNode => {
             component={Home}
           />
           <Stack.Screen
-            name={routes.search}
-            component={Search}
-            options={
-              {
-                // gestureEnabled: true,
-                // gestureDirection: 'horizontal',
-                // presentation: 'pageSheet',
-              }
-            }
+            name={routes.login}
+            component={Login}
           />
           <Stack.Screen
             name={routes.movie}
             component={Movie}
-            options={{
-              presentation: 'modal',
-            }}
+          />
+          <Stack.Screen
+            name={routes.password_recovery}
+            component={PasswordRecovery}
+          />
+          <Stack.Screen
+            name={routes.search}
+            component={Search}
+          />
+          <Stack.Screen
+            name={routes.sign_up}
+            component={SignUp}
           />
         </Stack.Navigator>
 
