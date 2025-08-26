@@ -6,4 +6,5 @@ export interface ButtonProps extends TouchableOpacityProps {
   variant?: 'primary' | 'secondary' | 'tertiary'
   title: string
   icon?: React.ReactElement<IconProps>
+  loading?: boolean
 }

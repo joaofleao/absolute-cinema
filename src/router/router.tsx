@@ -121,6 +121,7 @@ const Router = (): React.ReactNode => {
             options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
+              sheetInitialDetentIndex: 'last',
             }}
           />
         </Stack.Navigator>

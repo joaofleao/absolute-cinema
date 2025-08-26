@@ -6,12 +6,13 @@ import useStyles from './styles'
 import Button from '@components/button'
 import EmailInput from '@components/email_input'
 import { IconApple, IconGoogle } from '@components/icon'
+import OTPInput from '@components/otp_input'
 import PasswordInput from '@components/password_input'
 import Row from '@components/row'
 import SegmentedControl from '@components/segmented_control'
 import Typography from '@components/typography'
 import { useAuthActions } from '@convex-dev/auth/react'
-import { routes, ScreenType } from '@router'
+import { ScreenType } from '@router'
 
 const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -23,124 +24,164 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [otp, setOtp] = useState<string>('')
 
   const flows = {
     signIn: t('auth:sign_in'),
     signUp: t('auth:sign_up'),
-  }
+  } as const
 
   const [flow, setFlow] = useState('signIn')
 
   const handleSubmit = async (): Promise<void> => {
-    setLoading(true)
-
-    void signIn('password', { email, password, flow }).catch((error) => {
-      let toastTitle = ''
-      if (error.message.includes('Invalid password')) {
-        toastTitle = 'Invalid password. Please try again.'
-      } else {
-        toastTitle =
-          flow === 'sign_in'
-            ? 'Could not sign in, did you mean to sign up?'
-            : 'Could not sign up, did you mean to sign in?'
-      }
-      Alert.alert(toastTitle)
-      setLoading(false)
+    void signIn('password', {
+      flow,
+      email,
+      password,
     })
+      .catch((error) => {
+        console.log(error)
+      })
+      .then(() => {
+        if (flow === 'signUp') setFlow('otp')
+      })
+      .finally(() => setLoading(false))
   }
 
-  const content = (): React.ReactElement => {
-    if (flow === 'signIn')
-      return (
-        <>
-          <View style={styles.content}>
-            <EmailInput
-              value={email}
-              onChangeText={setEmail}
-            />
+  const handleSendOTP = async (): Promise<void> => {
+    setLoading(true)
 
-            <View style={styles.passwordWithForget}>
-              <PasswordInput
-                value={password}
-                onChangeText={setPassword}
-              />
-              <Button
-                title={'forgot Password?'}
-                variant="tertiary"
-                onPress={() => {
-                  Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
-                }}
-              />
-            </View>
-
-            <Row wrap>
-              <Button
-                title={t('auth:sign_in')}
-                variant="primary"
-                onPress={() => {
-                  // navigation.popTo(routes.home)
-                  handleSubmit()
-                }}
-              />
-            </Row>
-          </View>
-          <View style={styles.footer}>
-            <Typography
-              custom
-              light
-            >
-              {t('auth:continue_with')}
-            </Typography>
-            <Row wrap>
-              <Button
-                title="apple"
-                icon={<IconApple />}
-                onPress={() => {
-                  Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
-                }}
-              />
-              <Button
-                title="google"
-                icon={<IconGoogle />}
-                onPress={() => {
-                  Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
-                }}
-              />
-            </Row>
-          </View>
-        </>
-      )
-
-    return (
+    void signIn('password', { flow, email, password })
+      .catch((error) => {
+        console.log(error)
+        // if (error.message.includes('Invalid password')) {
+        //   Alert.alert('Invalid password. Please try again.')
+        // } else if (error.message.includes('verification')) {
+        //   Alert.alert('Please verify your email to continue.')
+        // } else {
+        //   Alert.alert(error.message)
+        // }
+      })
+      .finally(() => setLoading(false))
+    // void signIn('password', { email, password, flow })
+    //   .catch((error) => {
+    //     if (error.message.includes('Invalid password')) {
+    //       Alert.alert('Invalid password. Please try again.')
+    //     } else if (error.message.includes('verification')) {
+    //       Alert.alert('Please verify your email to continue.')
+    //     } else {
+    //       Alert.alert(error.message)
+    //     }
+    //   })
+    //   .then(() => {
+    //     if (flow === 'signUp') setFlow('otp')
+    //   })
+    //   .finally(() => setLoading(false))
+  }
+  const signInContent = (
+    <>
       <View style={styles.content}>
         <EmailInput
           value={email}
           onChangeText={setEmail}
         />
-        <PasswordInput
-          type="new_password"
-          value={password}
-          onChangeText={setPassword}
-        />
-        <PasswordInput
-          type="confirm_password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          passwordConfirmation={password}
-        />
+
+        <View style={styles.passwordWithForget}>
+          <PasswordInput
+            value={password}
+            onChangeText={setPassword}
+          />
+          <Button
+            title={'forgot Password?'}
+            variant="tertiary"
+            onPress={() => {
+              Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
+            }}
+          />
+        </View>
+
         <Row wrap>
           <Button
-            title={t('auth:register')}
+            loading={loading}
+            title={t('auth:sign_in')}
             variant="primary"
+            onPress={handleSubmit}
+          />
+        </Row>
+      </View>
+      <View style={styles.footer}>
+        <Typography
+          custom
+          light
+        >
+          {t('auth:continue_with')}
+        </Typography>
+        <Row wrap>
+          <Button
+            title="apple"
+            icon={<IconApple />}
             onPress={() => {
-              // navigation.popTo(routes.home)
-              handleSubmit()
+              Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
+            }}
+          />
+          <Button
+            title="google"
+            icon={<IconGoogle />}
+            onPress={() => {
+              Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
             }}
           />
         </Row>
       </View>
-    )
-  }
+    </>
+  )
+
+  const otpContent = (
+    <>
+      <View style={styles.content}>
+        <OTPInput
+          value={otp}
+          onChangeText={setOtp}
+        />
+
+        <Row wrap>
+          <Button
+            loading={loading}
+            title={t('auth:sign_in')}
+            variant="primary"
+            onPress={handleSubmit}
+          />
+        </Row>
+      </View>
+    </>
+  )
+
+  const signUpContent = (
+    <View style={styles.content}>
+      <EmailInput
+        value={email}
+        onChangeText={setEmail}
+      />
+      <PasswordInput
+        type="new_password"
+        value={password}
+        onChangeText={setPassword}
+      />
+      <PasswordInput
+        type="confirm_password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        passwordConfirmation={password}
+      />
+      <Row wrap>
+        <Button
+          title={t('auth:register')}
+          variant="primary"
+          onPress={handleSendOTP}
+        />
+      </Row>
+    </View>
+  )
 
   return (
     <View style={styles.root}>
@@ -151,7 +192,10 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           options={flows}
         />
       </View>
-      {content()}
+
+      {flow === 'signIn' && signInContent}
+      {flow === 'signUp' && signUpContent}
+      {flow === 'otp' && otpContent}
     </View>
   )
 }

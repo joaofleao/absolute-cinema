@@ -5,7 +5,14 @@
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "@*": ["./src/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@screens/*": ["./src/screens/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@components/*": ["./src/components/*"],
+      "@router/*": ["./src/router/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@router": ["./src/router"],
       "@convex": ["./convex"],
       "@package.json": ["./package.json"]
     },
