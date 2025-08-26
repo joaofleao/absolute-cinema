@@ -18,7 +18,8 @@
           },
           "imageWidth": 200
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "ios": {
       "supportsTablet": true,

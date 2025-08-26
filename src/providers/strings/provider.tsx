@@ -10,6 +10,13 @@ const StringsProvider = ({ children }: { children?: React.ReactNode }): React.Re
     search: {
       placeholder: t('overall:search_placeholder'),
     },
+    email: {
+      placeholder: t('overall:email_placeholder'),
+    },
+    password: {
+      placeholder: t('overall:password_placeholder'),
+      confirmationPlaceholder: t('overall:password_confirmation_placeholder'),
+    },
   }
 
   return <StringsContext.Provider value={value}>{children}</StringsContext.Provider>

@@ -4,6 +4,9 @@ import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
+  primary: ViewStyle
+  secondary: ViewStyle
+  tertiary: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -11,15 +14,28 @@ const useStyles = (): StylesReturn => {
 
   return StyleSheet.create({
     root: {
-      padding: 8,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: colors.container.stroke,
-      backgroundColor: colors.container.default,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 4,
+      gap: 8,
       height: 40,
+    },
+    primary: {
+      backgroundColor: '#E6E7E6',
+      borderColor: '#E6E7E6',
+    },
+    secondary: {
+      backgroundColor: colors.container.default,
+      borderColor: colors.container.stroke,
+    },
+    tertiary: {
+      borderWidth: 0,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
+      height: 'auto',
     },
   })
 }

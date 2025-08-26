@@ -1,6 +1,11 @@
 {
   "overall": {
-    "search_placeholder": "SEARCH"
+    "search_placeholder": "SEARCH",
+    "email_placeholder": "EMAIL",
+    "password_placeholder": "PASSWORD",
+    "password_confirmation_placeholder": "CONFIRM PASSWORD",
+    "not_implemented": "Not implemented",
+    "feature_not_implemented": "This feature is not implemented yet."
   },
   "home": {
     "watched": "Watched",
@@ -11,5 +16,10 @@
     "empty_state": "No movies found",
     "save": "Save",
     "watch": "Watch"
+  },
+  "auth": {
+    "sign_in": "Sign In",
+    "sign_up": "Register",
+    "continue_with": "Continue with"
   }
 }

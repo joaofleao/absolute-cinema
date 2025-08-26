@@ -10,4 +10,7 @@ export interface TypographyProps extends TextProps {
   title?: boolean
   custom?: boolean
   light?: boolean
+  inverse?: boolean
+  positive?: boolean
+  legend?: boolean
 }

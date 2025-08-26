@@ -8,6 +8,7 @@ import { useStrings } from '@providers/strings'
 import { useTheme } from '@providers/theme'
 const SearchInput = ({
   debounce = 0,
+  value,
   onChangeText,
   ...props
 }: SearchInputProps): React.ReactElement => {
@@ -40,7 +41,10 @@ const SearchInput = ({
         onPress={() => inputRef.current?.focus()}
         style={styles.leading}
       >
-        <IconMagnifyingGlass color={colors.foreground.default} />
+        <IconMagnifyingGlass
+          color={colors.foreground.default}
+          size={16}
+        />
       </Pressable>
 
       <TextInput
@@ -51,18 +55,21 @@ const SearchInput = ({
         cursorColor={colors.foreground.default}
         style={styles.input}
         onChangeText={handleChangeText}
+        value={value}
         {...props}
       />
 
-      <Pressable
-        onPress={handleClear}
-        style={styles.trailing}
-      >
-        <IconX
-          color={colors.foreground.default}
-          size={16}
-        />
-      </Pressable>
+      {inputRef?.current?.isFocused() && (
+        <Pressable
+          onPress={handleClear}
+          style={styles.trailing}
+        >
+          <IconX
+            color={colors.foreground.default}
+            size={16}
+          />
+        </Pressable>
+      )}
     </View>
   )
 }

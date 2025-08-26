@@ -12,6 +12,9 @@ type StylesReturn = {
   title: TextStyle
   custom: TextStyle
   light: TextStyle
+  inverse: TextStyle
+  positive: TextStyle
+  legend: TextStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -76,8 +79,22 @@ const useStyles = (): StylesReturn => {
       letterSpacing: 2,
       textTransform: 'uppercase',
     },
+    legend: {
+      color: colors.foreground.default,
+      fontFamily: fonts.tertiary.bold,
+      fontSize: 12,
+      lineHeight: 16,
+      letterSpacing: 2,
+      textTransform: 'uppercase',
+    },
     light: {
       color: colors.foreground.light,
+    },
+    inverse: {
+      color: colors.foreground.inverse,
+    },
+    positive: {
+      color: colors.positive.base,
     },
   })
 }

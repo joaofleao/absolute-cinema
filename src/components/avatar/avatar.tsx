@@ -20,7 +20,7 @@ const Avatar = ({ image, ...props }: AvatarProps): React.ReactElement => {
         />
       ) : (
         <View style={styles.iconContainer}>
-          <IconPerson />
+          <IconPerson size={24} />
         </View>
       )}
     </TouchableOpacity>

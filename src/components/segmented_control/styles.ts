@@ -4,6 +4,7 @@ import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
+  divider: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -11,17 +12,20 @@ const useStyles = (): StylesReturn => {
 
   return StyleSheet.create({
     root: {
-      padding: 8,
-      borderRadius: 12,
-      borderWidth: 1,
-      height: 40,
-      width: 40,
-
-      borderColor: colors.container.stroke,
-      backgroundColor: colors.container.default,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8,
+      gap: 4,
+      backgroundColor: colors.container.default,
+      borderColor: colors.container.stroke,
+      borderWidth: 1,
+      borderRadius: 12,
+      paddingVertical: 4,
+      paddingHorizontal: 4,
+    },
+    divider: {
+      width: 2,
+      height: 18,
+      backgroundColor: colors.container.stroke,
     },
   })
 }

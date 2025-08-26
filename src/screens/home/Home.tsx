@@ -72,7 +72,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           }}
         />
 
-        <Avatar onPress={() => navigation.navigate(routes.login)} />
+        <Avatar onPress={() => navigation.navigate(routes.auth)} />
       </View>
     </>
   )

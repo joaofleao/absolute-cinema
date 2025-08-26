@@ -1,3 +1,5 @@
 import { ViewProps } from 'react-native'
 
-export type RowProps = ViewProps
+export interface RowProps extends ViewProps {
+  wrap?: boolean
+}

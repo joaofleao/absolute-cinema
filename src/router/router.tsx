@@ -14,20 +14,14 @@ import { fontImports, useTheme } from '@providers/theme'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { routes } from '@router'
+import Auth from '@screens/auth'
 import Home from '@screens/home'
-import Login from '@screens/login'
 import Movie from '@screens/movie'
 import PasswordRecovery from '@screens/password_recovery'
 import Search from '@screens/search/search'
-import SignUp from '@screens/sign_up'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
-
-const screenOptions = {
-  // tabBarHideOnKeyboard: true,
-  headerShown: false,
-}
 
 const resources = {
   'pt-BR': ptBR,
@@ -80,9 +74,15 @@ const Router = (): React.ReactNode => {
         setAppReady(true)
       }
     }
-
     prepare()
   }, [])
+
+  const screenOptions = {
+    headerShown: false,
+    contentStyle: {
+      backgroundColor: colors.container.filled,
+    },
+  }
 
   if (!appReady) return null
 
@@ -104,10 +104,6 @@ const Router = (): React.ReactNode => {
             component={Home}
           />
           <Stack.Screen
-            name={routes.login}
-            component={Login}
-          />
-          <Stack.Screen
             name={routes.movie}
             component={Movie}
           />
@@ -120,8 +116,12 @@ const Router = (): React.ReactNode => {
             component={Search}
           />
           <Stack.Screen
-            name={routes.sign_up}
-            component={SignUp}
+            name={routes.auth}
+            component={Auth}
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+            }}
           />
         </Stack.Navigator>
 

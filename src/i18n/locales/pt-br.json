@@ -1,6 +1,11 @@
 {
   "overall": {
-    "search_placeholder": "PESQUISAR"
+    "search_placeholder": "PESQUISAR",
+    "email_placeholder": "EMAIL",
+    "password_placeholder": "SENHA",
+    "password_confirmation_placeholder": "CONFIRMAR SENHA",
+    "not_implemented": "Não implementado",
+    "feature_not_implemented": "Este recurso não está implementado ainda."
   },
   "home": {
     "watched": "Assistidos",
@@ -11,5 +16,10 @@
     "empty_state": "Nenhum filme encontrado",
     "save": "Salvar",
     "watch": "Assistir"
+  },
+  "auth": {
+    "sign_in": "Entrar",
+    "sign_up": "Registrar",
+    "continue_with": "Continue com"
   }
 }

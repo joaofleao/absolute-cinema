@@ -1,5 +1,5 @@
 import { TextInputProps } from 'react-native'
 
-export interface SearchInputProps extends TextInputProps {
+export interface EmailInputProps extends TextInputProps {
   debounce?: number
 }

@@ -1,21 +1,22 @@
 import { StyleSheet, ViewStyle } from 'react-native'
 
 type StylesReturn = {
-  row: ViewStyle
-  wrap: ViewStyle
+  root: ViewStyle
+  selected: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
   return StyleSheet.create({
-    row: {
+    root: {
       flexDirection: 'row',
-      gap: 8,
-      maxWidth: '100%',
-    },
-    wrap: {
-      flexWrap: 'wrap',
       alignItems: 'center',
-      justifyContent: 'center',
+      paddingVertical: 4,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+    },
+    selected: {
+      backgroundColor: 'white',
+      borderRadius: 8,
     },
   })
 }

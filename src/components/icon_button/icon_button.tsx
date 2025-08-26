@@ -17,6 +17,7 @@ const IconButton = ({ icon, ...props }: IconButtonProps): React.ReactElement => 
     >
       {React.cloneElement<IconProps>(icon, {
         color: theme.colors.foreground.default,
+        size: 24,
       })}
     </TouchableOpacity>
   )

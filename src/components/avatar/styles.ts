@@ -21,14 +21,15 @@ const useStyles = (): StylesReturn => {
       alignItems: 'center',
       gap: 8,
       overflow: 'hidden',
+      width: 40,
+      height: 40,
     },
     iconContainer: {
       padding: 8,
     },
     image: {
-      width: 40,
-      height: 40,
-      // borderRadius: 20,
+      width: '100%',
+      height: '100%',
     },
   })
 }
