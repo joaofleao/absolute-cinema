@@ -13,8 +13,8 @@
           "backgroundColor": "#791B1B",
           "image": "./src/assets//app//splash-icon.png",
           "dark": {
-            "image": "./src/assets//app//splash-icon.png",
-            "backgroundColor": "#000000"
+            "image": "./src/assets//app//splash-icon-dark.png",
+            "backgroundColor": "#270707"
           },
           "imageWidth": 200
         }
