@@ -18,7 +18,7 @@ import Auth from '@screens/auth'
 import Home from '@screens/home'
 import Movie from '@screens/movie'
 import PasswordRecovery from '@screens/password_recovery'
-import Search from '@screens/search/search'
+import Search from '@screens/search'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()

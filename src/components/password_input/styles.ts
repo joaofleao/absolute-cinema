@@ -9,7 +9,6 @@ type StylesReturn = {
   input: TextStyle
   container: TextStyle
   rule: TextStyle
-  valid: TextStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -52,18 +51,11 @@ const useStyles = (): StylesReturn => {
     },
 
     rule: {
-      // flex: 1,
-      // color: colors.text.light,
-      // fontFamily: fonts.secondary.bold,
-      // fontSize: 12,
-      // lineHeight: 18,
+      flex: 1,
     },
-    valid: {
-      // color: colors.positive.default,
-    },
+
     container: {
       flexDirection: 'row',
-      // alignItems: 'center',
       gap: 8,
     },
   })

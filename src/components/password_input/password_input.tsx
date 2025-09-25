@@ -40,7 +40,7 @@ const PasswordInput = ({
   const inputRef = useRef<TextInput>(null)
   const styles = useStyles()
   const { colors } = useTheme()
-  const { password } = useStrings()
+  const strings = useStrings()
   const [showPassword, setShowPassword] = useState(false)
 
   const { match, oneDigit, oneUpperCase, passwordValid } = passwordValidation(
@@ -62,6 +62,7 @@ const PasswordInput = ({
         />
       ) : (
         <IconAlert
+          color={colors.foreground.light}
           width={16}
           height={16}
         />
@@ -71,54 +72,51 @@ const PasswordInput = ({
         legend
         light
         positive={match}
+        style={styles.rule}
       >
-        Your passwords must match
+        {strings.password.match}
       </Typography>
     </View>
   )
 
   const renderRequirements = type === 'new_password' && (
-    <>
-      <View style={styles.container}>
-        {passwordValid ? (
-          <IconCheckCircle
-            color={colors.positive.base}
-            width={16}
-            height={16}
-          />
-        ) : (
-          <IconAlert
-            width={16}
-            height={16}
-          />
-        )}
+    <View style={styles.container}>
+      {passwordValid ? (
+        <IconCheckCircle
+          color={colors.positive.base}
+          width={16}
+          height={16}
+        />
+      ) : (
+        <IconAlert
+          color={colors.foreground.light}
+          width={16}
+          height={16}
+        />
+      )}
+      <Typography
+        legend
+        light
+        style={styles.rule}
+        positive={oneDigit && oneUpperCase}
+      >
+        {strings.password.requirements}
         <Typography
           legend
           light
-          positive={oneDigit && oneUpperCase}
+          positive={oneDigit}
         >
-          Your passwords must include:
-          <Typography
-            legend
-            light
-            positive={oneDigit}
-          >
-            {' '}
-            one digit
-          </Typography>
-          ,
-          <Typography
-            legend
-            light
-            positive={oneUpperCase}
-          >
-            {' '}
-            one uppercase letter
-          </Typography>
-          .
+          {strings.password.digit}
         </Typography>
-      </View>
-    </>
+        <Typography
+          legend
+          light
+          positive={oneUpperCase}
+        >
+          {strings.password.uppercase}
+        </Typography>
+      </Typography>
+    </View>
   )
 
   return (
@@ -140,7 +138,9 @@ const PasswordInput = ({
           secureTextEntry={!showPassword}
           ref={inputRef}
           placeholder={
-            type === 'confirm_password' ? password.confirmationPlaceholder : password.placeholder
+            type === 'confirm_password'
+              ? strings.password.confirmationPlaceholder
+              : strings.password.placeholder
           }
           placeholderTextColor={colors.foreground.light}
           selectionColor={colors.foreground.light}

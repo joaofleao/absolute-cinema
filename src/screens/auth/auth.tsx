@@ -22,9 +22,9 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
 
   const [loading, setLoading] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
+  const [code, setCode] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
-  const [otp, setOtp] = useState<string>('')
 
   const flows = {
     signIn: t('auth:sign_in'),
@@ -33,51 +33,45 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
 
   const [flow, setFlow] = useState('signIn')
 
-  const handleSubmit = async (): Promise<void> => {
+  const handleSignUp = async (): Promise<void> => {
+    setLoading(true)
     void signIn('password', {
       flow,
       email,
       password,
     })
-      .catch((error) => {
-        console.log(error)
-      })
+      .catch((error) => Alert.alert(error.message))
       .then(() => {
-        if (flow === 'signUp') setFlow('otp')
+        setFlow('email-verification')
       })
       .finally(() => setLoading(false))
   }
 
-  const handleSendOTP = async (): Promise<void> => {
+  const handleSignIn = async (): Promise<void> => {
     setLoading(true)
+    void signIn('password', {
+      flow,
+      email,
+      password,
+    })
+      .catch((error) => Alert.alert(error.message))
+      .finally(() => setLoading(false))
+  }
 
-    void signIn('password', { flow, email, password })
-      .catch((error) => {
-        console.log(error)
-        // if (error.message.includes('Invalid password')) {
-        //   Alert.alert('Invalid password. Please try again.')
-        // } else if (error.message.includes('verification')) {
-        //   Alert.alert('Please verify your email to continue.')
-        // } else {
-        //   Alert.alert(error.message)
-        // }
+  const handleVerify = async (): Promise<void> => {
+    setLoading(true)
+    void signIn('password', {
+      flow,
+      email,
+      code,
+    })
+      .catch((error) => Alert.alert(error.message))
+      .then(() => {
+        navigation.pop()
       })
       .finally(() => setLoading(false))
-    // void signIn('password', { email, password, flow })
-    //   .catch((error) => {
-    //     if (error.message.includes('Invalid password')) {
-    //       Alert.alert('Invalid password. Please try again.')
-    //     } else if (error.message.includes('verification')) {
-    //       Alert.alert('Please verify your email to continue.')
-    //     } else {
-    //       Alert.alert(error.message)
-    //     }
-    //   })
-    //   .then(() => {
-    //     if (flow === 'signUp') setFlow('otp')
-    //   })
-    //   .finally(() => setLoading(false))
   }
+
   const signInContent = (
     <>
       <View style={styles.content}>
@@ -92,7 +86,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
             onChangeText={setPassword}
           />
           <Button
-            title={'forgot Password?'}
+            title={t('auth:forgot_password')}
             variant="tertiary"
             onPress={() => {
               Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
@@ -105,7 +99,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
             loading={loading}
             title={t('auth:sign_in')}
             variant="primary"
-            onPress={handleSubmit}
+            onPress={handleSignIn}
           />
         </Row>
       </View>
@@ -136,24 +130,22 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
     </>
   )
 
-  const otpContent = (
-    <>
-      <View style={styles.content}>
-        <OTPInput
-          value={otp}
-          onChangeText={setOtp}
-        />
+  const verificationContent = (
+    <View style={styles.content}>
+      <OTPInput
+        value={code}
+        onChangeText={setCode}
+      />
 
-        <Row wrap>
-          <Button
-            loading={loading}
-            title={t('auth:sign_in')}
-            variant="primary"
-            onPress={handleSubmit}
-          />
-        </Row>
-      </View>
-    </>
+      <Row wrap>
+        <Button
+          loading={loading}
+          title={t('auth:sign_in')}
+          variant="primary"
+          onPress={handleVerify}
+        />
+      </Row>
+    </View>
   )
 
   const signUpContent = (
@@ -175,9 +167,9 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       />
       <Row wrap>
         <Button
-          title={t('auth:register')}
+          title={t('auth:sign_up')}
           variant="primary"
-          onPress={handleSendOTP}
+          onPress={handleSignUp}
         />
       </Row>
     </View>
@@ -195,7 +187,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
 
       {flow === 'signIn' && signInContent}
       {flow === 'signUp' && signUpContent}
-      {flow === 'otp' && otpContent}
+      {flow === 'email-verification' && verificationContent}
     </View>
   )
 }

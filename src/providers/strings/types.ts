@@ -5,6 +5,10 @@ export interface StringsContextType {
   password: {
     placeholder: string
     confirmationPlaceholder: string
+    requirements: string
+    digit: string
+    uppercase: string
+    match: string
   }
   email: {
     placeholder: string

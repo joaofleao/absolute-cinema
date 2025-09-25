@@ -4,6 +4,10 @@
     "email_placeholder": "EMAIL",
     "password_placeholder": "SENHA",
     "password_confirmation_placeholder": "CONFIRMAR SENHA",
+    "password_requirements": "SUAS SENHAS PRECISAM DE: ",
+    "password_digit": "UM DIGITO E",
+    "password_uppercase": "UMA LETRA MAIUSCULA.",
+    "password_match": "AS SENHAS DIFEREM",
     "not_implemented": "Não implementado",
     "feature_not_implemented": "Este recurso não está implementado ainda."
   },
@@ -20,6 +24,7 @@
   "auth": {
     "sign_in": "Entrar",
     "sign_up": "Registrar",
-    "continue_with": "Continue com"
+    "continue_with": "Continue com",
+    "forgot_password": "Esqueceu a senha?"
   }
 }

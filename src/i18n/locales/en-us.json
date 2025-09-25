@@ -4,6 +4,10 @@
     "email_placeholder": "EMAIL",
     "password_placeholder": "PASSWORD",
     "password_confirmation_placeholder": "CONFIRM PASSWORD",
+    "password_requirements": "YOUR PASSWORDS NEED TO HAVE: ",
+    "password_digit": "ONE DIGIT AND ",
+    "password_uppercase": "ONE UPPERCASE LETTER.",
+    "password_match": "PASSWORD DOES NOT MATCH",
     "not_implemented": "Not implemented",
     "feature_not_implemented": "This feature is not implemented yet."
   },
@@ -20,6 +24,7 @@
   "auth": {
     "sign_in": "Sign In",
     "sign_up": "Register",
-    "continue_with": "Continue with"
+    "continue_with": "Continue with",
+    "forgot_password": "Forgot password?"
   }
 }

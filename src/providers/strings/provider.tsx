@@ -16,6 +16,10 @@ const StringsProvider = ({ children }: { children?: React.ReactNode }): React.Re
     password: {
       placeholder: t('overall:password_placeholder'),
       confirmationPlaceholder: t('overall:password_confirmation_placeholder'),
+      requirements: t('overall:password_requirements'),
+      digit: t('overall:password_digit'),
+      uppercase: t('overall:password_uppercase'),
+      match: t('overall:password_match'),
     },
   }
 
