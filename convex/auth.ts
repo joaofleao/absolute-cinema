@@ -1,31 +1,7 @@
-// import { query } from './_generated/server'
-// import { verify } from './ResendOTP'
-// import { Anonymous } from '@convex-dev/auth/providers/Anonymous'
-// import { Password } from '@convex-dev/auth/providers/Password'
-// import { convexAuth, getAuthUserId } from '@convex-dev/auth/server'
-
-// export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-//   providers: [Password({ verify }), Anonymous],
-// })
-
-// export const loggedInUser = query({
-//   handler: async (ctx) => {
-//     const userId = await getAuthUserId(ctx)
-//     if (!userId) {
-//       return null
-//     }
-//     const user = await ctx.db.get(userId)
-//     if (!user) {
-//       return null
-//     }
-//     return user
-//   },
-// })
-
-import { ResendOTP } from './ResendOTP'
+import { verify } from './verify'
 import { Password } from '@convex-dev/auth/providers/Password'
 import { convexAuth } from '@convex-dev/auth/server'
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Password({ verify: ResendOTP })],
+  providers: [Password({ verify })],
 })
