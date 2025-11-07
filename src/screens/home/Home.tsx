@@ -1,13 +1,5 @@
 import { useState } from 'react'
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  ListRenderItem,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Dimensions, FlatList, Image, ListRenderItem, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { Authenticated, Unauthenticated, useQuery } from 'convex/react'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +9,7 @@ import useStyles from './styles'
 import Avatar from '@components/avatar'
 import Bar from '@components/bar'
 import DottedText from '@components/dotted_text'
+import GalleryItem from '@components/gallery_item'
 import {
   IconArrow,
   IconChevron,
@@ -25,6 +18,8 @@ import {
   IconMagnifyingGlass,
 } from '@components/icon'
 import IconButton from '@components/icon_button'
+import ListItem from '@components/list_item'
+import Select from '@components/select'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { routes, ScreenType } from '@router'
@@ -57,7 +52,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         />
 
         <View style={styles.title}>
-          <Typography>ABSOLUTE</Typography>
+          <Typography color={theme.semantics.background.foreground.light}>ABSOLUTE</Typography>
           <Typography display>CINEMA</Typography>
         </View>
         <Authenticated>
@@ -72,43 +67,68 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       </View>
     </>
   )
-  const renderItem: ListRenderItem<(typeof watchedMovies)[number]> = ({ item, index }) => (
-    <TouchableOpacity
-      style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }}
+
+  const renderGalleryItem: ListRenderItem<(typeof watchedMovies)[number]> = ({ item, index }) => (
+    <GalleryItem
       onPress={() => alert('Pressed ' + item._id)}
-    >
-      <Image
-        style={{ aspectRatio: 2 / 3 }}
-        source={{ uri: 'https://image.tmdb.org/t/p/w1280/' + item.posterPath }}
-      />
-      <Text style={{ position: 'absolute', top: 4, right: 4 }}>{index}</Text>
-    </TouchableOpacity>
+      image={item.posterPath}
+    />
+  )
+  const renderListItem: ListRenderItem<(typeof watchedMovies)[number]> = ({ item, index }) => (
+    <ListItem
+      onPress={() => alert('Pressed ' + item._id)}
+      image={item.posterPath}
+      title={item.title}
+      date={new Date(item.watchedAt).toLocaleDateString()}
+    />
   )
 
   return (
     <>
-      <FlatList
-        numColumns={3}
-        columnWrapperStyle={{
-          justifyContent: 'space-between',
-        }}
-        contentContainerStyle={{
-          padding: 16,
-          gap: 16,
-        }}
-        style={styles.root}
-        ListHeaderComponent={header}
-        data={watchedMovies}
-        keyExtractor={(movie) => movie._id + movie.watchedAt.toString()}
-        renderItem={renderItem}
-        ListEmptyComponent={() => (
-          <Authenticated>
-            <View style={styles.content}>
-              <DottedText>{t('home:empty_state')}</DottedText>
-            </View>
-          </Authenticated>
-        )}
-      />
+      {viewMode === 'gallery' && (
+        <FlatList
+          numColumns={3}
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+          }}
+          contentContainerStyle={{
+            padding: 16,
+            gap: 16,
+          }}
+          style={styles.root}
+          ListHeaderComponent={header}
+          data={watchedMovies}
+          keyExtractor={(movie) => movie._id + movie.watchedAt.toString()}
+          renderItem={renderGalleryItem}
+          ListEmptyComponent={() => (
+            <Authenticated>
+              <View style={styles.content}>
+                <DottedText>{t('home:empty_state')}</DottedText>
+              </View>
+            </Authenticated>
+          )}
+        />
+      )}
+      {viewMode === 'list' && (
+        <FlatList
+          contentContainerStyle={{
+            padding: 16,
+            gap: 16,
+          }}
+          style={styles.root}
+          ListHeaderComponent={header}
+          data={watchedMovies}
+          keyExtractor={(movie) => movie._id + movie.watchedAt.toString()}
+          renderItem={renderListItem}
+          ListEmptyComponent={() => (
+            <Authenticated>
+              <View style={styles.content}>
+                <DottedText>{t('home:empty_state')}</DottedText>
+              </View>
+            </Authenticated>
+          )}
+        />
+      )}
 
       <View style={styles.footer}>
         <IconButton
@@ -119,11 +139,20 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
 
       <View style={styles.head}>
         <Authenticated>
-          <IconButton
-            icon={viewMode === 'gallery' ? <IconList /> : <IconGallery />}
-            onPress={() => {
-              setViewMode((old) => (old === 'gallery' ? 'list' : 'gallery'))
-            }}
+          <Select
+            onSelect={setViewMode}
+            selected={viewMode}
+            data={[
+              { id: 'gallery', name: 'Gallery', icon: <IconList /> },
+              { id: 'list', name: 'List', icon: <IconGallery /> },
+            ]}
+            label={'View Mode'}
+            renderAnchor={({ selectedOption, setVisible }) => (
+              <IconButton
+                icon={selectedOption?.icon ?? <IconArrow />}
+                onPress={() => setVisible(true)}
+              />
+            )}
           />
 
           <View />

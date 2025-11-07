@@ -1,11 +1,11 @@
 import { TouchableOpacityProps } from 'react-native'
 
-import { BoxKeys } from '@components/box'
 import { IconProps } from '@components/icon'
+import { SemanticsType } from '@providers/theme'
 
 export interface ButtonProps extends TouchableOpacityProps {
   title: string
   icon?: React.ReactElement<IconProps>
   loading?: boolean
-  variant?: BoxKeys
+  variant?: keyof SemanticsType
 }

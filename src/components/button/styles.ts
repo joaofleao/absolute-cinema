@@ -1,6 +1,6 @@
 import { StyleSheet, ViewStyle } from 'react-native'
 
-import { BoxKeys } from '@components/box'
+import { ButtonProps } from './types'
 import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
@@ -10,7 +10,7 @@ type StylesReturn = {
   hide: ViewStyle
 }
 type StylesProps = {
-  variant: BoxKeys
+  variant: Required<ButtonProps>['variant']
 }
 
 const useStyles = ({ variant }: StylesProps): StylesReturn => {
