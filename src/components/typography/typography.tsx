@@ -5,37 +5,30 @@ import { TypographyProps } from './types'
 
 const Typography = ({
   style,
-  display,
-  header,
-  description,
-  section,
-  primary,
-  secondary,
-  title,
-  custom = true,
-  light,
-  inverse,
-  positive,
-  legend,
+  display = false,
+  onboardingAccent = false,
+  onboarding = false,
+  header = false,
+  title = true,
+  body = false,
+  description = false,
+  legend = false,
+  color = 'background',
   ...props
 }: TypographyProps): React.ReactElement => {
-  const styles = useStyles()
+  const styles = useStyles({ color })
 
   return (
     <Text
       style={[
-        custom && styles.custom,
-        display && styles.display,
-        header && styles.header,
-        description && styles.description,
-        section && styles.section,
-        primary && styles.primary,
-        secondary && styles.secondary,
         title && styles.title,
+        display && styles.display,
+        onboardingAccent && styles.onboardingAccent,
+        onboarding && styles.onboarding,
+        header && styles.header,
+        body && styles.body,
+        description && styles.description,
         legend && styles.legend,
-        light && styles.light,
-        inverse && styles.inverse,
-        positive && styles.positive,
         style,
       ]}
       {...props}

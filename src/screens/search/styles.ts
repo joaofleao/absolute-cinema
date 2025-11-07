@@ -15,7 +15,7 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
 
   const { top, bottom, right, left } = useSafeAreaInsets()
   const { width } = Dimensions.get('window')
@@ -23,7 +23,7 @@ const useStyles = (): StylesReturn => {
   return StyleSheet.create({
     safeArea: {
       flex: 1,
-      backgroundColor: colors.background.default,
+      backgroundColor: semantics.background.base.default,
       paddingTop: top,
       paddingBottom: bottom,
       paddingRight: right,

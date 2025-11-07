@@ -10,15 +10,15 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors, fonts } = useTheme()
+  const { semantics, fonts } = useTheme()
 
   return StyleSheet.create({
     root: {
-      borderColor: colors.container.stroke,
+      borderColor: semantics.container.stroke.default,
       borderWidth: 1,
       width: '100%',
       borderRadius: 12,
-      backgroundColor: colors.container.default,
+      backgroundColor: semantics.container.base.default,
       flexDirection: 'row',
       alignItems: 'center',
     },
@@ -39,7 +39,7 @@ const useStyles = (): StylesReturn => {
     input: {
       height: 40,
       letterSpacing: 1,
-      color: colors.foreground.default,
+      color: semantics.container.foreground.default,
       fontFamily: fonts.secondary.regular,
       padding: 8,
       paddingRight: 8 + 24 + 4,

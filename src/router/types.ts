@@ -6,6 +6,7 @@ export type StackProps = {
   password_recovery: undefined
   search: undefined
   auth: undefined
+  profile: undefined
 }
 
 export type ScreenProps<T extends keyof StackProps> = NativeStackScreenProps<StackProps, T>

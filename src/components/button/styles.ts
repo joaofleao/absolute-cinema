@@ -1,19 +1,20 @@
 import { StyleSheet, ViewStyle } from 'react-native'
 
+import { BoxKeys } from '@components/box'
 import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
   content: ViewStyle
-  primary: ViewStyle
-  secondary: ViewStyle
-  tertiary: ViewStyle
   loading: ViewStyle
   hide: ViewStyle
 }
+type StylesProps = {
+  variant: BoxKeys
+}
 
-const useStyles = (): StylesReturn => {
-  const { colors } = useTheme()
+const useStyles = ({ variant }: StylesProps): StylesReturn => {
+  const { semantics } = useTheme()
 
   return StyleSheet.create({
     root: {
@@ -22,22 +23,9 @@ const useStyles = (): StylesReturn => {
       paddingVertical: 8,
       borderRadius: 12,
       borderWidth: 1,
-
       height: 40,
-    },
-    primary: {
-      backgroundColor: '#E6E7E6',
-      borderColor: '#E6E7E6',
-    },
-    secondary: {
-      backgroundColor: colors.container.default,
-      borderColor: colors.container.stroke,
-    },
-    tertiary: {
-      borderWidth: 0,
-      paddingVertical: 0,
-      paddingHorizontal: 0,
-      height: 'auto',
+      backgroundColor: semantics[variant].base.default,
+      borderColor: semantics[variant].stroke.default,
     },
     content: {
       flexDirection: 'row',

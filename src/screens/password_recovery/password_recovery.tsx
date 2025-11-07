@@ -1,13 +1,11 @@
 import { Image, ScrollView, View } from 'react-native'
-import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
 import Typography from '@components/typography'
-import { routes, ScreenType } from '@router'
+import { ScreenType } from '@router'
 
 const PasswordRecovery: ScreenType<'password_recovery'> = ({ navigation, route }) => {
   const styles = useStyles()
-  const { t, i18n } = useTranslation()
 
   return (
     <>
@@ -20,12 +18,7 @@ const PasswordRecovery: ScreenType<'password_recovery'> = ({ navigation, route }
             />
 
             <View style={styles.title}>
-              <Typography
-                title
-                light
-              >
-                ABSOLUTE CINEMA
-              </Typography>
+              <Typography title>ABSOLUTE CINEMA</Typography>
             </View>
           </View>
 

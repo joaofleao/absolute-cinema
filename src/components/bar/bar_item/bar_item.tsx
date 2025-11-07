@@ -10,7 +10,7 @@ const Bar = ({ children, icon }: BarItemProps): React.ReactElement => {
 
   return (
     <TouchableOpacity style={style.root}>
-      <Typography custom>{children}</Typography>
+      <Typography title>{children}</Typography>
       {icon && <View style={style.icon}>{icon}</View>}
     </TouchableOpacity>
   )

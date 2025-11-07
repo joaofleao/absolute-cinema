@@ -14,7 +14,7 @@ const SearchInput = ({
 }: SearchInputProps): React.ReactElement => {
   const inputRef = useRef<TextInput>(null)
   const styles = useStyles()
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
   const { search } = useStrings()
 
   let timeoutId: NodeJS.Timeout
@@ -42,7 +42,7 @@ const SearchInput = ({
         style={styles.leading}
       >
         <IconMagnifyingGlass
-          color={colors.foreground.default}
+          color={semantics.container.foreground.default}
           size={16}
         />
       </Pressable>
@@ -50,9 +50,9 @@ const SearchInput = ({
       <TextInput
         ref={inputRef}
         placeholder={search.placeholder}
-        placeholderTextColor={colors.foreground.light}
-        selectionColor={colors.foreground.light}
-        cursorColor={colors.foreground.default}
+        placeholderTextColor={semantics.container.foreground.light}
+        selectionColor={semantics.container.foreground.light}
+        cursorColor={semantics.container.foreground.default}
         style={styles.input}
         onChangeText={handleChangeText}
         value={value}
@@ -65,7 +65,7 @@ const SearchInput = ({
           style={styles.trailing}
         >
           <IconX
-            color={colors.foreground.default}
+            color={semantics.container.foreground.default}
             size={16}
           />
         </Pressable>

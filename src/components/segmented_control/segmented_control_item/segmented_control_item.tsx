@@ -17,12 +17,7 @@ const SegmentedControlItem = ({
       style={[style.root, selected && style.selected]}
       {...props}
     >
-      <Typography
-        inverse={selected}
-        custom
-      >
-        {children}
-      </Typography>
+      <Typography color={selected ? 'accent' : undefined}>{children}</Typography>
     </TouchableOpacity>
   )
 }

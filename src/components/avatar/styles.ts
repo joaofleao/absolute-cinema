@@ -9,27 +9,24 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
 
   return StyleSheet.create({
     root: {
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: colors.container.stroke,
-      backgroundColor: colors.container.default,
+      borderColor: semantics.container.stroke.default,
+      backgroundColor: semantics.container.base.default,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8,
       overflow: 'hidden',
-      width: 40,
-      height: 40,
     },
     iconContainer: {
       padding: 8,
     },
     image: {
-      width: '100%',
-      height: '100%',
+      width: 40,
+      height: 40,
     },
   })
 }

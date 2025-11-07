@@ -7,7 +7,7 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
 
   return StyleSheet.create({
     root: {
@@ -17,8 +17,8 @@ const useStyles = (): StylesReturn => {
       height: 40,
       width: 40,
 
-      borderColor: colors.container.stroke,
-      backgroundColor: colors.container.default,
+      borderColor: semantics.container.stroke.default,
+      backgroundColor: semantics.container.base.default,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,

@@ -39,7 +39,7 @@ const PasswordInput = ({
 }: PasswordInputProps): React.ReactElement => {
   const inputRef = useRef<TextInput>(null)
   const styles = useStyles()
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
   const strings = useStrings()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -56,13 +56,13 @@ const PasswordInput = ({
     <View style={styles.container}>
       {match ? (
         <IconCheckCircle
-          color={colors.positive.base}
+          color={semantics.positive.foreground.default}
           width={16}
           height={16}
         />
       ) : (
         <IconAlert
-          color={colors.foreground.light}
+          color={semantics.background.foreground.light}
           width={16}
           height={16}
         />
@@ -70,8 +70,7 @@ const PasswordInput = ({
 
       <Typography
         legend
-        light
-        positive={match}
+        color={match ? 'positive' : undefined}
         style={styles.rule}
       >
         {strings.password.match}
@@ -83,35 +82,32 @@ const PasswordInput = ({
     <View style={styles.container}>
       {passwordValid ? (
         <IconCheckCircle
-          color={colors.positive.base}
+          color={semantics.positive.foreground.default}
           width={16}
           height={16}
         />
       ) : (
         <IconAlert
-          color={colors.foreground.light}
+          color={semantics.background.foreground.light}
           width={16}
           height={16}
         />
       )}
       <Typography
         legend
-        light
         style={styles.rule}
-        positive={oneDigit && oneUpperCase}
+        color={oneDigit && oneUpperCase ? 'positive' : undefined}
       >
         {strings.password.requirements}
         <Typography
           legend
-          light
-          positive={oneDigit}
+          color={oneDigit ? 'positive' : undefined}
         >
           {strings.password.digit}
         </Typography>
         <Typography
           legend
-          light
-          positive={oneUpperCase}
+          color={oneUpperCase ? 'positive' : undefined}
         >
           {strings.password.uppercase}
         </Typography>
@@ -127,7 +123,7 @@ const PasswordInput = ({
           style={styles.leading}
         >
           <IconLock
-            color={colors.foreground.default}
+            color={semantics.background.foreground.default}
             size={16}
           />
         </Pressable>
@@ -142,9 +138,9 @@ const PasswordInput = ({
               ? strings.password.confirmationPlaceholder
               : strings.password.placeholder
           }
-          placeholderTextColor={colors.foreground.light}
-          selectionColor={colors.foreground.light}
-          cursorColor={colors.foreground.default}
+          placeholderTextColor={semantics.background.foreground.light}
+          selectionColor={semantics.background.foreground.light}
+          cursorColor={semantics.background.foreground.default}
           style={styles.input}
           value={value}
           {...props}
@@ -156,12 +152,12 @@ const PasswordInput = ({
         >
           {showPassword ? (
             <IconEyeClosed
-              color={colors.foreground.default}
+              color={semantics.background.foreground.light}
               size={16}
             />
           ) : (
             <IconEyeOpen
-              color={colors.foreground.default}
+              color={semantics.background.foreground.light}
               size={16}
             />
           )}

@@ -16,7 +16,7 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
   const { width } = Dimensions.get('window')
   const { top, bottom, right, left } = useSafeAreaInsets()
 
@@ -26,7 +26,7 @@ const useStyles = (): StylesReturn => {
       paddingBottom: bottom,
       paddingRight: right,
       paddingLeft: left,
-      backgroundColor: colors.background.default,
+      backgroundColor: semantics.background.base.default,
       flex: 1,
       position: 'relative',
     },

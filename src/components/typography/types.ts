@@ -1,16 +1,16 @@
 import { TextProps } from 'react-native'
 
+import { BoxKeys } from '@components/box'
+
 export interface TypographyProps extends TextProps {
   display?: boolean
+  onboardingAccent?: boolean
+  onboarding?: boolean
   header?: boolean
-  description?: boolean
-  section?: boolean
-  primary?: boolean
-  secondary?: boolean
   title?: boolean
-  custom?: boolean
-  light?: boolean
-  inverse?: boolean
-  positive?: boolean
+  body?: boolean
+  description?: boolean
   legend?: boolean
+
+  color?: BoxKeys
 }

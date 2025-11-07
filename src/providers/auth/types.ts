@@ -1,1 +1,3 @@
-export interface AuthContextType {}
+export interface AuthContextType {
+  logged?: true
+}

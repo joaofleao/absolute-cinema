@@ -26,5 +26,10 @@
     "sign_up": "Register",
     "continue_with": "Continue with",
     "forgot_password": "Forgot password?"
+  },
+  "profile": {
+    "sign_out": "Sign Out",
+    "switch_to_ptbr": "Switch to Portuguese",
+    "switch_to_enus": "Switch to English"
   }
 }

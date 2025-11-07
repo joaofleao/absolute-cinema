@@ -7,7 +7,7 @@ const Icon = ({ size = 24, color: colorProp, ...rest }: IconProps): React.ReactE
   const theme = useTheme()
   const scale = size / 24
 
-  const color = colorProp || theme.colors.foreground.default
+  const color = colorProp || theme.semantics.background.foreground.default
   return (
     <Svg
       fill="none"

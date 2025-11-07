@@ -157,17 +157,15 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
               <View style={styles.gradientContainer}>
                 <RadialGradient
                   style={styles.gradient}
-                  colors={['#481010', '#000000']}
+                  colors={[
+                    theme.primitives.vibrant.ruby[15],
+                    theme.semantics.background.base.default,
+                  ]}
                   radius={300}
                   center={[width / 2, width]}
                 />
               </View>
-              <Typography
-                title
-                light
-              >
-                ABSOLUTE CINEMA
-              </Typography>
+              <Typography title>ABSOLUTE CINEMA</Typography>
             </View>
           </View>
 
@@ -180,8 +178,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
                     padding: 8,
                     borderRadius: 12,
                     borderWidth: 1,
-                    borderColor: theme.colors.container.stroke,
-                    backgroundColor: theme.colors.container.default,
+                    borderColor: theme.semantics.container.stroke.default,
+                    backgroundColor: theme.semantics.container.base.default,
                     flexDirection: 'row',
                     alignItems: 'center',
                     gap: 20,
@@ -198,11 +196,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
                   )}
 
                   <View style={{ flex: 1, justifyContent: 'space-around' }}>
-                    <Typography custom>{movie.title}</Typography>
-                    <Typography
-                      custom
-                      light
-                    >
+                    <Typography color="container">{movie.title}</Typography>
+                    <Typography color="container">
                       {new Date(movie.release_date).getFullYear()} • ⭐{' '}
                       {movie.vote_average.toFixed(1)}
                     </Typography>

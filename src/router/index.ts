@@ -7,6 +7,7 @@ export const routes: { [K in keyof StackProps]: K } = {
   password_recovery: 'password_recovery',
   search: 'search',
   auth: 'auth',
+  profile: 'profile',
 }
 
 export * from './types'

@@ -20,7 +20,7 @@ const EmailInput = ({
 }: EmailInputProps): React.ReactElement => {
   const inputRef = useRef<TextInput>(null)
   const styles = useStyles()
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
   const { email } = useStrings()
   const [error, setError] = useState<boolean>()
 
@@ -45,7 +45,7 @@ const EmailInput = ({
         style={styles.leading}
       >
         <IconEmail
-          color={colors.foreground.default}
+          color={semantics.container.foreground.default}
           size={16}
         />
       </Pressable>
@@ -57,9 +57,9 @@ const EmailInput = ({
         autoCorrect={false}
         ref={inputRef}
         placeholder={email.placeholder}
-        placeholderTextColor={colors.foreground.light}
-        selectionColor={colors.foreground.light}
-        cursorColor={colors.foreground.default}
+        placeholderTextColor={semantics.container.foreground.light}
+        selectionColor={semantics.container.foreground.light}
+        cursorColor={semantics.container.foreground.default}
         style={styles.input}
         value={value}
         onChangeText={handleChangeText}
@@ -73,7 +73,7 @@ const EmailInput = ({
           {error === false && (
             <IconAlert
               filled
-              color={colors.negative.base}
+              color={semantics.negative.foreground.default}
               size={16}
             />
           )}
@@ -81,7 +81,7 @@ const EmailInput = ({
           {error === true && (
             <IconCheckCircle
               filled
-              color={colors.positive.base}
+              color={semantics.positive.foreground.default}
               size={16}
             />
           )}

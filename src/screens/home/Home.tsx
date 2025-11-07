@@ -8,24 +8,29 @@ import {
   View,
 } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
-import { useQuery } from 'convex/react'
+import { Authenticated, Unauthenticated, useQuery } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
 import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
 import Avatar from '@components/avatar'
 import Bar from '@components/bar'
+import Button from '@components/button'
 import DottedText from '@components/dotted_text'
-import { IconArrow, IconChevron, IconLanguages, IconMagnifyingGlass } from '@components/icon'
+import { IconArrow, IconChevron, IconMagnifyingGlass } from '@components/icon'
 import IconButton from '@components/icon_button'
 import Typography from '@components/typography'
+import { useTheme } from '@providers/theme'
 import { routes, ScreenType } from '@router'
 
 const Home: ScreenType<'home'> = ({ navigation, route }) => {
   const styles = useStyles()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const theme = useTheme()
 
-  const watchlist = useQuery(api.movies.getUserWatchlist) || []
+  // const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
+
+  // const watchlist = useQuery(api.movies.getUserWatchlist) || []
   const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
 
   const { width } = Dimensions.get('window')
@@ -34,12 +39,11 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       <View style={styles.gradientContainer}>
         <RadialGradient
           style={styles.gradient}
-          colors={['#481010', '#000000']}
+          colors={[theme.primitives.vibrant.ruby[15], theme.semantics.background.base.default]}
           radius={300}
           center={[width / 2, width]}
         />
       </View>
-      {/* <View> */}
       <View style={styles.header}>
         <Image
           style={styles.logo}
@@ -47,25 +51,18 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         />
 
         <View style={styles.title}>
-          <Typography
-            title
-            light
-          >
-            ABSOLUTE
-          </Typography>
+          <Typography>ABSOLUTE</Typography>
           <Typography display>CINEMA</Typography>
         </View>
-        <View style={styles.content}>
-          <Bar.Root>
-            <Bar.Item icon={<IconChevron />}>2025</Bar.Item>
-            <Bar.Item icon={<IconChevron />}>{t('home:watched')}</Bar.Item>
-            <Bar.Item icon={<IconArrow />}>{t('home:by_date')}</Bar.Item>
-          </Bar.Root>
-
-          {watchlist.length === 0 && watchedMovies.length === 0 && (
-            <DottedText>{t('home:empty_state')}</DottedText>
-          )}
-        </View>
+        <Authenticated>
+          <View style={styles.content}>
+            <Bar.Root>
+              <Bar.Item icon={<IconChevron />}>2025</Bar.Item>
+              <Bar.Item icon={<IconChevron />}>{t('home:watched')}</Bar.Item>
+              <Bar.Item icon={<IconArrow />}>{t('home:by_date')}</Bar.Item>
+            </Bar.Root>
+          </View>
+        </Authenticated>
       </View>
     </>
   )
@@ -98,6 +95,13 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         data={watchedMovies}
         keyExtractor={(movie) => movie._id + movie.watchedAt.toString()}
         renderItem={renderItem}
+        ListEmptyComponent={() => (
+          <Authenticated>
+            <View style={styles.content}>
+              <DottedText>{t('home:empty_state')}</DottedText>
+            </View>
+          </Authenticated>
+        )}
       />
 
       <View style={styles.footer}>
@@ -108,14 +112,23 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       </View>
 
       <View style={styles.head}>
-        <IconButton
-          icon={<IconLanguages />}
-          onPress={() => {
-            i18n.changeLanguage(i18n.language === 'en-US' ? 'pt-BR' : 'en-US')
-          }}
-        />
+        <Authenticated>
+          <Button
+            icon={<IconArrow />}
+            title="change view mode"
+          />
+          <View />
 
-        <Avatar onPress={() => navigation.navigate(routes.auth)} />
+          <Avatar onPress={() => navigation.navigate(routes.profile)} />
+        </Authenticated>
+
+        <Unauthenticated>
+          <View />
+          <Avatar
+            onPress={() => navigation.navigate(routes.auth)}
+            label={t('auth:sign_in')}
+          />
+        </Unauthenticated>
       </View>
     </>
   )

@@ -8,53 +8,33 @@ import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 
 const Button = ({
-  variant = 'secondary',
+  variant = 'container',
   title,
   icon,
   style,
   loading = false,
   ...props
 }: ButtonProps): React.ReactElement => {
-  const styles = useStyles()
+  const styles = useStyles({ variant })
   const theme = useTheme()
 
   return (
     <TouchableOpacity
-      style={[
-        styles.root,
-        variant === 'primary' && styles.primary,
-        variant === 'secondary' && styles.secondary,
-        variant === 'tertiary' && styles.tertiary,
-        style,
-      ]}
+      style={[styles.root, style]}
       {...props}
     >
       <View style={[styles.content, loading && styles.hide]}>
-        <Typography
-          inverse={variant === 'primary'}
-          custom
-        >
-          {title}
-        </Typography>
+        <Typography color={variant}>{title}</Typography>
 
         {icon &&
           React.cloneElement<IconProps>(icon, {
-            color:
-              variant === 'primary'
-                ? theme.colors.foreground.inverse
-                : theme.colors.foreground.default,
+            color: theme.semantics[variant].foreground.default,
             size: 16,
           })}
       </View>
 
       <View style={[styles.loading, !loading && styles.hide]}>
-        <ActivityIndicator
-          color={
-            variant === 'primary'
-              ? theme.colors.foreground.inverse
-              : theme.colors.foreground.default
-          }
-        />
+        <ActivityIndicator color={theme.semantics[variant].foreground.default} />
       </View>
     </TouchableOpacity>
   )

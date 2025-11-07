@@ -10,7 +10,7 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors, fonts } = useTheme()
+  const { semantics, fonts } = useTheme()
 
   return StyleSheet.create({
     container: {
@@ -22,8 +22,8 @@ const useStyles = (): StylesReturn => {
     codeContainer: {
       borderWidth: 1,
       borderRadius: 12,
-      backgroundColor: colors.container.default,
-      borderColor: colors.container.stroke,
+      backgroundColor: semantics.container.base.default,
+      borderColor: semantics.container.stroke.default,
 
       height: 60,
       width: 44,
@@ -33,7 +33,7 @@ const useStyles = (): StylesReturn => {
     codeText: {
       fontFamily: fonts.secondary.black,
       fontSize: 28,
-      color: colors.foreground.default,
+      color: semantics.container.foreground.default,
     },
     hiddenInput: {
       ...StyleSheet.absoluteFillObject,

@@ -12,7 +12,7 @@ const Icon = ({
   const theme = useTheme()
   const scale = size / 24
 
-  const color = colorProp || theme.colors.foreground.default
+  const color = colorProp || theme.semantics.background.foreground.default
 
   const filledPath = (
     <Path

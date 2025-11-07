@@ -18,6 +18,7 @@ import Auth from '@screens/auth'
 import Home from '@screens/home'
 import Movie from '@screens/movie'
 import PasswordRecovery from '@screens/password_recovery'
+import Profile from '@screens/profile'
 import Search from '@screens/search'
 import print from '@utils/print'
 
@@ -58,7 +59,7 @@ SplashScreen.setOptions({
 
 const Router = (): React.ReactNode => {
   const [appReady, setAppReady] = React.useState(false)
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
   const styles = useStyles()
 
   React.useEffect(() => {
@@ -80,7 +81,7 @@ const Router = (): React.ReactNode => {
   const screenOptions = {
     headerShown: false,
     contentStyle: {
-      backgroundColor: colors.container.filled,
+      backgroundColor: semantics.background.base.default,
     },
   }
 
@@ -90,7 +91,7 @@ const Router = (): React.ReactNode => {
     <NavigationContainer>
       <StatusBar
         animated={true}
-        backgroundColor={colors.background.default}
+        backgroundColor={semantics.background.base.default}
         barStyle={'light-content'}
       />
 
@@ -114,6 +115,15 @@ const Router = (): React.ReactNode => {
           <Stack.Screen
             name={routes.search}
             component={Search}
+          />
+          <Stack.Screen
+            name={routes.profile}
+            component={Profile}
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+              sheetInitialDetentIndex: 'last',
+            }}
           />
           <Stack.Screen
             name={routes.auth}

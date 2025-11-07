@@ -40,10 +40,10 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       email,
       password,
     })
-      .catch((error) => Alert.alert(error.message))
       .then(() => {
         setFlow('email-verification')
       })
+      .catch((error) => Alert.alert(error.message))
       .finally(() => setLoading(false))
   }
 
@@ -54,6 +54,9 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       email,
       password,
     })
+      .then(() => {
+        navigation.pop()
+      })
       .catch((error) => Alert.alert(error.message))
       .finally(() => setLoading(false))
   }
@@ -87,7 +90,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           />
           <Button
             title={t('auth:forgot_password')}
-            variant="tertiary"
+            variant="background"
             onPress={() => {
               Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
             }}
@@ -98,18 +101,13 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           <Button
             loading={loading}
             title={t('auth:sign_in')}
-            variant="primary"
+            variant="accent"
             onPress={handleSignIn}
           />
         </Row>
       </View>
       <View style={styles.footer}>
-        <Typography
-          custom
-          light
-        >
-          {t('auth:continue_with')}
-        </Typography>
+        <Typography>{t('auth:continue_with')}</Typography>
         <Row wrap>
           <Button
             title="apple"
@@ -141,7 +139,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
         <Button
           loading={loading}
           title={t('auth:sign_in')}
-          variant="primary"
+          variant="accent"
           onPress={handleVerify}
         />
       </Row>
@@ -168,7 +166,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       <Row wrap>
         <Button
           title={t('auth:sign_up')}
-          variant="primary"
+          variant="accent"
           onPress={handleSignUp}
         />
       </Row>
