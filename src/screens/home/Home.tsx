@@ -69,14 +69,24 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
   )
 
   const renderGalleryItem: ListRenderItem<(typeof watchedMovies)[number]> = ({ item, index }) => (
-    <GalleryItem
-      onPress={() => alert('Pressed ' + item._id)}
-      image={item.posterPath}
-    />
+    <>
+      <GalleryItem
+        onPress={() => alert('Pressed ' + item.title)}
+        image={item.posterPath}
+      />
+      {watchedMovies.length % 3 !== 0 && index === watchedMovies.length - 1 && (
+        <>
+          <View style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }} />
+          {watchedMovies.length % 3 === 1 && (
+            <View style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }} />
+          )}
+        </>
+      )}
+    </>
   )
   const renderListItem: ListRenderItem<(typeof watchedMovies)[number]> = ({ item, index }) => (
     <ListItem
-      onPress={() => alert('Pressed ' + item._id)}
+      onPress={() => alert('Pressed ' + item.title)}
       image={item.posterPath}
       title={item.title}
       date={new Date(item.watchedAt).toLocaleDateString()}
