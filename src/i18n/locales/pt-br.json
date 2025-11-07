@@ -14,8 +14,7 @@
   "home": {
     "watched": "Assistidos",
     "by_date": "Por Data",
-    "empty_state": "Sem filmes ainda",
-    "unauthenticated_message": "Faça login para marcar filmes"
+    "empty_state": "Sem filmes ainda"
   },
   "search": {
     "empty_state": "Nenhum filme encontrado",
