@@ -82,6 +82,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
   const searchMovies = useAction(api.movies.searchMovies)
   const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
+  const markAsWatched = useMutation(api.movies.markAsWatched)
   const addToWatchlist = useMutation(api.movies.addToWatchlist)
 
   const handleSearch = async (query: string): Promise<void> => {
@@ -97,7 +98,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     }
   }
 
-  const handleAddToWatchlist = async (movie: TMDBMovie): Promise<void> => {
+  const handleSave = async (movie: TMDBMovie): Promise<void> => {
     try {
       const genres = movie.genre_ids.map((id) => genreMap[id]).filter(Boolean)
 
@@ -112,10 +113,36 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         genres,
       })
 
-      await addToWatchlist({ movieId })
-      Alert.alert(`Added "${movie.title}" to your watchlist`)
+      if (movieId)
+        await addToWatchlist({ movieId }).then(() => {
+          Alert.alert(`Added "${movie.title}" to your watchlist`)
+        })
     } catch (error: any) {
       Alert.alert(error.message || 'Failed to add movie to watchlist')
+    }
+  }
+
+  const handleWatch = async (movie: TMDBMovie): Promise<void> => {
+    try {
+      const genres = movie.genre_ids.map((id) => genreMap[id]).filter(Boolean)
+
+      const movieId = await getOrCreateMovie({
+        tmdbId: movie.id,
+        title: movie.title,
+        overview: movie.overview,
+        posterPath: movie.poster_path,
+        backdropPath: movie.backdrop_path,
+        releaseDate: movie.release_date,
+        voteAverage: movie.vote_average,
+        genres,
+      })
+
+      if (movieId)
+        await markAsWatched({ movieId }).then(() => {
+          Alert.alert(`Marked "${movie.title}" as watched`)
+        })
+    } catch (error: any) {
+      Alert.alert(error.message || 'Failed to mark movie as watched')
     }
   }
 
@@ -181,12 +208,12 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
                     </Typography>
                     <View style={{ flexDirection: 'row', gap: 8 }}>
                       <Button
-                        onPress={() => handleAddToWatchlist(movie)}
+                        onPress={() => handleSave(movie)}
                         title={t('search:save')}
                         icon={<IconAddCircle />}
                       />
                       <Button
-                        onPress={() => handleAddToWatchlist(movie)}
+                        onPress={() => handleWatch(movie)}
                         title={t('search:watch')}
                         icon={<IconCheckCircle />}
                       />
