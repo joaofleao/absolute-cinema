@@ -13,7 +13,7 @@ const Typography = ({
   body = false,
   description = false,
   legend = false,
-  color = 'background',
+  color,
   ...props
 }: TypographyProps): React.ReactElement => {
   const styles = useStyles({ color })

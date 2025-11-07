@@ -1,7 +1,5 @@
 import { TextProps } from 'react-native'
 
-import { BoxKeys } from '@components/box'
-
 export interface TypographyProps extends TextProps {
   display?: boolean
   onboardingAccent?: boolean
@@ -12,5 +10,5 @@ export interface TypographyProps extends TextProps {
   description?: boolean
   legend?: boolean
 
-  color?: BoxKeys
+  color?: string
 }

@@ -70,7 +70,7 @@ const PasswordInput = ({
 
       <Typography
         legend
-        color={match ? 'positive' : undefined}
+        color={match ? semantics.positive.foreground.default : undefined}
         style={styles.rule}
       >
         {strings.password.match}
@@ -96,18 +96,18 @@ const PasswordInput = ({
       <Typography
         legend
         style={styles.rule}
-        color={oneDigit && oneUpperCase ? 'positive' : undefined}
+        color={oneDigit && oneUpperCase ? semantics.positive.foreground.default : undefined}
       >
         {strings.password.requirements}
         <Typography
           legend
-          color={oneDigit ? 'positive' : undefined}
+          color={oneDigit ? semantics.positive.foreground.default : undefined}
         >
           {strings.password.digit}
         </Typography>
         <Typography
           legend
-          color={oneUpperCase ? 'positive' : undefined}
+          color={oneUpperCase ? semantics.positive.foreground.default : undefined}
         >
           {strings.password.uppercase}
         </Typography>

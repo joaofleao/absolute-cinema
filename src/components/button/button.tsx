@@ -24,7 +24,7 @@ const Button = ({
       {...props}
     >
       <View style={[styles.content, loading && styles.hide]}>
-        <Typography color={variant}>{title}</Typography>
+        <Typography color={theme.semantics[variant].foreground.default}>{title}</Typography>
 
         {icon &&
           React.cloneElement<IconProps>(icon, {

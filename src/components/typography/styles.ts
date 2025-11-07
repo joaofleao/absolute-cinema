@@ -1,6 +1,5 @@
 import { StyleSheet, TextStyle } from 'react-native'
 
-import { BoxKeys } from '@components/box'
 import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
@@ -15,7 +14,7 @@ type StylesReturn = {
 }
 
 type StylesProps = {
-  color: BoxKeys
+  color?: string
 }
 
 const useStyles = ({ color }: StylesProps): StylesReturn => {
@@ -23,7 +22,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
 
   return StyleSheet.create({
     display: {
-      color: semantics[color].foreground.default,
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.primary.regular,
       fontSize: 64,
       lineHeight: 88,
@@ -32,7 +31,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
     },
 
     onboardingAccent: {
-      color: semantics[color].foreground.default,
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.tertiary.bold,
       fontSize: 24,
       lineHeight: 36,
@@ -41,7 +40,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
     },
 
     onboarding: {
-      color: semantics[color].foreground.light,
+      color: color ?? semantics.background.foreground.light,
       fontFamily: fonts.tertiary.bold,
       fontSize: 24,
       lineHeight: 36,
@@ -49,7 +48,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
       textTransform: 'uppercase',
     },
     header: {
-      color: semantics[color].foreground.default,
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.tertiary.bold,
       fontSize: 14,
       lineHeight: 24,
@@ -57,7 +56,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
       textTransform: 'uppercase',
     },
     title: {
-      color: semantics[color].foreground.default,
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.tertiary.bold,
       fontSize: 12,
       lineHeight: 24,
@@ -65,7 +64,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
       textTransform: 'uppercase',
     },
     body: {
-      color: semantics[color].foreground.default,
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.secondary.regular,
       fontSize: 12,
       lineHeight: 24,
@@ -73,7 +72,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
       textTransform: 'none',
     },
     description: {
-      color: semantics[color].foreground.light,
+      color: color ?? semantics.background.foreground.light,
       fontFamily: fonts.secondary.regular,
       fontSize: 12,
       lineHeight: 24,
@@ -81,7 +80,7 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
       textTransform: 'none',
     },
     legend: {
-      color: semantics[color].foreground.light,
+      color: color ?? semantics.background.foreground.light,
       fontFamily: fonts.secondary.bold,
       fontSize: 10,
       lineHeight: 16,
