@@ -78,13 +78,6 @@ const Router = (): React.ReactNode => {
     prepare()
   }, [])
 
-  const screenOptions = {
-    headerShown: false,
-    contentStyle: {
-      backgroundColor: semantics.background.base.default,
-    },
-  }
-
   if (!appReady) return null
 
   return (
@@ -99,7 +92,14 @@ const Router = (): React.ReactNode => {
         style={styles.container}
         onLayout={SplashScreen.hideAsync}
       >
-        <Stack.Navigator screenOptions={screenOptions}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: semantics.background.base.default,
+            },
+          }}
+        >
           <Stack.Screen
             name={routes.home}
             component={Home}
@@ -116,24 +116,28 @@ const Router = (): React.ReactNode => {
             name={routes.search}
             component={Search}
           />
-          <Stack.Screen
-            name={routes.profile}
-            component={Profile}
-            options={{
+
+          <Stack.Group
+            screenOptions={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
               sheetInitialDetentIndex: 'last',
+              sheetCornerRadius: 0,
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
             }}
-          />
-          <Stack.Screen
-            name={routes.auth}
-            component={Auth}
-            options={{
-              presentation: 'formSheet',
-              sheetAllowedDetents: 'fitToContents',
-              sheetInitialDetentIndex: 'last',
-            }}
-          />
+          >
+            <Stack.Screen
+              name={routes.profile}
+              component={Profile}
+            />
+
+            <Stack.Screen
+              name={routes.auth}
+              component={Auth}
+            />
+          </Stack.Group>
         </Stack.Navigator>
 
         <LinearGradient

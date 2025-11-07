@@ -83,19 +83,18 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           onChangeText={setEmail}
         />
 
-        <View style={styles.passwordWithForget}>
-          <PasswordInput
-            value={password}
-            onChangeText={setPassword}
-          />
+        <PasswordInput
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Row wrap>
           <Button
             title={t('auth:forgot_password')}
-            variant="background"
             onPress={() => {
               Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
             }}
           />
-        </View>
+        </Row>
 
         <Row wrap>
           <Button

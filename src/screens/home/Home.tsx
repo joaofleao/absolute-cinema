@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Dimensions,
   FlatList,
@@ -15,9 +16,14 @@ import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
 import Avatar from '@components/avatar'
 import Bar from '@components/bar'
-import Button from '@components/button'
 import DottedText from '@components/dotted_text'
-import { IconArrow, IconChevron, IconMagnifyingGlass } from '@components/icon'
+import {
+  IconArrow,
+  IconChevron,
+  IconGallery,
+  IconList,
+  IconMagnifyingGlass,
+} from '@components/icon'
 import IconButton from '@components/icon_button'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
@@ -28,7 +34,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
   const { t } = useTranslation()
   const theme = useTheme()
 
-  // const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
+  const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
 
   // const watchlist = useQuery(api.movies.getUserWatchlist) || []
   const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
@@ -113,10 +119,13 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
 
       <View style={styles.head}>
         <Authenticated>
-          <Button
-            icon={<IconArrow />}
-            title="change view mode"
+          <IconButton
+            icon={viewMode === 'gallery' ? <IconList /> : <IconGallery />}
+            onPress={() => {
+              setViewMode((old) => (old === 'gallery' ? 'list' : 'gallery'))
+            }}
           />
+
           <View />
 
           <Avatar onPress={() => navigation.navigate(routes.profile)} />

@@ -28,6 +28,7 @@ const semantics = {
 
   container: {
     base: {
+      original: color(primitives.neutral[5], 1),
       default: color(primitives.neutral[5], 0.7),
       pressed: color(primitives.neutral[15], 0.7),
     },
