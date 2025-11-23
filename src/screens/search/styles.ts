@@ -1,64 +1,61 @@
-import { Dimensions, StyleSheet, ViewStyle } from 'react-native'
+import { Dimensions, ImageStyle, StyleSheet, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useTheme } from '@providers/theme'
-
 type StylesReturn = {
-  safeArea: ViewStyle
-  root: ViewStyle
+  logo: ImageStyle
   title: ViewStyle
-  header: ViewStyle
+
   content: ViewStyle
-  footer: ViewStyle
-  gradientContainer: ViewStyle
   gradient: ViewStyle
+  gradientContainer: ViewStyle
+  footer: ViewStyle
+  header: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
-  const { semantics } = useTheme()
-
-  const { top, bottom, right, left } = useSafeAreaInsets()
   const { width } = Dimensions.get('window')
+  const { top, bottom } = useSafeAreaInsets()
 
   return StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: semantics.background.base.default,
-      paddingTop: top,
-      paddingBottom: bottom,
-      paddingRight: right,
-      paddingLeft: left,
+    logo: {
+      width: 153,
+      height: 118,
     },
-    gradientContainer: {
-      position: 'absolute',
-      alignSelf: 'center',
-      top: -width / 3,
-    },
-    gradient: {
-      height: width * 2,
-      width: width,
-    },
-    root: {
-      flex: 1,
-    },
-    header: {
-      alignItems: 'center',
-      gap: 20,
-      paddingBlock: 20,
-    },
+
     title: {
       alignItems: 'center',
       justifyContent: 'center',
     },
     content: {
       alignItems: 'center',
+      minHeight: 200,
       justifyContent: 'center',
-      gap: 12,
-      paddingHorizontal: 12,
+    },
+    gradientContainer: {
+      position: 'absolute',
+      alignSelf: 'center',
+      top: -width / 2,
+    },
+    gradient: {
+      height: width * 2,
+      width: width,
     },
     footer: {
+      position: 'absolute',
+      bottom,
+      paddingHorizontal: 16,
+      width: '100%',
+    },
+    header: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      width: '100%',
+      position: 'absolute',
+      top,
       paddingHorizontal: 20,
-      paddingVertical: 12,
+      paddingBottom: 20,
+      maxWidth: '100%',
+      alignSelf: 'flex-end',
     },
   })
 }

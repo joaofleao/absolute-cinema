@@ -3,19 +3,21 @@ import { v } from 'convex/values'
 import { action, mutation, query } from './_generated/server'
 import { getAuthUserId } from '@convex-dev/auth/server'
 
-// Search movies using TMDB API
 export const searchMovies = action({
-  args: { query: v.string() },
+  args: { query: v.string(), language: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(args.query)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.TMDB_BEARER_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
+    let url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(args.query)}`
+
+    if (args.language) {
+      url += `&language=${encodeURIComponent(args.language)}`
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${process.env.TMDB_BEARER_TOKEN}`,
+        accept: 'application/json',
       },
-    )
+    })
 
     if (!response.ok) {
       throw new Error('Failed to search movies')
@@ -31,12 +33,10 @@ export const getOrCreateMovie = mutation({
   args: {
     tmdbId: v.number(),
     title: v.string(),
-    overview: v.string(),
     posterPath: v.optional(v.string()),
-    backdropPath: v.optional(v.string()),
     releaseDate: v.string(),
     voteAverage: v.number(),
-    genres: v.array(v.string()),
+    originalLanguage: v.string(),
   },
   handler: async (ctx, args) => {
     // Check if movie already exists
@@ -54,6 +54,22 @@ export const getOrCreateMovie = mutation({
   },
 })
 
+export const getMovie = mutation({
+  args: {
+    tmdbId: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const existingMovie = await ctx.db
+      .query('movies')
+      .withIndex('by_tmdb_id', (q) => q.eq('tmdbId', args.tmdbId))
+      .unique()
+
+    if (existingMovie) {
+      return existingMovie
+    }
+  },
+})
+
 // Add movie to watchlist
 export const addToWatchlist = mutation({
   args: { movieId: v.id('movies') },
@@ -68,7 +84,8 @@ export const addToWatchlist = mutation({
       .unique()
 
     if (existing) {
-      throw new Error('Movie already in watchlist')
+      await ctx.db.patch(existing._id, { addedAt: Date.now() })
+      return existing._id
     }
 
     return await ctx.db.insert('watchlist', {
@@ -99,7 +116,7 @@ export const removeFromWatchlist = mutation({
 
 // Mark movie as watched
 export const markAsWatched = mutation({
-  args: { movieId: v.id('movies') },
+  args: { movieId: v.id('movies'), watchedAt: v.number() },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx)
     if (!userId) throw new Error('Not authenticated')
@@ -108,7 +125,7 @@ export const markAsWatched = mutation({
     await ctx.db.insert('watchedMovies', {
       userId,
       movieId: args.movieId,
-      watchedAt: Date.now(),
+      watchedAt: args.watchedAt,
     })
 
     // Remove from watchlist if it exists

@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { Dimensions, FlatList, Image, ListRenderItem, View } from 'react-native'
+import React, { useState } from 'react'
+import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
-import { Authenticated, Unauthenticated, useQuery } from 'convex/react'
+import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
 import { api } from '../../../convex/_generated/api'
@@ -9,30 +9,125 @@ import useStyles from './styles'
 import Avatar from '@components/avatar'
 import Bar from '@components/bar'
 import DottedText from '@components/dotted_text'
-import GalleryItem from '@components/gallery_item'
+import GalleryView from '@components/gallery_view'
 import {
+  IconAddCircle,
   IconArrow,
+  IconCheckCircle,
   IconChevron,
   IconGallery,
   IconList,
   IconMagnifyingGlass,
 } from '@components/icon'
 import IconButton from '@components/icon_button'
-import ListItem from '@components/list_item'
+import ListView from '@components/list_view'
+import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import Select from '@components/select'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { routes, ScreenType } from '@router'
+import { LanguageCode, languages } from '@utils/languages'
 
 const Home: ScreenType<'home'> = ({ navigation, route }) => {
   const styles = useStyles()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const theme = useTheme()
 
-  const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
+  const getMovie = useMutation(api.movies.getMovie)
+  const markAsWatched = useMutation(api.movies.markAsWatched)
+  const addToWatchlist = useMutation(api.movies.addToWatchlist)
 
-  // const watchlist = useQuery(api.movies.getUserWatchlist) || []
+  const watchlist = useQuery(api.movies.getUserWatchlist) || []
   const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
+  const uniqueYears = watchedMovies
+    .map((movie) => new Date(movie.watchedAt).getFullYear())
+    .filter((year, index, self) => self.indexOf(year) === index)
+    .map((year) => ({
+      id: year,
+      name: year.toString(),
+    }))
+
+  const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
+  const [year, setYear] = useState<number>(uniqueYears.length === 0 ? 0 : new Date().getFullYear())
+
+  const [list, setList] = useState<'watchlist' | 'watchedMovies'>('watchedMovies')
+  const [sort, setSort] = useState<'ascending' | 'descending'>('ascending')
+  const [saveLoading, setSaveLoading] = useState<number>()
+  const [watchLoading, setWatchLoading] = useState<number>()
+
+  const isSaveLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
+    return movie === saveLoading
+  }
+  const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
+    setSaveLoading(movie)
+    try {
+      const existingMovie = await getMovie({ tmdbId: movie })
+      if (existingMovie)
+        await addToWatchlist({ movieId: existingMovie._id }).then(() => {
+          Alert.alert(`"${existingMovie.title}" added to your watchlist`)
+        })
+    } catch (error: any) {
+      Alert.alert(error.message || 'Failed to add movie to watchlist')
+    } finally {
+      setSaveLoading(undefined)
+    }
+  }
+
+  const isWatchLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
+    return movie === watchLoading
+  }
+
+  const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
+    setWatchLoading(movie)
+    try {
+      const existingMovie = await getMovie({ tmdbId: movie })
+
+      if (existingMovie)
+        await markAsWatched({ movieId: existingMovie._id, watchedAt: Date.now() }).then(() => {
+          Alert.alert(`"${existingMovie.title}" marked as watched`)
+        })
+    } catch (error: any) {
+      Alert.alert(error.message || 'Failed to mark movie as watched')
+    } finally {
+      setWatchLoading(undefined)
+    }
+  }
+
+  const data = {
+    watchlist: watchlist
+      .sort((a, b) =>
+        sort === 'ascending'
+          ? new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()
+          : new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime(),
+      )
+      .filter((movie) => new Date(movie.addedAt).getFullYear() === year || year === 0)
+      .map((movie) => ({
+        _id: movie.tmdbId,
+        title: movie.title,
+        posterPath: movie.posterPath,
+        date: new Date(movie.addedAt).toLocaleDateString(),
+        voteAverage: movie.voteAverage,
+        language:
+          languages[movie.originalLanguage as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+      })),
+
+    watchedMovies: watchedMovies
+      .sort((a, b) =>
+        sort === 'ascending'
+          ? new Date(a.watchedAt).getTime() - new Date(b.watchedAt).getTime()
+          : new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime(),
+      )
+      .filter((movie) => new Date(movie.watchedAt).getFullYear() === year || year === 0)
+      .map((movie) => ({
+        _id: movie.tmdbId,
+        title: movie.title,
+        posterPath: movie.posterPath,
+        date: new Date(movie.watchedAt).toLocaleDateString(),
+        voteAverage: movie.voteAverage,
+        language:
+          languages[movie.originalLanguage as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+      })),
+  }
 
   const { width } = Dimensions.get('window')
   const header = (
@@ -45,7 +140,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           center={[width / 2, width]}
         />
       </View>
-      <View style={styles.header}>
+      <View style={styles.banner}>
         <Image
           style={styles.logo}
           source={require('@assets/mascot.png')}
@@ -58,9 +153,53 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         <Authenticated>
           <View style={styles.content}>
             <Bar.Root>
-              <Bar.Item icon={<IconChevron />}>2025</Bar.Item>
-              <Bar.Item icon={<IconChevron />}>{t('home:watched')}</Bar.Item>
-              <Bar.Item icon={<IconArrow />}>{t('home:by_date')}</Bar.Item>
+              <Select
+                label="select year"
+                data={[{ name: 'All', id: 0 }, ...uniqueYears]}
+                onSelect={setYear}
+                selected={year}
+                renderAnchor={({ selectedOption, setVisible, visible }) => (
+                  <Bar.Item
+                    onPress={() => setVisible(true)}
+                    icon={<IconChevron />}
+                  >
+                    {selectedOption?.name as string}
+                  </Bar.Item>
+                )}
+              />
+
+              <Select
+                label="select year"
+                data={[
+                  { id: 'watchedMovies', name: t('home:watched') },
+                  { id: 'watchlist', name: t('home:watchlist') },
+                ]}
+                onSelect={setList}
+                selected={list}
+                renderAnchor={({ selectedOption, setVisible, visible }) => (
+                  <Bar.Item
+                    onPress={() => setVisible(true)}
+                    icon={<IconChevron />}
+                  >
+                    {selectedOption?.name as string}
+                  </Bar.Item>
+                )}
+              />
+
+              <Bar.Item
+                onPress={() =>
+                  setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))
+                }
+                icon={
+                  <IconArrow
+                    style={{
+                      transform: [{ rotate: sort === 'ascending' ? '0deg' : '180deg' }],
+                    }}
+                  />
+                }
+              >
+                {t('home:by_date')}
+              </Bar.Item>
             </Bar.Root>
           </View>
         </Authenticated>
@@ -68,75 +207,41 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
     </>
   )
 
-  const renderGalleryItem: ListRenderItem<(typeof watchedMovies)[number]> = ({ item, index }) => (
-    <>
-      <GalleryItem
-        onPress={() => alert('Pressed ' + item.title)}
-        image={item.posterPath}
-      />
-      {watchedMovies.length % 3 !== 0 && index === watchedMovies.length - 1 && (
-        <>
-          <View style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }} />
-          {watchedMovies.length % 3 === 1 && (
-            <View style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }} />
-          )}
-        </>
-      )}
-    </>
-  )
-  const renderListItem: ListRenderItem<(typeof watchedMovies)[number]> = ({ item, index }) => (
-    <ListItem
-      onPress={() => alert('Pressed ' + item.title)}
-      image={item.posterPath}
-      title={item.title}
-      date={new Date(item.watchedAt).toLocaleDateString()}
-    />
+  const emptyState = (
+    <Authenticated>
+      <View style={styles.content}>
+        <DottedText>{t('home:empty_state')}</DottedText>
+      </View>
+    </Authenticated>
   )
 
   return (
     <>
       {viewMode === 'gallery' && (
-        <FlatList
-          numColumns={3}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-          }}
-          contentContainerStyle={{
-            padding: 16,
-            gap: 16,
-          }}
-          style={styles.root}
-          ListHeaderComponent={header}
-          data={watchedMovies}
-          keyExtractor={(movie) => movie._id + movie.watchedAt.toString()}
-          renderItem={renderGalleryItem}
-          ListEmptyComponent={() => (
-            <Authenticated>
-              <View style={styles.content}>
-                <DottedText>{t('home:empty_state')}</DottedText>
-              </View>
-            </Authenticated>
-          )}
+        <GalleryView
+          data={data[list]}
+          header={header}
+          empty={emptyState}
         />
       )}
+
       {viewMode === 'list' && (
-        <FlatList
-          contentContainerStyle={{
-            padding: 16,
-            gap: 16,
+        <ListView
+          data={data[list]}
+          header={header}
+          empty={emptyState}
+          topButton={{
+            title: t('search:watch'),
+            icon: <IconCheckCircle />,
+            loading: isWatchLoading,
+            onPress: handleWatch,
           }}
-          style={styles.root}
-          ListHeaderComponent={header}
-          data={watchedMovies}
-          keyExtractor={(movie) => movie._id + movie.watchedAt.toString()}
-          renderItem={renderListItem}
-          ListEmptyComponent={() => (
-            <Authenticated>
-              <View style={styles.content}>
-                <DottedText>{t('home:empty_state')}</DottedText>
-              </View>
-            </Authenticated>
-          )}
+          bottomButton={{
+            title: t('search:save'),
+            icon: <IconAddCircle />,
+            loading: isSaveLoading,
+            onPress: handleSave,
+          }}
         />
       )}
 
@@ -147,26 +252,14 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         />
       </View>
 
-      <View style={styles.head}>
+      <View style={styles.header}>
         <Authenticated>
-          <Select
-            onSelect={setViewMode}
-            selected={viewMode}
-            data={[
-              { id: 'gallery', name: 'Gallery', icon: <IconList /> },
-              { id: 'list', name: 'List', icon: <IconGallery /> },
-            ]}
-            label={'View Mode'}
-            renderAnchor={({ selectedOption, setVisible }) => (
-              <IconButton
-                icon={selectedOption?.icon ?? <IconArrow />}
-                onPress={() => setVisible(true)}
-              />
-            )}
+          <IconButton
+            onPress={() => {
+              setViewMode((prev) => (prev === 'gallery' ? 'list' : 'gallery'))
+            }}
+            icon={viewMode === 'gallery' ? <IconList /> : <IconGallery />}
           />
-
-          <View />
-
           <Avatar onPress={() => navigation.navigate(routes.profile)} />
         </Authenticated>
 

@@ -1,32 +1,35 @@
-import { useState } from 'react'
-import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, View } from 'react-native'
+import React, { useState } from 'react'
+import { ActivityIndicator, Alert, Dimensions, View } from 'react-native'
 import { useKeyboardHandler } from 'react-native-keyboard-controller'
 import RadialGradient from 'react-native-radial-gradient'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAction, useMutation } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
 import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
-import Button from '@components/button'
 import DottedText from '@components/dotted_text'
 import { IconAddCircle, IconCheckCircle } from '@components/icon'
+import ListView, { ListViewItemProps } from '@components/list_view'
+import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import SearchInput from '@components/search_input'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
+import { LanguageCode, languages } from '@utils/languages'
 
 const useGradualAnimation = (): { height: SharedValue<number> } => {
   const height = useSharedValue(0)
-
-  const { bottom } = useSafeAreaInsets()
 
   useKeyboardHandler(
     {
       onMove: (event) => {
         'worklet'
-        height.value = Math.max(event.height - bottom, 0)
+        height.value = event.height
+      },
+      onEnd: (event) => {
+        'worklet'
+        height.value = event.height
       },
     },
     [],
@@ -37,48 +40,37 @@ const useGradualAnimation = (): { height: SharedValue<number> } => {
 interface TMDBMovie {
   id: number
   title: string
-  overview: string
   poster_path?: string
-  backdrop_path?: string
   release_date: string
   vote_average: number
-  genre_ids: number[]
-}
-
-const genreMap: Record<number, string> = {
-  28: 'Action',
-  12: 'Adventure',
-  16: 'Animation',
-  35: 'Comedy',
-  80: 'Crime',
-  99: 'Documentary',
-  18: 'Drama',
-  10751: 'Family',
-  14: 'Fantasy',
-  36: 'History',
-  27: 'Horror',
-  10402: 'Music',
-  9648: 'Mystery',
-  10749: 'Romance',
-  878: 'Science Fiction',
-  10770: 'TV Movie',
-  53: 'Thriller',
-  10752: 'War',
-  37: 'Western',
+  original_language: string
 }
 
 const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const theme = useTheme()
 
   const { height } = useGradualAnimation()
-  const keyboardView = useAnimatedStyle(() => {
-    return { height: Math.abs(height.value) }
-  }, [])
+
+  const keyboardSensitive = useAnimatedStyle(() => {
+    return { height: height.value }
+  }, [height])
 
   const [results, setResults] = useState<TMDBMovie[]>([])
+
+  const refinedResults: ListViewItemProps[] = results.map((movie) => ({
+    _id: movie.id,
+    title: movie.title,
+    posterPath: movie.poster_path,
+    date: new Date(movie.release_date).getFullYear().toString(),
+    voteAverage: movie.vote_average,
+    language:
+      languages[movie.original_language as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+  }))
   const [loading, setLoading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState<number>()
+  const [watchLoading, setWatchLoading] = useState<number>()
 
   const searchMovies = useAction(api.movies.searchMovies)
   const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
@@ -87,9 +79,12 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
   const handleSearch = async (query: string): Promise<void> => {
     if (!query.trim()) return
-    setLoading(true)
     try {
-      const searchResults = await searchMovies({ query: query.trim() })
+      const searchResults: TMDBMovie[] = await searchMovies({
+        query: query.trim(),
+        language: i18n.language,
+      })
+
       setResults(searchResults)
     } catch {
       Alert.alert('Failed to search movies. Please check your TMDB API key.')
@@ -98,143 +93,135 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     }
   }
 
-  const handleSave = async (movie: TMDBMovie): Promise<void> => {
+  const isSaveLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
+    return movie === saveLoading
+  }
+  const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
+    setSaveLoading(movie)
     try {
-      const genres = movie.genre_ids.map((id) => genreMap[id]).filter(Boolean)
+      const tmdbMovie = results.find((original) => {
+        return original.id === movie
+      })!
 
       const movieId = await getOrCreateMovie({
-        tmdbId: movie.id,
-        title: movie.title,
-        overview: movie.overview,
-        posterPath: movie.poster_path,
-        backdropPath: movie.backdrop_path,
-        releaseDate: movie.release_date,
-        voteAverage: movie.vote_average,
-        genres,
+        tmdbId: tmdbMovie.id,
+        title: tmdbMovie.title,
+        releaseDate: tmdbMovie.release_date,
+        voteAverage: tmdbMovie.vote_average,
+        originalLanguage: tmdbMovie.original_language,
+        ...(tmdbMovie.poster_path && { posterPath: tmdbMovie.poster_path }),
       })
 
       if (movieId)
         await addToWatchlist({ movieId }).then(() => {
-          Alert.alert(`Added "${movie.title}" to your watchlist`)
+          Alert.alert(`"${tmdbMovie.title}" added to your watchlist`)
         })
     } catch (error: any) {
       Alert.alert(error.message || 'Failed to add movie to watchlist')
+    } finally {
+      setSaveLoading(undefined)
     }
   }
 
-  const handleWatch = async (movie: TMDBMovie): Promise<void> => {
+  const isWatchLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
+    return movie === watchLoading
+  }
+
+  const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
+    setWatchLoading(movie)
     try {
-      const genres = movie.genre_ids.map((id) => genreMap[id]).filter(Boolean)
+      const tmdbMovie = results.find((original) => {
+        return original.id === movie
+      })!
 
       const movieId = await getOrCreateMovie({
-        tmdbId: movie.id,
-        title: movie.title,
-        overview: movie.overview,
-        posterPath: movie.poster_path,
-        backdropPath: movie.backdrop_path,
-        releaseDate: movie.release_date,
-        voteAverage: movie.vote_average,
-        genres,
+        tmdbId: tmdbMovie.id,
+        title: tmdbMovie.title,
+        releaseDate: tmdbMovie.release_date,
+        voteAverage: tmdbMovie.vote_average,
+        originalLanguage: tmdbMovie.original_language,
+        ...(tmdbMovie.poster_path && { posterPath: tmdbMovie.poster_path }),
       })
 
       if (movieId)
-        await markAsWatched({ movieId }).then(() => {
-          Alert.alert(`Marked "${movie.title}" as watched`)
+        await markAsWatched({ movieId, watchedAt: Date.now() }).then(() => {
+          Alert.alert(`"${tmdbMovie.title}" marked as watched`)
         })
     } catch (error: any) {
       Alert.alert(error.message || 'Failed to mark movie as watched')
+    } finally {
+      setWatchLoading(undefined)
     }
   }
 
   const { width } = Dimensions.get('window')
 
-  return (
-    <View style={styles.safeArea}>
-      <ScrollView style={styles.root}>
-        <View>
-          <View style={styles.header}>
-            <View style={styles.title}>
-              <View style={styles.gradientContainer}>
-                <RadialGradient
-                  style={styles.gradient}
-                  colors={[
-                    theme.primitives.vibrant.ruby[15],
-                    theme.semantics.background.base.default,
-                  ]}
-                  radius={300}
-                  center={[width / 2, width]}
-                />
-              </View>
-              <Typography title>ABSOLUTE CINEMA</Typography>
-            </View>
-          </View>
-
-          <View style={styles.content}>
-            {results.length > 0 &&
-              results.map((movie) => (
-                <View
-                  key={movie.id}
-                  style={{
-                    padding: 8,
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    borderColor: theme.semantics.container.stroke.default,
-                    backgroundColor: theme.semantics.container.base.default,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 20,
-                  }}
-                >
-                  {movie.poster_path ? (
-                    <Image
-                      style={{ width: 100, aspectRatio: 27 / 40, borderRadius: 8 }}
-                      source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
-                      alt={movie.title}
-                    />
-                  ) : (
-                    <View style={{ width: 100, aspectRatio: 9 / 16, borderRadius: 4 }} />
-                  )}
-
-                  <View style={{ flex: 1, justifyContent: 'space-around' }}>
-                    <Typography color="container">{movie.title}</Typography>
-                    <Typography color="container">
-                      {new Date(movie.release_date).getFullYear()} • ⭐{' '}
-                      {movie.vote_average.toFixed(1)}
-                    </Typography>
-                    <View style={{ flexDirection: 'row', gap: 8 }}>
-                      <Button
-                        onPress={() => handleSave(movie)}
-                        title={t('search:save')}
-                        icon={<IconAddCircle />}
-                      />
-                      <Button
-                        onPress={() => handleWatch(movie)}
-                        title={t('search:watch')}
-                        icon={<IconCheckCircle />}
-                      />
-                    </View>
-                  </View>
-                </View>
-              ))}
-
-            {loading && <ActivityIndicator />}
-
-            {results.length === 0 && !loading && (
-              <View style={{ paddingVertical: 200 }}>
-                <DottedText>{t('search:empty_state')}</DottedText>
-              </View>
-            )}
-          </View>
-        </View>
-      </ScrollView>
-      <View style={styles.footer}>
-        <SearchInput
-          debounce={2000}
-          onChangeText={handleSearch}
+  const header = (
+    <>
+      <View style={styles.gradientContainer}>
+        <RadialGradient
+          style={styles.gradient}
+          colors={[theme.primitives.vibrant.ruby[15], theme.semantics.background.base.default]}
+          radius={300}
+          center={[width / 2, width]}
         />
       </View>
-      <Animated.View style={keyboardView} />
+
+      <View style={styles.title}>
+        <Typography color={theme.semantics.background.foreground.light}>ABSOLUTE CINEMA</Typography>
+      </View>
+    </>
+  )
+
+  const emptyState = (
+    <View style={styles.content}>
+      {loading ? <ActivityIndicator /> : <DottedText>{t('search:empty_state')}</DottedText>}
     </View>
+  )
+
+  const [footerSize, setFooterSize] = useState({ height: 0 })
+
+  return (
+    <>
+      <ListView
+        footer={<View style={{ height: footerSize.height }} />}
+        data={refinedResults}
+        header={header}
+        empty={emptyState}
+        topButton={{
+          title: t('search:watch'),
+          icon: <IconCheckCircle />,
+          loading: isWatchLoading,
+          onPress: handleWatch,
+        }}
+        bottomButton={{
+          title: t('search:save'),
+          icon: <IconAddCircle />,
+          loading: isSaveLoading,
+          onPress: handleSave,
+        }}
+      />
+
+      <View
+        style={styles.footer}
+        onLayout={(event) =>
+          setFooterSize({
+            height: event.nativeEvent.layout.height + 20,
+          })
+        }
+      >
+        <SearchInput
+          debounce={2000}
+          onChangeText={() => setLoading(true)}
+          onDebouncedText={handleSearch}
+          onClear={() => {
+            setResults([])
+            setLoading(false)
+          }}
+        />
+        <Animated.View style={keyboardSensitive} />
+      </View>
+    </>
   )
 }
 

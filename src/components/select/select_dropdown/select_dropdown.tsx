@@ -24,11 +24,10 @@ const SelectDropdown = <T,>({
       setVisible(false)
     }
     const highlight = selected === item.id
-
     return (
       <Pressable
         onPress={onItemPress}
-        style={[styles.option, highlight && styles.optionHighlight]}
+        style={[styles.option, item.icon && styles.optionIcon, highlight && styles.optionHighlight]}
       >
         {item.icon &&
           React.cloneElement<IconProps>(item.icon, {

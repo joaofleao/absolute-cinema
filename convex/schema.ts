@@ -8,12 +8,10 @@ const applicationTables = {
   movies: defineTable({
     tmdbId: v.number(),
     title: v.string(),
-    overview: v.string(),
     posterPath: v.optional(v.string()),
-    backdropPath: v.optional(v.string()),
     releaseDate: v.string(),
     voteAverage: v.number(),
-    genres: v.array(v.string()),
+    originalLanguage: v.string(),
   }).index('by_tmdb_id', ['tmdbId']),
 
   // User's watchlist

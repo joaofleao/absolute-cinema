@@ -13,6 +13,7 @@
   },
   "home": {
     "watched": "Assistidos",
+    "watchlist": "Lista",
     "by_date": "Por Data",
     "empty_state": "Sem filmes ainda"
   },

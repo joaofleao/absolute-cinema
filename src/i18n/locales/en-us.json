@@ -13,6 +13,7 @@
   },
   "home": {
     "watched": "Watched",
+    "watchlist": "Watchlist",
     "by_date": "By Date",
     "empty_state": "No movies yet"
   },

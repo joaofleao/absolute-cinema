@@ -117,8 +117,10 @@ const Router = (): React.ReactNode => {
             component={Search}
           />
 
-          <Stack.Group
-            screenOptions={{
+          <Stack.Screen
+            name={routes.profile}
+            component={Profile}
+            options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
               sheetInitialDetentIndex: 'last',
@@ -127,17 +129,21 @@ const Router = (): React.ReactNode => {
                 backgroundColor: semantics.container.base.original,
               },
             }}
-          >
-            <Stack.Screen
-              name={routes.profile}
-              component={Profile}
-            />
+          />
 
-            <Stack.Screen
-              name={routes.auth}
-              component={Auth}
-            />
-          </Stack.Group>
+          <Stack.Screen
+            name={routes.auth}
+            component={Auth}
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+              sheetInitialDetentIndex: 'last',
+              sheetCornerRadius: 0,
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
+            }}
+          />
         </Stack.Navigator>
 
         <LinearGradient

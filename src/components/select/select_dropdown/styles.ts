@@ -8,6 +8,7 @@ type StylesReturn = {
   overlay: ViewStyle
   popover: ViewStyle
   option: ViewStyle
+  optionIcon: ViewStyle
   optionHighlight: ViewStyle
 }
 
@@ -43,8 +44,8 @@ const useStyles = (): StylesReturn => {
 
     option: {
       borderRadius: 16,
-      paddingHorizontal: 12,
-      paddingVertical: 12,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
       backgroundColor: semantics.container.base.original,
       borderColor: semantics.container.stroke.default,
       borderWidth: 1,
@@ -52,8 +53,12 @@ const useStyles = (): StylesReturn => {
       gap: 8,
       alignItems: 'center',
     },
+    optionIcon: {
+      paddingHorizontal: 8,
+    },
     optionHighlight: {
       backgroundColor: semantics.accent.base.default,
+      borderColor: semantics.accent.stroke.default,
     },
   })
 }

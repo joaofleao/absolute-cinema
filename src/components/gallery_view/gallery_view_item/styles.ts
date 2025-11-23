@@ -1,10 +1,11 @@
-import { Dimensions, ImageStyle, StyleSheet, ViewStyle } from 'react-native'
+import { Dimensions, ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
   image: ImageStyle
+  title: TextStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -12,6 +13,7 @@ const useStyles = (): StylesReturn => {
 
   return StyleSheet.create({
     root: {
+      alignItems: 'center',
       position: 'relative',
       borderRadius: 4,
       borderWidth: 1,
@@ -20,6 +22,11 @@ const useStyles = (): StylesReturn => {
       borderColor: semantics.container.stroke.default,
       width: (Dimensions.get('screen').width - 32 - 32) / 3,
       aspectRatio: 2 / 3,
+      overflow: 'hidden',
+      justifyContent: 'center',
+    },
+    title: {
+      textAlign: 'center',
       overflow: 'hidden',
     },
     image: {

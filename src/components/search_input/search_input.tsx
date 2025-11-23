@@ -10,6 +10,8 @@ const SearchInput = ({
   debounce = 0,
   value,
   onChangeText,
+  onDebouncedText,
+  onClear,
   ...props
 }: SearchInputProps): React.ReactElement => {
   const inputRef = useRef<TextInput>(null)
@@ -21,11 +23,12 @@ const SearchInput = ({
 
   const debouncer = (text: string): void => {
     timeoutId = setTimeout(() => {
-      onChangeText?.(text)
+      onDebouncedText?.(text)
     }, debounce)
   }
 
   const handleChangeText = (text: string): void => {
+    onChangeText?.(text)
     clearTimeout(timeoutId)
     debouncer(text)
   }
@@ -33,6 +36,7 @@ const SearchInput = ({
   const handleClear = (): void => {
     inputRef.current?.clear()
     Keyboard.dismiss()
+    onClear?.()
   }
 
   return (
