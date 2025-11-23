@@ -37,7 +37,8 @@
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "resend": "^6.0.1",
-    "@expo/ui": "~0.1.1-alpha.10"
+    "@expo/ui": "~0.1.1-alpha.10",
+    "@react-native-community/datetimepicker": "8.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
