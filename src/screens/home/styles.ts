@@ -11,11 +11,12 @@ type StylesReturn = {
   footer: ViewStyle
   header: ViewStyle
   datepicker: ViewStyle
+  flatlists: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
   const { width } = Dimensions.get('window')
-  const { top, bottom } = useSafeAreaInsets()
+  const { top, bottom, right, left } = useSafeAreaInsets()
 
   return StyleSheet.create({
     logo: {
@@ -67,6 +68,12 @@ const useStyles = (): StylesReturn => {
       paddingBottom: 20,
       maxWidth: '100%',
       alignSelf: 'flex-end',
+    },
+    flatlists: {
+      paddingTop: top,
+      paddingBottom: bottom,
+      paddingRight: right,
+      paddingLeft: left,
     },
   })
 }

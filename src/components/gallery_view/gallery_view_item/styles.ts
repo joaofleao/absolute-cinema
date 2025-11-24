@@ -20,7 +20,6 @@ const useStyles = (): StylesReturn => {
       height: 40,
       backgroundColor: semantics.container.base.default,
       borderColor: semantics.container.stroke.default,
-      width: (Dimensions.get('screen').width - 32 - 32) / 3,
       aspectRatio: 2 / 3,
       overflow: 'hidden',
       justifyContent: 'center',

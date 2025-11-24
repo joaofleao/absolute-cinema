@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { ActivityIndicator, Alert, Dimensions, View } from 'react-native'
+import { ActivityIndicator, Alert, View } from 'react-native'
 import { useKeyboardHandler } from 'react-native-keyboard-controller'
-import RadialGradient from 'react-native-radial-gradient'
-import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useAction, useMutation } from 'convex/react'
+import { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { useAction, useConvexAuth, useMutation } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
 import { api } from '../../../convex/_generated/api'
@@ -53,12 +52,9 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { t, i18n } = useTranslation()
   const theme = useTheme()
+  const { isAuthenticated } = useConvexAuth()
 
   const { height } = useGradualAnimation()
-
-  const keyboardSensitive = useAnimatedStyle(() => {
-    return { height: height.value }
-  }, [height])
 
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
@@ -106,6 +102,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   }
 
   const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
+    if (!isAuthenticated) navigation.navigate('auth')
     setSaveLoading(movie)
     try {
       const tmdbMovie = results.find((original) => {
@@ -133,7 +130,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   }
 
   const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
-    setSelectedMovie(movie)
+    if (!isAuthenticated) navigation.navigate('auth')
+    else setSelectedMovie(movie)
     setCalendarDropdown(true)
   }
 
@@ -164,23 +162,16 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     }
   }
 
-  const { width } = Dimensions.get('window')
-
   const header = (
-    <>
-      <View style={styles.gradientContainer}>
-        <RadialGradient
-          style={styles.gradient}
-          colors={[theme.primitives.vibrant.ruby[15], theme.semantics.background.base.default]}
-          radius={300}
-          center={[width / 2, width]}
-        />
-      </View>
-
-      <View style={styles.title}>
-        <Typography color={theme.semantics.background.foreground.light}>ABSOLUTE CINEMA</Typography>
-      </View>
-    </>
+    <SearchInput
+      debounce={2000}
+      onChangeText={() => setLoading(true)}
+      onDebouncedText={handleSearch}
+      onClear={() => {
+        setResults([])
+        setLoading(false)
+      }}
+    />
   )
 
   const emptyState = (
@@ -189,12 +180,10 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     </View>
   )
 
-  const [footerSize, setFooterSize] = useState({ height: 0 })
-
   return (
     <>
       <ListView
-        footer={<View style={{ height: footerSize.height }} />}
+        style={styles.list}
         data={refinedResults}
         header={header}
         empty={emptyState}
@@ -210,27 +199,6 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
           onPress: handleSave,
         }}
       />
-
-      <View
-        style={styles.footer}
-        onLayout={(event) =>
-          setFooterSize({
-            height: event.nativeEvent.layout.height + 20,
-          })
-        }
-      >
-        <SearchInput
-          debounce={2000}
-          onChangeText={() => setLoading(true)}
-          onDebouncedText={handleSearch}
-          onClear={() => {
-            setResults([])
-            setLoading(false)
-          }}
-        />
-
-        <Animated.View style={keyboardSensitive} />
-      </View>
 
       <Dropdown
         visible={calendarDropdown}

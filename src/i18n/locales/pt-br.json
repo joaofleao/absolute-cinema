@@ -20,7 +20,9 @@
     "all": "Todos",
     "bump": "Subir",
     "watch": "Assistir",
-    "save": "Salvar"
+    "save": "Salvar",
+    "nothing": "absolutamente nada ",
+    "sign_in": "entre para continuar"
   },
   "search": {
     "empty_state": "Nenhum filme encontrado",

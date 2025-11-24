@@ -15,26 +15,46 @@ const GalleryView = ({
   ...props
 }: GalleryViewProps): React.ReactElement => {
   const styles = useStyles()
+  const { width } = Dimensions.get('window')
 
-  const renderGalleryViewItem: ListRenderItem<GalleryViewItemProps> = ({ item, index }) => (
-    <React.Fragment key={index}>
-      <GalleryViewItem {...item} />
-      {data.length % 3 !== 0 && index === data.length - 1 && (
-        <>
-          <View style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }} />
-          {data.length % 3 === 1 && (
-            <View style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }} />
-          )}
-        </>
-      )}
-    </React.Fragment>
+  const HORIZONTAL_PADDING = 16 + 16
+  const GAP = 8
+  const MIN_ITEM_WIDTH = 100
+  const maxColumns = 6
+
+  const columns = Math.max(
+    1,
+    Math.min(maxColumns, Math.floor((width - HORIZONTAL_PADDING + GAP) / (MIN_ITEM_WIDTH + GAP))),
   )
+  const itemWidth = (width - HORIZONTAL_PADDING - GAP * (columns - 1)) / columns
+
+  const renderGalleryViewItem: ListRenderItem<GalleryViewItemProps> = ({ item, index }) => {
+    const remainder = data.length % columns
+    const needsPlaceholder = remainder !== 0 && index === data.length - 1
+    const placeholders = needsPlaceholder ? columns - remainder : 0
+
+    return (
+      <React.Fragment key={index}>
+        <GalleryViewItem
+          {...item}
+          style={{ width: itemWidth }}
+        />
+        {needsPlaceholder &&
+          Array.from({ length: placeholders }).map((_, i) => (
+            <View
+              key={`placeholder-${i}`}
+              style={{ width: itemWidth }}
+            />
+          ))}
+      </React.Fragment>
+    )
+  }
 
   return (
     <FlatList
       data={data}
       renderItem={renderGalleryViewItem}
-      numColumns={3}
+      numColumns={columns}
       columnWrapperStyle={styles.gallery}
       contentContainerStyle={[styles.list, contentContainerStyle]}
       style={[styles.root, style]}

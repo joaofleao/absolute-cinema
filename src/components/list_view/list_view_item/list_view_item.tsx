@@ -13,6 +13,7 @@ const ListViewItem = ({
   title,
   date,
   posterPath,
+  style,
   voteAverage,
   language,
   topButton,
@@ -21,7 +22,7 @@ const ListViewItem = ({
   onPress,
   ...props
 }: ListViewItemProps): React.ReactElement => {
-  const style = useStyle()
+  const styles = useStyle()
   const theme = useTheme()
 
   const renderButton = (
@@ -35,11 +36,11 @@ const ListViewItem = ({
       <TouchableOpacity
         delayLongPress={3000}
         activeOpacity={0.7}
-        style={[style.button, position === 'top' ? style.top : style.bottom]}
+        style={[styles.button, position === 'top' ? styles.top : styles.bottom]}
         onPress={() => button.onPress(_id)}
         disabled={isLoading}
       >
-        <View style={[style.buttonContent, isLoading && style.hide]}>
+        <View style={[styles.buttonContent, isLoading && styles.hide]}>
           <Typography color={theme.semantics.container.foreground.default}>
             {button.title}
           </Typography>
@@ -51,7 +52,7 @@ const ListViewItem = ({
             })}
         </View>
 
-        <View style={[style.loading, !isLoading && style.hide]}>
+        <View style={[styles.loading, !isLoading && styles.hide]}>
           <ActivityIndicator color={theme.semantics.container.foreground.default} />
         </View>
       </TouchableOpacity>
@@ -62,12 +63,12 @@ const ListViewItem = ({
     <>
       {posterPath !== undefined ? (
         <Image
-          style={style.image}
+          style={styles.image}
           source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
           alt={title}
         />
       ) : (
-        <View style={style.imagePlaceholder} />
+        <View style={styles.imagePlaceholder} />
       )}
 
       <View style={{ flex: 1, gap: 4 }}>
@@ -79,12 +80,12 @@ const ListViewItem = ({
   )
 
   return (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={[{ flexDirection: 'row' }, style]}>
       {(onPress || onLongPress) && (
         <TouchableOpacity
           onPress={(e) => onPress?.(e, props.id)}
           onLongPress={(e) => onLongPress?.(e, props.id)}
-          style={[style.root, topButton && bottomButton && style.hasButtons]}
+          style={[styles.root, topButton && bottomButton && styles.hasButtons]}
           activeOpacity={0.7}
           {...props}
         >
@@ -94,7 +95,7 @@ const ListViewItem = ({
 
       {!onPress && !onLongPress && (
         <View
-          style={[style.root, topButton && bottomButton && style.hasButtons]}
+          style={[styles.root, topButton && bottomButton && styles.hasButtons]}
           activeOpacity={0.7}
           {...props}
         >

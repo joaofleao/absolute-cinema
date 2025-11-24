@@ -20,7 +20,9 @@
     "all": "All",
     "bump": "Bump",
     "watch": "Watch",
-    "save": "Save"
+    "save": "Save",
+    "nothing": "Absolutely nothing",
+    "sign_in": "sign in to continue"
   },
   "search": {
     "empty_state": "No movies found",

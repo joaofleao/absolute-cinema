@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
@@ -145,13 +146,14 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
   }
 
   const { width } = Dimensions.get('window')
+
   const header = (
     <>
       <View style={styles.gradientContainer}>
         <RadialGradient
           style={styles.gradient}
           colors={[theme.primitives.vibrant.ruby[15], theme.semantics.background.base.default]}
-          radius={300}
+          radius={width / 1.5}
           center={[width / 2, width]}
         />
       </View>
@@ -165,6 +167,12 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           <Typography color={theme.semantics.background.foreground.light}>ABSOLUTE</Typography>
           <Typography display>CINEMA</Typography>
         </View>
+        <Unauthenticated>
+          <DottedText>{t('home:nothing')}</DottedText>
+          <Typography color={theme.semantics.background.foreground.light}>
+            {t('home:sign_in')}
+          </Typography>
+        </Unauthenticated>
         <Authenticated>
           <View style={styles.content}>
             <Bar.Root>
@@ -228,6 +236,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
     <>
       {viewMode === 'gallery' && (
         <GalleryView
+          style={styles.flatlists}
           data={data[list]}
           header={header}
           empty={emptyState}
@@ -236,6 +245,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
 
       {viewMode === 'list' && (
         <ListView
+          style={styles.flatlists}
           data={data[list]}
           header={header}
           empty={emptyState}

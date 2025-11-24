@@ -10,6 +10,7 @@ const GalleryViewItem = ({
   _id,
   posterPath,
   title,
+  style,
   onPress,
   ...props
 }: GalleryViewItemProps): React.ReactElement => {
@@ -39,7 +40,7 @@ const GalleryViewItem = ({
     return (
       <TouchableOpacity
         onPress={(e) => onPress(e, props.id)}
-        style={styles.root}
+        style={[styles.root, style]}
         activeOpacity={0.7}
         {...props}
       >
@@ -48,7 +49,7 @@ const GalleryViewItem = ({
     )
   return (
     <View
-      style={styles.root}
+      style={[styles.root, style]}
       {...props}
     >
       {content}

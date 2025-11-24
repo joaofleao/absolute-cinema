@@ -26,7 +26,6 @@ const useStyles = (): StylesReturn => {
       maxHeight: window.height / 2,
       bottom: insets.bottom + 20,
       alignSelf: 'center',
-      width: window.width - 40,
       padding: 16,
       position: 'absolute',
       borderRadius: 16,

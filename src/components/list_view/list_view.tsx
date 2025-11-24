@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, ListRenderItem } from 'react-native'
+import { Dimensions, FlatList, ListRenderItem, View } from 'react-native'
 
 import ListViewItem from './list_view_item'
 import useStyles from './styles'
@@ -19,23 +19,53 @@ const ListView = ({
 }: ListViewProps): React.ReactElement => {
   const styles = useStyles()
 
+  const { width } = Dimensions.get('window')
+
+  const HORIZONTAL_PADDING = 16 + 16
+  const GAP = 8
+  const MIN_ITEM_WIDTH = 220
+  const maxColumns = 2
+
+  const columns = Math.max(
+    1,
+    Math.min(maxColumns, Math.floor((width - HORIZONTAL_PADDING + GAP) / (MIN_ITEM_WIDTH + GAP))),
+  )
+
+  const itemWidth = (width - HORIZONTAL_PADDING - GAP * (columns - 1)) / columns
+
   const renderListViewItem: ListRenderItem<ListViewItemProps> = ({ item, index }) => {
+    const remainder = data.length % columns
+    const needsPlaceholder = remainder !== 0 && index === data.length - 1
+    const placeholders = needsPlaceholder ? columns - remainder : 0
+
     return (
-      <ListViewItem
-        {...item}
-        key={index}
-        topButton={topButton}
-        bottomButton={bottomButton}
-      />
+      <React.Fragment key={index}>
+        <ListViewItem
+          style={{ width: itemWidth }}
+          {...item}
+          key={index}
+          topButton={topButton}
+          bottomButton={bottomButton}
+        />
+        {needsPlaceholder &&
+          Array.from({ length: placeholders }).map((_, i) => (
+            <View
+              key={`placeholder-${i}`}
+              style={{ width: itemWidth }}
+            />
+          ))}
+      </React.Fragment>
     )
   }
 
   return (
     <FlatList
+      numColumns={columns}
       data={data}
       renderItem={renderListViewItem}
       style={[styles.root, style]}
       contentContainerStyle={[styles.list, contentContainerStyle]}
+      columnWrapperStyle={columns > 1 ? styles.gallery : undefined}
       ListHeaderComponent={header}
       ListFooterComponent={footer}
       ListEmptyComponent={empty}

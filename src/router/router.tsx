@@ -114,9 +114,22 @@ const Router = (): React.ReactNode => {
             name={routes.password_recovery}
             component={PasswordRecovery}
           />
+          {/* <Stack.Screen
+            name={routes.search}
+            component={Search}
+          /> */}
+
           <Stack.Screen
             name={routes.search}
             component={Search}
+            options={{
+              presentation: 'formSheet',
+              // sheetAllowedDetents: 'fitToContents',
+
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
+            }}
           />
 
           <Stack.Screen
@@ -126,7 +139,6 @@ const Router = (): React.ReactNode => {
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
               sheetInitialDetentIndex: 'last',
-              sheetCornerRadius: 0,
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
@@ -139,7 +151,6 @@ const Router = (): React.ReactNode => {
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
               sheetInitialDetentIndex: 'last',
-              sheetCornerRadius: 0,
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
@@ -153,7 +164,6 @@ const Router = (): React.ReactNode => {
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
               sheetInitialDetentIndex: 'last',
-              sheetCornerRadius: 0,
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
