@@ -10,6 +10,7 @@ type StylesReturn = {
   gradientContainer: ViewStyle
   footer: ViewStyle
   header: ViewStyle
+  datepicker: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -20,6 +21,9 @@ const useStyles = (): StylesReturn => {
     logo: {
       width: 153,
       height: 118,
+    },
+    datepicker: {
+      alignSelf: 'center',
     },
     banner: {
       position: 'relative',

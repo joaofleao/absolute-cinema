@@ -63,6 +63,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
   const [results, setResults] = useState<TMDBMovie[]>([])
+  const [loading, setLoading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState<number>()
   const [selectedMovie, setSelectedMovie] = useState<number>()
 
   const refinedResults: ListViewItemProps[] = results.map((movie) => ({
@@ -77,9 +79,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     language:
       languages[movie.original_language as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
   }))
-  const [loading, setLoading] = useState(false)
-  const [saveLoading, setSaveLoading] = useState<number>()
-  const [watchLoading, setWatchLoading] = useState<number>()
+
   const searchMovies = useAction(api.movies.searchMovies)
   const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
   const markAsWatched = useMutation(api.movies.markAsWatched)
@@ -132,18 +132,12 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     }
   }
 
-  const isWatchLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
-    return movie === watchLoading
-  }
-
   const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
     setSelectedMovie(movie)
     setCalendarDropdown(true)
   }
 
   const watchMovie = async (): Promise<void> => {
-    setWatchLoading(selectedMovie)
-
     try {
       const tmdbMovie = results.find((original) => {
         return original.id === selectedMovie
@@ -165,7 +159,6 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     } catch (error: any) {
       Alert.alert(error.message || 'Failed to mark movie as watched')
     } finally {
-      setWatchLoading(undefined)
       setSelectedMovie(undefined)
       setCalendarDropdown(false)
     }
@@ -208,7 +201,6 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         topButton={{
           title: t('search:watch'),
           icon: <TinyCheckmark />,
-          loading: isWatchLoading,
           onPress: handleWatch,
         }}
         bottomButton={{

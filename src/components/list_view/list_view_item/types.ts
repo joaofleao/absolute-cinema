@@ -6,7 +6,7 @@ export type ListViewItemActionProps = {
   icon?: React.ReactElement<IconProps>
   title: string
   onPress: (movie: NonNullable<ListViewItemProps['_id']>) => void | Promise<void>
-  loading: (movie: NonNullable<ListViewItemProps['_id']>) => boolean
+  loading?: (movie: NonNullable<ListViewItemProps['_id']>) => boolean
 }
 
 export interface ListViewItemProps extends Omit<TouchableOpacityProps, 'onPress'> {
@@ -19,4 +19,5 @@ export interface ListViewItemProps extends Omit<TouchableOpacityProps, 'onPress'
   topButton?: ListViewItemActionProps
   bottomButton?: ListViewItemActionProps
   onPress?: (e: GestureResponderEvent, id?: string) => void
+  onLongPress?: (e: GestureResponderEvent, id?: string) => void
 }

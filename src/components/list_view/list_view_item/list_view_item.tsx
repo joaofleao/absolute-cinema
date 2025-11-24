@@ -17,6 +17,7 @@ const ListViewItem = ({
   language,
   topButton,
   bottomButton,
+  onLongPress,
   onPress,
   ...props
 }: ListViewItemProps): React.ReactElement => {
@@ -28,10 +29,11 @@ const ListViewItem = ({
     position: 'top' | 'bottom',
   ): React.ReactElement | undefined => {
     if (!button) return
-    const isLoading = button.loading(_id)
+    const isLoading = button.loading?.(_id) ?? false
 
     return (
       <TouchableOpacity
+        delayLongPress={3000}
         activeOpacity={0.7}
         style={[style.button, position === 'top' ? style.top : style.bottom]}
         onPress={() => button.onPress(_id)}
@@ -78,9 +80,10 @@ const ListViewItem = ({
 
   return (
     <View style={{ flexDirection: 'row' }}>
-      {onPress && (
+      {(onPress || onLongPress) && (
         <TouchableOpacity
-          onPress={(e) => onPress(e, props.id)}
+          onPress={(e) => onPress?.(e, props.id)}
+          onLongPress={(e) => onLongPress?.(e, props.id)}
           style={[style.root, topButton && bottomButton && style.hasButtons]}
           activeOpacity={0.7}
           {...props}
@@ -89,7 +92,7 @@ const ListViewItem = ({
         </TouchableOpacity>
       )}
 
-      {!onPress && (
+      {!onPress && !onLongPress && (
         <View
           style={[style.root, topButton && bottomButton && style.hasButtons]}
           activeOpacity={0.7}

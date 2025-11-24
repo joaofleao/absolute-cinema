@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
@@ -8,7 +9,9 @@ import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
 import Avatar from '@components/avatar'
 import Bar from '@components/bar'
+import Button from '@components/button'
 import DottedText from '@components/dotted_text'
+import Dropdown from '@components/dropdown'
 import GalleryView from '@components/gallery_view'
 import { IconGallery, IconList, IconMagnifyingGlass } from '@components/icon'
 import IconButton from '@components/icon_button'
@@ -29,6 +32,11 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
   const getMovie = useMutation(api.movies.getMovie)
   const markAsWatched = useMutation(api.movies.markAsWatched)
   const addToWatchlist = useMutation(api.movies.addToWatchlist)
+  const removeFromWatchlist = useMutation(api.movies.removeFromWatchlist)
+  const [calendarDropdown, setCalendarDropdown] = useState(false)
+  const [date, setDate] = useState<Date>(new Date(Date.now()))
+  const [saveLoading, setSaveLoading] = useState<number>()
+  const [selectedMovie, setSelectedMovie] = useState<number>()
 
   const watchlist = useQuery(api.movies.getUserWatchlist) || []
   const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
@@ -45,8 +53,6 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
 
   const [list, setList] = useState<'watchlist' | 'watchedMovies'>('watchedMovies')
   const [sort, setSort] = useState<'ascending' | 'descending'>('ascending')
-  const [saveLoading, setSaveLoading] = useState<number>()
-  const [watchLoading, setWatchLoading] = useState<number>()
 
   const isSaveLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
     return movie === saveLoading
@@ -66,23 +72,25 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
     }
   }
 
-  const isWatchLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
-    return movie === watchLoading
+  const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
+    setSelectedMovie(movie)
+    setCalendarDropdown(true)
   }
 
-  const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
-    setWatchLoading(movie)
+  const watchMovie = async (): Promise<void> => {
+    if (!selectedMovie) return
     try {
-      const existingMovie = await getMovie({ tmdbId: movie })
+      const existingMovie = await getMovie({ tmdbId: selectedMovie })
 
       if (existingMovie)
-        await markAsWatched({ movieId: existingMovie._id, watchedAt: Date.now() }).then(() => {
+        await markAsWatched({ movieId: existingMovie._id, watchedAt: date.getTime() }).then(() => {
           Alert.alert(`"${existingMovie.title}" marked as watched`)
         })
     } catch (error: any) {
       Alert.alert(error.message || 'Failed to mark movie as watched')
     } finally {
-      setWatchLoading(undefined)
+      setSelectedMovie(undefined)
+      setCalendarDropdown(false)
     }
   }
 
@@ -102,6 +110,18 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         voteAverage: movie.voteAverage,
         language:
           languages[movie.originalLanguage as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+        onLongPress: async (): Promise<void> => {
+          setSaveLoading(movie.tmdbId)
+          try {
+            await removeFromWatchlist({ movieId: movie._id }).then(() =>
+              Alert.alert(`"${movie.title}" removed from your watchlist`),
+            )
+          } catch (error: any) {
+            Alert.alert(error.message || 'Failed to remove movie to watchlist')
+          } finally {
+            setSaveLoading(undefined)
+          }
+        },
       })),
 
     watchedMovies: watchedMovies
@@ -222,7 +242,6 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           topButton={{
             title: t('home:watch'),
             icon: <TinyCheckmark />,
-            loading: isWatchLoading,
             onPress: handleWatch,
           }}
           bottomButton={{
@@ -260,6 +279,33 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           />
         </Unauthenticated>
       </View>
+      <Dropdown
+        visible={calendarDropdown}
+        setVisible={setCalendarDropdown}
+      >
+        <DateTimePicker
+          maximumDate={new Date(Date.now())}
+          style={styles.datepicker}
+          themeVariant="dark"
+          display="inline"
+          value={date}
+          onChange={(_, date) => {
+            if (date) setDate(date)
+          }}
+          accentColor={theme.primitives.vibrant.ruby[40]}
+        />
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
+          <Button
+            title="cancel"
+            onPress={() => setCalendarDropdown(false)}
+          />
+          <Button
+            title="submit"
+            variant="accent"
+            onPress={watchMovie}
+          />
+        </View>
+      </Dropdown>
     </>
   )
 }
