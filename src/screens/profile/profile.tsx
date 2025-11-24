@@ -41,6 +41,7 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
           icon={<IconLanguages />}
         />
         <Button
+          variant="negative"
           loading={loading}
           onPress={handleSignOut}
           title={t('profile:sign_out')}
