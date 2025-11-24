@@ -5,6 +5,7 @@ export const routes: { [K in keyof StackProps]: K } = {
 
   movie: 'movie',
   password_recovery: 'password_recovery',
+  watched_movie: 'watched_movie',
   search: 'search',
   auth: 'auth',
   profile: 'profile',

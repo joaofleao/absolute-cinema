@@ -22,14 +22,8 @@ const ListView = ({
   const renderListViewItem: ListRenderItem<ListViewItemProps> = ({ item, index }) => {
     return (
       <ListViewItem
+        {...item}
         key={index}
-        _id={item._id}
-        title={item.title}
-        onPress={() => alert('Pressed ' + item.title)}
-        posterPath={item.posterPath}
-        date={item.date}
-        voteAverage={item.voteAverage}
-        language={item.language}
         topButton={topButton}
         bottomButton={bottomButton}
       />

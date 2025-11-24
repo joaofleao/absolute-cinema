@@ -15,7 +15,12 @@
     "watched": "Watched",
     "watchlist": "Watchlist",
     "by_date": "By Date",
-    "empty_state": "No movies yet"
+    "empty_state": "No movies yet",
+    "select_year": "Select Year",
+    "all": "All",
+    "bump": "Bump",
+    "watch": "Watch",
+    "save": "Save"
   },
   "search": {
     "empty_state": "No movies found",
@@ -32,5 +37,9 @@
     "sign_out": "Sign Out",
     "switch_to_ptbr": "Switch to Portuguese",
     "switch_to_enus": "Switch to English"
+  },
+  "watched_movie": {
+    "watched_at": "Watched at",
+    "delete": "Delete"
   }
 }

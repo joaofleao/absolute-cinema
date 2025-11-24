@@ -1,10 +1,10 @@
-import { TouchableOpacityProps } from 'react-native'
-import { Id } from 'convex/_generated/dataModel'
+import { GestureResponderEvent, TouchableOpacityProps } from 'react-native'
 
-export interface GalleryViewItemProps extends TouchableOpacityProps {
-  _id?: Id<'movies'> | undefined | number
+export interface GalleryViewItemProps extends Omit<TouchableOpacityProps, 'onPress'> {
+  _id: number
   posterPath?: string | undefined
   title?: string
   date?: string
   voteAverage?: number
+  onPress?: (e: GestureResponderEvent, id?: string) => void
 }

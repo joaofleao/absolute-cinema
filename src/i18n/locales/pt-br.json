@@ -15,7 +15,12 @@
     "watched": "Assistidos",
     "watchlist": "Lista",
     "by_date": "Por Data",
-    "empty_state": "Sem filmes ainda"
+    "empty_state": "Sem filmes ainda",
+    "select_year": "Selecionar ano",
+    "all": "Todos",
+    "bump": "Subir",
+    "watch": "Assistir",
+    "save": "Salvar"
   },
   "search": {
     "empty_state": "Nenhum filme encontrado",
@@ -32,5 +37,9 @@
     "sign_out": "Sair",
     "switch_to_ptbr": "Mudar para Português",
     "switch_to_enus": "Mudar para Inglês"
+  },
+  "watched_movie": {
+    "watched_at": "Assitido dia",
+    "delete": "Deletar"
   }
 }

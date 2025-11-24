@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { ActivityIndicator, Alert, Dimensions, View } from 'react-native'
 import { useKeyboardHandler } from 'react-native-keyboard-controller'
 import RadialGradient from 'react-native-radial-gradient'
@@ -8,7 +9,9 @@ import { useTranslation } from 'react-i18next'
 
 import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
+import Button from '@components/button'
 import DottedText from '@components/dotted_text'
+import Dropdown from '@components/dropdown'
 import { IconAddCircle, IconCheckCircle } from '@components/icon'
 import ListView, { ListViewItemProps } from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
@@ -57,7 +60,10 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     return { height: height.value }
   }, [height])
 
+  const [calendarDropdown, setCalendarDropdown] = useState(false)
+  const [date, setDate] = useState<Date>(new Date(Date.now()))
   const [results, setResults] = useState<TMDBMovie[]>([])
+  const [selectedMovie, setSelectedMovie] = useState<number>()
 
   const refinedResults: ListViewItemProps[] = results.map((movie) => ({
     _id: movie.id,
@@ -71,7 +77,6 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState<number>()
   const [watchLoading, setWatchLoading] = useState<number>()
-
   const searchMovies = useAction(api.movies.searchMovies)
   const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
   const markAsWatched = useMutation(api.movies.markAsWatched)
@@ -96,6 +101,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const isSaveLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
     return movie === saveLoading
   }
+
   const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
     setSaveLoading(movie)
     try {
@@ -128,10 +134,16 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   }
 
   const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
-    setWatchLoading(movie)
+    setSelectedMovie(movie)
+    setCalendarDropdown(true)
+  }
+
+  const watchMovie = async (): Promise<void> => {
+    setWatchLoading(selectedMovie)
+
     try {
       const tmdbMovie = results.find((original) => {
-        return original.id === movie
+        return original.id === selectedMovie
       })!
 
       const movieId = await getOrCreateMovie({
@@ -144,13 +156,15 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
       })
 
       if (movieId)
-        await markAsWatched({ movieId, watchedAt: Date.now() }).then(() => {
+        await markAsWatched({ movieId, watchedAt: date.getTime() }).then(() => {
           Alert.alert(`"${tmdbMovie.title}" marked as watched`)
         })
     } catch (error: any) {
       Alert.alert(error.message || 'Failed to mark movie as watched')
     } finally {
       setWatchLoading(undefined)
+      setSelectedMovie(undefined)
+      setCalendarDropdown(false)
     }
   }
 
@@ -219,8 +233,37 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
             setLoading(false)
           }}
         />
+
         <Animated.View style={keyboardSensitive} />
       </View>
+
+      <Dropdown
+        visible={calendarDropdown}
+        setVisible={setCalendarDropdown}
+      >
+        <DateTimePicker
+          maximumDate={new Date(Date.now())}
+          style={styles.datepicker}
+          themeVariant="dark"
+          display="inline"
+          value={date}
+          onChange={(_, date) => {
+            if (date) setDate(date)
+          }}
+          accentColor={theme.primitives.vibrant.ruby[40]}
+        />
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
+          <Button
+            title="cancel"
+            onPress={() => setCalendarDropdown(false)}
+          />
+          <Button
+            title="submit"
+            variant="accent"
+            onPress={watchMovie}
+          />
+        </View>
+      </Dropdown>
     </>
   )
 }

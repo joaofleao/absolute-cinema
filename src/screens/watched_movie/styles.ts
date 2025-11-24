@@ -1,29 +1,46 @@
 import { Dimensions, ImageStyle, StyleSheet, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { useTheme } from '@providers/theme'
+
 type StylesReturn = {
+  root: ViewStyle
   logo: ImageStyle
   title: ViewStyle
-
+  header: ViewStyle
   content: ViewStyle
-  datepicker: ViewStyle
   gradient: ViewStyle
   gradientContainer: ViewStyle
   footer: ViewStyle
-  header: ViewStyle
+  head: ViewStyle
+  image: ImageStyle
+  imagePlaceholder: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
+  const { semantics } = useTheme()
   const { width } = Dimensions.get('window')
-  const { top, bottom } = useSafeAreaInsets()
+  const { top, bottom, right, left } = useSafeAreaInsets()
 
   return StyleSheet.create({
+    root: {
+      paddingTop: top,
+      paddingBottom: bottom,
+      paddingRight: right,
+      paddingLeft: left,
+      backgroundColor: semantics.background.base.default,
+      flex: 1,
+      position: 'relative',
+    },
     logo: {
       width: 153,
       height: 118,
     },
-    datepicker: {
-      alignSelf: 'center',
+    header: {
+      position: 'relative',
+      alignItems: 'center',
+      gap: 20,
+      // paddingBlock: 60,
     },
     title: {
       alignItems: 'center',
@@ -31,8 +48,8 @@ const useStyles = (): StylesReturn => {
     },
     content: {
       alignItems: 'center',
-      minHeight: 200,
       justifyContent: 'center',
+      gap: 48,
     },
     gradientContainer: {
       position: 'absolute',
@@ -46,10 +63,12 @@ const useStyles = (): StylesReturn => {
     footer: {
       position: 'absolute',
       bottom,
-      paddingHorizontal: 16,
-      width: '100%',
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+      maxWidth: '100%',
+      alignSelf: 'flex-end',
     },
-    header: {
+    head: {
       justifyContent: 'space-between',
       flexDirection: 'row',
       width: '100%',
@@ -59,6 +78,16 @@ const useStyles = (): StylesReturn => {
       paddingBottom: 20,
       maxWidth: '100%',
       alignSelf: 'flex-end',
+    },
+    image: {
+      width: 120,
+      aspectRatio: 2 / 3,
+      borderRadius: 4,
+    },
+    imagePlaceholder: {
+      width: 120,
+      aspectRatio: 2 / 3,
+      borderRadius: 4,
     },
   })
 }

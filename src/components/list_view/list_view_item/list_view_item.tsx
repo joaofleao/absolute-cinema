@@ -17,6 +17,7 @@ const ListViewItem = ({
   language,
   topButton,
   bottomButton,
+  onPress,
   ...props
 }: ListViewItemProps): React.ReactElement => {
   const style = useStyle()
@@ -28,6 +29,7 @@ const ListViewItem = ({
   ): React.ReactElement | undefined => {
     if (!button) return
     const isLoading = button.loading(_id)
+
     return (
       <TouchableOpacity
         activeOpacity={0.7}
@@ -54,31 +56,51 @@ const ListViewItem = ({
     )
   }
 
+  const content = (
+    <>
+      {posterPath !== undefined ? (
+        <Image
+          style={style.image}
+          source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
+          alt={title}
+        />
+      ) : (
+        <View style={style.imagePlaceholder} />
+      )}
+
+      <View style={{ flex: 1, gap: 4 }}>
+        <Typography body>{title}</Typography>
+        <Rating value={voteAverage} />
+        <Typography legend>{`${date} ${language}`}</Typography>
+      </View>
+    </>
+  )
+
   return (
     <View style={{ flexDirection: 'row' }}>
-      <View
-        {...props}
-        style={[style.root, topButton && bottomButton && style.hasButtons]}
-      >
-        {posterPath !== undefined ? (
-          <Image
-            style={style.image}
-            source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
-            alt={title}
-          />
-        ) : (
-          <View style={style.imagePlaceholder} />
-        )}
+      {onPress && (
+        <TouchableOpacity
+          onPress={(e) => onPress(e, props.id)}
+          style={[style.root, topButton && bottomButton && style.hasButtons]}
+          activeOpacity={0.7}
+          {...props}
+        >
+          {content}
+        </TouchableOpacity>
+      )}
 
-        <View style={{ flex: 1, gap: 4 }}>
-          <Typography body>{title}</Typography>
-          <Rating value={voteAverage} />
-          <Typography legend>{`${date} ${language}`}</Typography>
+      {!onPress && (
+        <View
+          style={[style.root, topButton && bottomButton && style.hasButtons]}
+          activeOpacity={0.7}
+          {...props}
+        >
+          {content}
         </View>
-      </View>
+      )}
 
       {topButton && bottomButton && (
-        <View style={{}}>
+        <View>
           {renderButton(topButton, 'top')}
           {renderButton(bottomButton, 'bottom')}
         </View>

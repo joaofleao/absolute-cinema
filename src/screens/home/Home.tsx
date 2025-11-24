@@ -119,6 +119,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       )
       .filter((movie) => new Date(movie.watchedAt).getFullYear() === year || year === 0)
       .map((movie) => ({
+        id: movie.watchId,
         _id: movie.tmdbId,
         title: movie.title,
         posterPath: movie.posterPath,
@@ -126,6 +127,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
         voteAverage: movie.voteAverage,
         language:
           languages[movie.originalLanguage as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+        onPress: (): void => navigation.navigate('watched_movie', { movie }),
       })),
   }
 
@@ -154,8 +156,8 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           <View style={styles.content}>
             <Bar.Root>
               <Select
-                label="select year"
-                data={[{ name: 'All', id: 0 }, ...uniqueYears]}
+                label={t('home:select_year')}
+                data={[{ name: t('home:all'), id: 0 }, ...uniqueYears]}
                 onSelect={setYear}
                 selected={year}
                 renderAnchor={({ selectedOption, setVisible, visible }) => (
@@ -169,7 +171,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
               />
 
               <Select
-                label="select year"
+                label={t('home:select_year')}
                 data={[
                   { id: 'watchedMovies', name: t('home:watched') },
                   { id: 'watchlist', name: t('home:watchlist') },
@@ -231,14 +233,14 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           header={header}
           empty={emptyState}
           topButton={{
-            title: t('search:watch'),
+            title: t('home:watch'),
             icon: <IconCheckCircle />,
             loading: isWatchLoading,
             onPress: handleWatch,
           }}
           bottomButton={{
-            title: t('search:save'),
-            icon: <IconAddCircle />,
+            title: list === 'watchlist' ? t('home:bump') : t('home:save'),
+            icon: list === 'watchlist' ? <IconArrow /> : <IconAddCircle />,
             loading: isSaveLoading,
             onPress: handleSave,
           }}

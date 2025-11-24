@@ -114,6 +114,24 @@ export const removeFromWatchlist = mutation({
   },
 })
 
+// Remove from watched movies
+export const removeFromWatchedMovies = mutation({
+  args: { watchId: v.id('watchedMovies') },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+    if (!userId) throw new Error('Not authenticated')
+
+    const watchlistItem = await ctx.db
+      .query('watchedMovies')
+      .withIndex('by_id', (q) => q.eq('_id', args.watchId))
+      .unique()
+
+    if (watchlistItem) {
+      await ctx.db.delete(watchlistItem._id)
+    }
+  },
+})
+
 // Mark movie as watched
 export const markAsWatched = mutation({
   args: { movieId: v.id('movies'), watchedAt: v.number() },
@@ -155,7 +173,7 @@ export const getUserWatchlist = query({
     const movies = await Promise.all(
       watchlistItems.map(async (item) => {
         const movie = await ctx.db.get(item.movieId)
-        return { ...movie, addedAt: item.addedAt }
+        return { ...movie!, addedAt: item.addedAt }
       }),
     )
 
@@ -179,7 +197,7 @@ export const getUserWatchedMovies = query({
     const movies = await Promise.all(
       watchedItems.map(async (item) => {
         const movie = await ctx.db.get(item.movieId)
-        return { ...movie, watchedAt: item.watchedAt }
+        return { ...movie!, watchedAt: item.watchedAt, watchId: item._id }
       }),
     )
 

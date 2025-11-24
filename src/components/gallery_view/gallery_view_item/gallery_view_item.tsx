@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, TouchableOpacity } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 
 import useStyles from './styles'
 import { GalleryViewItemProps } from './types'
@@ -7,19 +7,17 @@ import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 
 const GalleryViewItem = ({
+  _id,
   posterPath,
-  style,
   title,
+  onPress,
   ...props
 }: GalleryViewItemProps): React.ReactElement => {
   const styles = useStyles()
   const theme = useTheme()
 
-  return (
-    <TouchableOpacity
-      style={styles.root}
-      {...props}
-    >
+  const content = (
+    <>
       {posterPath && (
         <Image
           style={styles.image}
@@ -35,7 +33,26 @@ const GalleryViewItem = ({
           {title}
         </Typography>
       )}
-    </TouchableOpacity>
+    </>
+  )
+  if (onPress)
+    return (
+      <TouchableOpacity
+        onPress={(e) => onPress(e, props.id)}
+        style={styles.root}
+        activeOpacity={0.7}
+        {...props}
+      >
+        {content}
+      </TouchableOpacity>
+    )
+  return (
+    <View
+      style={styles.root}
+      {...props}
+    >
+      {content}
+    </View>
   )
 }
 

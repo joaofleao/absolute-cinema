@@ -20,6 +20,7 @@ import Movie from '@screens/movie'
 import PasswordRecovery from '@screens/password_recovery'
 import Profile from '@screens/profile'
 import Search from '@screens/search'
+import WatchedMovie from '@screens/watched_movie'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
@@ -108,6 +109,7 @@ const Router = (): React.ReactNode => {
             name={routes.movie}
             component={Movie}
           />
+
           <Stack.Screen
             name={routes.password_recovery}
             component={PasswordRecovery}
@@ -117,6 +119,19 @@ const Router = (): React.ReactNode => {
             component={Search}
           />
 
+          <Stack.Screen
+            name={routes.watched_movie}
+            component={WatchedMovie}
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+              sheetInitialDetentIndex: 'last',
+              sheetCornerRadius: 0,
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
+            }}
+          />
           <Stack.Screen
             name={routes.profile}
             component={Profile}

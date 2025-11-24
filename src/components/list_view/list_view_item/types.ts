@@ -1,4 +1,4 @@
-import { TouchableOpacityProps } from 'react-native'
+import { GestureResponderEvent, TouchableOpacityProps } from 'react-native'
 
 import { IconProps } from '@components/icon'
 
@@ -9,8 +9,8 @@ export type ListViewItemActionProps = {
   loading: (movie: NonNullable<ListViewItemProps['_id']>) => boolean
 }
 
-export interface ListViewItemProps extends TouchableOpacityProps {
-  _id?: number
+export interface ListViewItemProps extends Omit<TouchableOpacityProps, 'onPress'> {
+  _id: number
   posterPath?: string | undefined
   title?: string
   voteAverage?: number
@@ -18,4 +18,5 @@ export interface ListViewItemProps extends TouchableOpacityProps {
   language?: string
   topButton?: ListViewItemActionProps
   bottomButton?: ListViewItemActionProps
+  onPress?: (e: GestureResponderEvent, id?: string) => void
 }

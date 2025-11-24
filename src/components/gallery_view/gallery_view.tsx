@@ -18,11 +18,7 @@ const GalleryView = ({
 
   const renderGalleryViewItem: ListRenderItem<GalleryViewItemProps> = ({ item, index }) => (
     <React.Fragment key={index}>
-      <GalleryViewItem
-        title={item.title}
-        onPress={() => alert('Pressed ' + item.title)}
-        posterPath={item.posterPath}
-      />
+      <GalleryViewItem {...item} />
       {data.length % 3 !== 0 && index === data.length - 1 && (
         <>
           <View style={{ width: (Dimensions.get('screen').width - 32 - 32) / 3 }} />
