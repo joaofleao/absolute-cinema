@@ -32,6 +32,7 @@ const WatchedMovie: ScreenType<'watched_movie'> = ({ navigation, route }) => {
           {t('watched_movie:watched_at') + ': ' + new Date(watchedAt).toLocaleDateString()}
         </Typography>
         <Button
+          variant="negative"
           title={t('watched_movie:delete')}
           onPress={() => {
             removeFromWatchedMovies({ watchId })
