@@ -14,6 +14,7 @@ const ListView = ({
   topButton,
   bottomButton,
   style,
+  responsive = false,
 
   ...props
 }: ListViewProps): React.ReactElement => {
@@ -26,10 +27,15 @@ const ListView = ({
   const MIN_ITEM_WIDTH = 220
   const maxColumns = 2
 
-  const columns = Math.max(
-    1,
-    Math.min(maxColumns, Math.floor((width - HORIZONTAL_PADDING + GAP) / (MIN_ITEM_WIDTH + GAP))),
-  )
+  const columns = responsive
+    ? Math.max(
+        1,
+        Math.min(
+          maxColumns,
+          Math.floor((width - HORIZONTAL_PADDING + GAP) / (MIN_ITEM_WIDTH + GAP)),
+        ),
+      )
+    : 1
 
   const itemWidth = (width - HORIZONTAL_PADDING - GAP * (columns - 1)) / columns
 
@@ -41,7 +47,7 @@ const ListView = ({
     return (
       <React.Fragment key={index}>
         <ListViewItem
-          style={{ width: itemWidth }}
+          style={{ width: responsive ? itemWidth : '100%' }}
           {...item}
           key={index}
           topButton={topButton}

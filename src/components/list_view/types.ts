@@ -12,6 +12,7 @@ interface ListViewProps
   empty?: FlatListProps<ListViewItemProps>['ListEmptyComponent']
   footer?: FlatListProps<ListViewItemProps>['ListFooterComponent']
   header?: FlatListProps<ListViewItemProps>['ListHeaderComponent']
+  responsive?: boolean
 }
 
 export type { ListViewItemProps, ListViewProps }

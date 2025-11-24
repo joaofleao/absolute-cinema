@@ -245,6 +245,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
 
       {viewMode === 'list' && (
         <ListView
+          responsive
           style={styles.flatlists}
           data={data[list]}
           header={header}
