@@ -2,7 +2,7 @@
   "expo": {
     "name": "Absolute Cinema",
     "slug": "absolute-cinema",
-    "version": "1.0.0",
+    "version": "1.0",
     "orientation": "portrait",
     "icon": "./src/assets/app/icon.png",
     "newArchEnabled": true,
