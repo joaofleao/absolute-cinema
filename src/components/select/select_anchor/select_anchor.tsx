@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 
 import useStyles from './styles'
 import { SelectAnchorProps } from './types'
-import { IconArrow } from '@components/icon'
+import { TinyArrow } from '@components/tiny_icon'
 import Typography from '@components/typography'
 
 const SelectAnchor = <T,>({
@@ -43,7 +43,7 @@ const SelectAnchor = <T,>({
           </Text>
         )}
 
-        <IconArrow style={{ transform: [{ rotate: visible ? '180deg' : '0deg' }] }} />
+        <TinyArrow orientation={visible ? 'down' : 'default'} />
       </TouchableOpacity>
     </View>
   )

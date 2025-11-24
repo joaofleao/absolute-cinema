@@ -82,7 +82,7 @@ const useStyles = (): StylesReturn => {
     buttonContent: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8,
+      gap: 4,
     },
     loading: {
       opacity: 1,

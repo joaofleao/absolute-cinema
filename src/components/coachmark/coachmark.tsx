@@ -4,8 +4,8 @@ import { Text, View } from 'react-native'
 import useStyles from './styles'
 import { CoachmarkProps } from './types'
 import { getCoachmarkPosition } from './utils'
-import { IconArrow, IconCheckCircle } from '@components/icon'
 import IconButton from '@components/icon_button'
+import { TinyArrow, TinyCheckmark } from '@components/tiny_icon'
 import { useTheme } from '@providers/theme'
 
 const Coachmark = ({
@@ -60,21 +60,21 @@ const Coachmark = ({
 
           {onPrevious && (
             <IconButton
-              icon={<IconArrow />}
+              icon={<TinyArrow orientation="left" />}
               // variant="secondary"
               onPress={onPrevious}
             />
           )}
           {onNext && (
             <IconButton
-              icon={<IconArrow style={{ transform: [{ rotate: '180deg' }] }} />}
+              icon={<TinyArrow orientation="right" />}
               // variant="primary"
               onPress={onNext}
             />
           )}
           {onComplete && (
             <IconButton
-              icon={<IconCheckCircle />}
+              icon={<TinyCheckmark />}
               // size="medium"
               onPress={onComplete}
             />

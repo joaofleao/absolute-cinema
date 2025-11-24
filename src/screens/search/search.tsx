@@ -12,10 +12,10 @@ import useStyles from './styles'
 import Button from '@components/button'
 import DottedText from '@components/dotted_text'
 import Dropdown from '@components/dropdown'
-import { IconAddCircle, IconCheckCircle } from '@components/icon'
 import ListView, { ListViewItemProps } from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import SearchInput from '@components/search_input'
+import { TinyCheckmark, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
@@ -204,13 +204,13 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         empty={emptyState}
         topButton={{
           title: t('search:watch'),
-          icon: <IconCheckCircle />,
+          icon: <TinyCheckmark />,
           loading: isWatchLoading,
           onPress: handleWatch,
         }}
         bottomButton={{
           title: t('search:save'),
-          icon: <IconAddCircle />,
+          icon: <TinyPlus />,
           loading: isSaveLoading,
           onPress: handleSave,
         }}

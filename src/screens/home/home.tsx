@@ -10,19 +10,12 @@ import Avatar from '@components/avatar'
 import Bar from '@components/bar'
 import DottedText from '@components/dotted_text'
 import GalleryView from '@components/gallery_view'
-import {
-  IconAddCircle,
-  IconArrow,
-  IconCheckCircle,
-  IconChevron,
-  IconGallery,
-  IconList,
-  IconMagnifyingGlass,
-} from '@components/icon'
+import { IconGallery, IconList, IconMagnifyingGlass } from '@components/icon'
 import IconButton from '@components/icon_button'
 import ListView from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import Select from '@components/select'
+import { TinyArrow, TinyCheckmark, TinyChevron, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { routes, ScreenType } from '@router'
@@ -163,7 +156,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
                 renderAnchor={({ selectedOption, setVisible, visible }) => (
                   <Bar.Item
                     onPress={() => setVisible(true)}
-                    icon={<IconChevron />}
+                    icon={<TinyChevron />}
                   >
                     {selectedOption?.name as string}
                   </Bar.Item>
@@ -181,7 +174,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
                 renderAnchor={({ selectedOption, setVisible, visible }) => (
                   <Bar.Item
                     onPress={() => setVisible(true)}
-                    icon={<IconChevron />}
+                    icon={<TinyChevron />}
                   >
                     {selectedOption?.name as string}
                   </Bar.Item>
@@ -192,13 +185,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
                 onPress={() =>
                   setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))
                 }
-                icon={
-                  <IconArrow
-                    style={{
-                      transform: [{ rotate: sort === 'ascending' ? '0deg' : '180deg' }],
-                    }}
-                  />
-                }
+                icon={<TinyArrow orientation={sort === 'ascending' ? 'up' : 'down'} />}
               >
                 {t('home:by_date')}
               </Bar.Item>
@@ -234,13 +221,13 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           empty={emptyState}
           topButton={{
             title: t('home:watch'),
-            icon: <IconCheckCircle />,
+            icon: <TinyCheckmark />,
             loading: isWatchLoading,
             onPress: handleWatch,
           }}
           bottomButton={{
             title: list === 'watchlist' ? t('home:bump') : t('home:save'),
-            icon: list === 'watchlist' ? <IconArrow /> : <IconAddCircle />,
+            icon: list === 'watchlist' ? <TinyArrow /> : <TinyPlus />,
             loading: isSaveLoading,
             onPress: handleSave,
           }}
