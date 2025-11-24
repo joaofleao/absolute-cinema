@@ -69,7 +69,10 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     _id: movie.id,
     title: movie.title,
     posterPath: movie.poster_path,
-    date: new Date(movie.release_date).getFullYear().toString(),
+    date:
+      movie.release_date === ''
+        ? t('search:unrelesed')
+        : new Date(movie.release_date).getFullYear().toString(),
     voteAverage: movie.vote_average,
     language:
       languages[movie.original_language as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],

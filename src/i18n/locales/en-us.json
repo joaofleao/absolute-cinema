@@ -25,7 +25,8 @@
   "search": {
     "empty_state": "No movies found",
     "save": "Save",
-    "watch": "Watch"
+    "watch": "Watch",
+    "unreleased": "Unreleased"
   },
   "auth": {
     "sign_in": "Sign In",
