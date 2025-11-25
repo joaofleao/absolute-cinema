@@ -33,8 +33,7 @@
     "unreleased": "Unreleased",
     "cancel": "Cancel",
     "submit": "Submit",
-    "tmdb_error": "Failed to search movies. Please check your TMDB API key.",
-    "add_watchlist": "added to your watchlist"
+    "tmdb_error": "Failed to search movies. Please check your TMDB API key."
   },
   "auth": {
     "sign_in": "Sign In",
