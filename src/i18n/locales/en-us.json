@@ -7,9 +7,11 @@
     "password_requirements": "YOUR PASSWORDS NEED TO HAVE: ",
     "password_digit": "ONE DIGIT AND ",
     "password_uppercase": "ONE UPPERCASE LETTER.",
-    "password_match": "PASSWORD DOES NOT MATCH",
+    "password_match": "PASSWORD Need to match",
     "not_implemented": "Not implemented",
-    "feature_not_implemented": "This feature is not implemented yet."
+    "feature_not_implemented": "This feature is not implemented yet.",
+    "add_watchlist": "added to your watchlist",
+    "remove_watchlist": "added from your watchlist"
   },
   "home": {
     "watched": "Watched",
@@ -28,7 +30,11 @@
     "empty_state": "No movies found",
     "save": "Save",
     "watch": "Watch",
-    "unreleased": "Unreleased"
+    "unreleased": "Unreleased",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "tmdb_error": "Failed to search movies. Please check your TMDB API key.",
+    "add_watchlist": "added to your watchlist"
   },
   "auth": {
     "sign_in": "Sign In",

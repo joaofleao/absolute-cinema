@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
@@ -64,10 +63,10 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       const existingMovie = await getMovie({ tmdbId: movie })
       if (existingMovie)
         await addToWatchlist({ movieId: existingMovie._id }).then(() => {
-          Alert.alert(`"${existingMovie.title}" added to your watchlist`)
+          Alert.alert(`"${existingMovie.title}" ${t('overall:add_watchlist')}`)
         })
     } catch (error: any) {
-      Alert.alert(error.message || 'Failed to add movie to watchlist')
+      Alert.alert(error.message)
     } finally {
       setSaveLoading(undefined)
     }
@@ -84,11 +83,9 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
       const existingMovie = await getMovie({ tmdbId: selectedMovie })
 
       if (existingMovie)
-        await markAsWatched({ movieId: existingMovie._id, watchedAt: date.getTime() }).then(() => {
-          Alert.alert(`"${existingMovie.title}" marked as watched`)
-        })
+        await markAsWatched({ movieId: existingMovie._id, watchedAt: date.getTime() })
     } catch (error: any) {
-      Alert.alert(error.message || 'Failed to mark movie as watched')
+      Alert.alert(error.message)
     } finally {
       setSelectedMovie(undefined)
       setCalendarDropdown(false)
@@ -99,8 +96,8 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
     watchlist: watchlist
       .sort((a, b) =>
         sort === 'ascending'
-          ? new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()
-          : new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime(),
+          ? new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
+          : new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime(),
       )
       .filter((movie) => new Date(movie.addedAt).getFullYear() === year || year === 0)
       .map((movie) => ({
@@ -115,10 +112,10 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
           setSaveLoading(movie.tmdbId)
           try {
             await removeFromWatchlist({ movieId: movie._id }).then(() =>
-              Alert.alert(`"${movie.title}" removed from your watchlist`),
+              Alert.alert(`"${movie.title}" ${t('overall:remove_watchlist')}`),
             )
           } catch (error: any) {
-            Alert.alert(error.message || 'Failed to remove movie to watchlist')
+            Alert.alert(error.message)
           } finally {
             setSaveLoading(undefined)
           }
@@ -128,8 +125,8 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
     watchedMovies: watchedMovies
       .sort((a, b) =>
         sort === 'ascending'
-          ? new Date(a.watchedAt).getTime() - new Date(b.watchedAt).getTime()
-          : new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime(),
+          ? new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime()
+          : new Date(a.watchedAt).getTime() - new Date(b.watchedAt).getTime(),
       )
       .filter((movie) => new Date(movie.watchedAt).getFullYear() === year || year === 0)
       .map((movie) => ({
@@ -184,7 +181,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
                 renderAnchor={({ selectedOption, setVisible, visible }) => (
                   <Bar.Item
                     onPress={() => setVisible(true)}
-                    icon={<TinyChevron />}
+                    icon={<TinyChevron orientation="down" />}
                   >
                     {selectedOption?.name as string}
                   </Bar.Item>
@@ -202,7 +199,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
                 renderAnchor={({ selectedOption, setVisible, visible }) => (
                   <Bar.Item
                     onPress={() => setVisible(true)}
-                    icon={<TinyChevron />}
+                    icon={<TinyChevron orientation="down" />}
                   >
                     {selectedOption?.name as string}
                   </Bar.Item>
@@ -213,7 +210,7 @@ const Home: ScreenType<'home'> = ({ navigation, route }) => {
                 onPress={() =>
                   setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))
                 }
-                icon={<TinyArrow orientation={sort === 'ascending' ? 'up' : 'down'} />}
+                icon={<TinyArrow orientation={sort === 'descending' ? 'up' : 'down'} />}
               >
                 {t('home:by_date')}
               </Bar.Item>

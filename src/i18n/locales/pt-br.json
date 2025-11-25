@@ -7,9 +7,11 @@
     "password_requirements": "SUAS SENHAS PRECISAM DE: ",
     "password_digit": "UM DIGITO E",
     "password_uppercase": "UMA LETRA MAIUSCULA.",
-    "password_match": "AS SENHAS DIFEREM",
+    "password_match": "precisam ser iguais ",
     "not_implemented": "Não implementado",
-    "feature_not_implemented": "Este recurso não está implementado ainda."
+    "feature_not_implemented": "Este recurso não está implementado ainda.",
+    "add_watchlist": "salvo na sua lista",
+    "remove_watchlist": "removido da sua lista"
   },
   "home": {
     "watched": "Assistidos",
@@ -21,14 +23,17 @@
     "bump": "Subir",
     "watch": "Assistir",
     "save": "Salvar",
-    "nothing": "absolutamente nada ",
+    "nothing": "absolutamente nada",
     "sign_in": "entre para continuar"
   },
   "search": {
     "empty_state": "Nenhum filme encontrado",
     "save": "Salvar",
     "watch": "Assistir",
-    "unreleased": "Não Lançado"
+    "unreleased": "Não Lançado",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "tmdb_error": "Erro ao buscar filme. Verifique a chave do TMDB."
   },
   "auth": {
     "sign_in": "Entrar",

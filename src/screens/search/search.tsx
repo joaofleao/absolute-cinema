@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { ActivityIndicator, Alert, View } from 'react-native'
-import { useKeyboardHandler } from 'react-native-keyboard-controller'
-import { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useAction, useConvexAuth, useMutation } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,29 +13,9 @@ import ListView, { ListViewItemProps } from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import SearchInput from '@components/search_input'
 import { TinyCheckmark, TinyPlus } from '@components/tiny_icon'
-import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
 import { LanguageCode, languages } from '@utils/languages'
-
-const useGradualAnimation = (): { height: SharedValue<number> } => {
-  const height = useSharedValue(0)
-
-  useKeyboardHandler(
-    {
-      onMove: (event) => {
-        'worklet'
-        height.value = event.height
-      },
-      onEnd: (event) => {
-        'worklet'
-        height.value = event.height
-      },
-    },
-    [],
-  )
-  return { height }
-}
 
 interface TMDBMovie {
   id: number
@@ -54,8 +32,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const theme = useTheme()
   const { isAuthenticated } = useConvexAuth()
 
-  const { height } = useGradualAnimation()
-
+  const [query, setQuery] = useState('')
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
   const [results, setResults] = useState<TMDBMovie[]>([])
@@ -91,7 +68,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
       setResults(searchResults)
     } catch {
-      Alert.alert('Failed to search movies. Please check your TMDB API key.')
+      Alert.alert(t('overall:tmdb_error'))
     } finally {
       setLoading(false)
     }
@@ -120,10 +97,10 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
       if (movieId)
         await addToWatchlist({ movieId }).then(() => {
-          Alert.alert(`"${tmdbMovie.title}" added to your watchlist`)
+          Alert.alert(`"${tmdbMovie.title}" ${t('overall:add_watchlist')}`)
         })
     } catch (error: any) {
-      Alert.alert(error.message || 'Failed to add movie to watchlist')
+      Alert.alert(error.message)
     } finally {
       setSaveLoading(undefined)
     }
@@ -150,12 +127,9 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         ...(tmdbMovie.poster_path && { posterPath: tmdbMovie.poster_path }),
       })
 
-      if (movieId)
-        await markAsWatched({ movieId, watchedAt: date.getTime() }).then(() => {
-          Alert.alert(`"${tmdbMovie.title}" marked as watched`)
-        })
+      if (movieId) await markAsWatched({ movieId, watchedAt: date.getTime() })
     } catch (error: any) {
-      Alert.alert(error.message || 'Failed to mark movie as watched')
+      Alert.alert(error.message)
     } finally {
       setSelectedMovie(undefined)
       setCalendarDropdown(false)
@@ -164,12 +138,17 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
   const header = (
     <SearchInput
+      value={query}
       debounce={2000}
-      onChangeText={() => setLoading(true)}
+      onChangeText={(txt) => {
+        setLoading(true)
+        setQuery(txt)
+      }}
       onDebouncedText={handleSearch}
       onClear={() => {
         setResults([])
         setLoading(false)
+        setQuery('')
       }}
     />
   )
@@ -215,13 +194,13 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
           }}
           accentColor={theme.primitives.vibrant.ruby[40]}
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
+        <View style={styles.calendarFooter}>
           <Button
-            title="cancel"
+            title={t('search:cancel')}
             onPress={() => setCalendarDropdown(false)}
           />
           <Button
-            title="submit"
+            title={t('search:submit')}
             variant="accent"
             onPress={watchMovie}
           />

@@ -5,6 +5,7 @@ type StylesReturn = {
   content: ViewStyle
   datepicker: ViewStyle
   list: ViewStyle
+  calendarFooter: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
@@ -20,6 +21,11 @@ const useStyles = (): StylesReturn => {
     },
     list: {
       paddingBottom: bottom,
+    },
+    calendarFooter: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      gap: 8,
     },
   })
 }
