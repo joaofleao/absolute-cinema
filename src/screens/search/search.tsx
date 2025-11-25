@@ -133,6 +133,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     } finally {
       setSelectedMovie(undefined)
       setCalendarDropdown(false)
+      setQuery('')
+      setResults([])
     }
   }
 
