@@ -1,4 +1,4 @@
-export * from './colors'
+export * from './semantics'
 export * from './fonts'
 export { default as ThemeContext } from './context'
 export { default as ThemeProvider } from './provider'

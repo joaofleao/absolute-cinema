@@ -2,7 +2,7 @@
   "expo": {
     "name": "Absolute Cinema",
     "slug": "absolute-cinema",
-    "version": "1.0.0",
+    "version": "1.0",
     "orientation": "portrait",
     "icon": "./src/assets/app/icon.png",
     "newArchEnabled": true,
@@ -10,15 +10,17 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#791B1B",
-          "image": "./src/assets//app//splash-icon.png",
+          "backgroundColor": "#660000",
+          "image": "./src/assets/app/splash-icon.png",
           "dark": {
-            "image": "./src/assets//app//splash-icon.png",
-            "backgroundColor": "#000000"
+            "image": "./src/assets/app//splash-icon-dark.png",
+            "backgroundColor": "#1A0000"
           },
-          "imageWidth": 200
+          "imageWidth": 250,
+          "resizeMode": "contain"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "ios": {
       "supportsTablet": true,
@@ -34,7 +36,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/app/adaptive-icon.png",
-        "backgroundColor": "#791B1B"
+        "backgroundColor": "#660000"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.joaofleao.absolutecinema"

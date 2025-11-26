@@ -1,0 +1,53 @@
+{
+  "overall": {
+    "search_placeholder": "SEARCH",
+    "email_placeholder": "EMAIL",
+    "password_placeholder": "PASSWORD",
+    "password_confirmation_placeholder": "CONFIRM PASSWORD",
+    "password_requirements": "YOUR PASSWORDS NEED TO HAVE: ",
+    "password_digit": "ONE DIGIT AND ",
+    "password_uppercase": "ONE UPPERCASE LETTER.",
+    "password_match": "PASSWORD Need to match",
+    "not_implemented": "Not implemented",
+    "feature_not_implemented": "This feature is not implemented yet.",
+    "add_watchlist": "added to your watchlist",
+    "remove_watchlist": "added from your watchlist"
+  },
+  "home": {
+    "watched": "Watched",
+    "watchlist": "Watchlist",
+    "by_date": "By Date",
+    "empty_state": "No movies yet",
+    "select_year": "Select Year",
+    "all": "All",
+    "bump": "Bump",
+    "watch": "Watch",
+    "save": "Save",
+    "nothing": "Absolutely nothing",
+    "sign_in": "sign in to continue"
+  },
+  "search": {
+    "empty_state": "No movies found",
+    "save": "Save",
+    "watch": "Watch",
+    "unreleased": "Unreleased",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "tmdb_error": "Failed to search movies. Please check your TMDB API key."
+  },
+  "auth": {
+    "sign_in": "Sign In",
+    "sign_up": "Register",
+    "continue_with": "Continue with",
+    "forgot_password": "Forgot password?"
+  },
+  "profile": {
+    "sign_out": "Sign Out",
+    "switch_to_ptbr": "Switch to Portuguese",
+    "switch_to_enus": "Switch to English"
+  },
+  "watched_movie": {
+    "watched_at": "Watched at",
+    "delete": "Delete"
+  }
+}

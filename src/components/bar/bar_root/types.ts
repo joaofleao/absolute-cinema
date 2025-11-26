@@ -1,3 +1,3 @@
-export interface BarProps {
+export interface BarRootProps {
   children: React.ReactElement | React.ReactElement[]
 }

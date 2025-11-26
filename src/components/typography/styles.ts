@@ -4,80 +4,88 @@ import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
   display: TextStyle
+  onboardingAccent: TextStyle
+  onboarding: TextStyle
   header: TextStyle
-  description: TextStyle
-  section: TextStyle
-  primary: TextStyle
-  secondary: TextStyle
   title: TextStyle
-  custom: TextStyle
-  light: TextStyle
+  body: TextStyle
+  description: TextStyle
+  legend: TextStyle
 }
 
-const useStyles = (): StylesReturn => {
-  const { colors, fonts } = useTheme()
+type StylesProps = {
+  color?: string
+}
+
+const useStyles = ({ color }: StylesProps): StylesReturn => {
+  const { semantics, fonts } = useTheme()
 
   return StyleSheet.create({
     display: {
-      color: colors.foreground.default,
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.primary.regular,
       fontSize: 64,
       lineHeight: 88,
       letterSpacing: 1,
+      textTransform: 'none',
+    },
+
+    onboardingAccent: {
+      color: color ?? semantics.background.foreground.default,
+      fontFamily: fonts.tertiary.bold,
+      fontSize: 24,
+      lineHeight: 36,
+      letterSpacing: 2,
+      textTransform: 'uppercase',
+    },
+
+    onboarding: {
+      color: color ?? semantics.background.foreground.light,
+      fontFamily: fonts.tertiary.bold,
+      fontSize: 24,
+      lineHeight: 36,
+      letterSpacing: 2,
+      textTransform: 'uppercase',
     },
     header: {
-      color: colors.foreground.default,
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.tertiary.bold,
-      fontSize: 20,
-      lineHeight: 28,
-      letterSpacing: 1,
-    },
-    description: {
-      color: colors.foreground.default,
-      fontFamily: fonts.secondary.bold,
-      fontSize: 16,
-      lineHeight: 24,
-      letterSpacing: 1,
-    },
-    section: {
-      color: colors.foreground.default,
-      fontFamily: fonts.secondary.bold,
-      fontSize: 16,
-      lineHeight: 24,
-      letterSpacing: 2,
-    },
-    primary: {
-      color: colors.foreground.default,
-      fontFamily: fonts.secondary.regular,
-      fontSize: 16,
-      lineHeight: 24,
-      letterSpacing: 2,
-    },
-    secondary: {
-      color: colors.foreground.default,
-      fontFamily: fonts.secondary.regular,
       fontSize: 14,
-      lineHeight: 20,
-      letterSpacing: 2,
-    },
-    title: {
-      color: colors.foreground.default,
-      fontFamily: fonts.tertiary.bold,
-      fontSize: 16,
       lineHeight: 24,
       letterSpacing: 2,
       textTransform: 'uppercase',
     },
-    custom: {
-      color: colors.foreground.default,
+    title: {
+      color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.tertiary.bold,
       fontSize: 12,
       lineHeight: 24,
       letterSpacing: 2,
       textTransform: 'uppercase',
     },
-    light: {
-      color: colors.foreground.light,
+    body: {
+      color: color ?? semantics.background.foreground.default,
+      fontFamily: fonts.secondary.regular,
+      fontSize: 12,
+      lineHeight: 24,
+      letterSpacing: 1,
+      textTransform: 'none',
+    },
+    description: {
+      color: color ?? semantics.background.foreground.light,
+      fontFamily: fonts.secondary.regular,
+      fontSize: 12,
+      lineHeight: 24,
+      letterSpacing: 1,
+      textTransform: 'none',
+    },
+    legend: {
+      color: color ?? semantics.background.foreground.light,
+      fontFamily: fonts.secondary.bold,
+      fontSize: 10,
+      lineHeight: 16,
+      letterSpacing: 1,
+      textTransform: 'uppercase',
     },
   })
 }

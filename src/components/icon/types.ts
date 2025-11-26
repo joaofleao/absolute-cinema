@@ -1,3 +1,6 @@
 import { SvgProps } from 'react-native-svg'
 
-export type IconProps = SvgProps
+export interface IconProps extends SvgProps {
+  size?: number
+  filled?: boolean
+}

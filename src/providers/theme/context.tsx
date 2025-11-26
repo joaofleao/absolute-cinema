@@ -1,13 +1,8 @@
 import { createContext } from 'react'
 
-import type { ModeType, ThemeType } from './types'
+import type { ThemeType } from './types'
 
-export interface ThemeContextType extends ThemeType {
-  mode: ModeType
-  setMode: (mode: ModeType) => void
-}
-
-const ThemeContext = createContext<ThemeContextType | null>(null)
+const ThemeContext = createContext<ThemeType | null>(null)
 ThemeContext.displayName = 'ThemeContext'
 
 export default ThemeContext

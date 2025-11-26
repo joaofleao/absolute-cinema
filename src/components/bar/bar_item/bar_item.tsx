@@ -1,18 +1,21 @@
 import React from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 import useStyles from './styles'
-import { BarProps } from './types'
+import { BarItemProps } from './types'
 import Typography from '@components/typography'
 
-const Bar = ({ children, icon }: BarProps): React.ReactElement => {
+const Bar = ({ children, icon, ...props }: BarItemProps): React.ReactElement => {
   const style = useStyles()
 
   return (
-    <View style={style.root}>
-      <Typography custom>{children}</Typography>
+    <TouchableOpacity
+      style={style.root}
+      {...props}
+    >
+      <Typography title>{children}</Typography>
       {icon && <View style={style.icon}>{icon}</View>}
-    </View>
+    </TouchableOpacity>
   )
 }
 
