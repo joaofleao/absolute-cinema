@@ -41,7 +41,7 @@
     "resend": "^6.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
+    "@babel/core": "^7.28.5",
     "@types/react": "~19.0.10",
     "eslint": "^9.33.0",
     "eslint-config-expo": "~9.2.0",
