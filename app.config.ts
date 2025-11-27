@@ -16,11 +16,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         'expo-splash-screen',
         {
-          backgroundColor: 'hsl(0, 100%, 20%)',
+          backgroundColor: '#660000',
           image: './src/assets/app/splash-icon.png',
           dark: {
             image: './src/assets/app//splash-icon-dark.png',
-            backgroundColor: 'hsl(0, 100%, 5%)',
+            backgroundColor: '#1a0000',
           },
           imageWidth: 440,
           resizeMode: 'contain',
@@ -45,7 +45,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       adaptiveIcon: {
         foregroundImage: './src/assets/app/adaptive-icon.png',
-        backgroundColor: 'hsl(0, 100%, 20%)',
+        backgroundColor: '#660000',
       },
       edgeToEdgeEnabled: true,
       package: 'com.joaofleao.absolutecinema',
