@@ -8,7 +8,7 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
-  const { colors } = useTheme()
+  const { semantics } = useTheme()
 
   return StyleSheet.create({
     root: {
@@ -19,7 +19,7 @@ const useStyles = (): StylesReturn => {
     ball: {
       width: 6,
       height: 6,
-      backgroundColor: colors.foreground.light,
+      backgroundColor: semantics.container.foreground.light,
       borderRadius: '100%',
     },
   })

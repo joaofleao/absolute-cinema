@@ -1,9 +1,11 @@
-import { ColorsType } from './colors'
 import { FontsType } from './fonts'
-
-export type ModeType = 'dark' | 'light'
+import { LayerType } from './layer'
+import { PrimitivesType } from './primitives'
+import { SemanticsType } from './semantics'
 
 export interface ThemeType {
-  colors: ColorsType
+  semantics: SemanticsType
+  primitives: PrimitivesType
   fonts: FontsType
+  layer: LayerType
 }

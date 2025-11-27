@@ -2,9 +2,9 @@ import React from 'react'
 import { View } from 'react-native'
 
 import useStyles from './styles'
-import { BarProps } from './types'
+import { BarRootProps } from './types'
 
-const Bar = ({ children: childrenProp }: BarProps): React.ReactElement => {
+const Bar = ({ children: childrenProp }: BarRootProps): React.ReactElement => {
   const style = useStyles()
 
   const children = React.Children.toArray(childrenProp)

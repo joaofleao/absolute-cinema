@@ -18,6 +18,8 @@ import type * as http from "../http.js";
 import type * as movieLists from "../movieLists.js";
 import type * as movies from "../movies.js";
 import type * as router from "../router.js";
+import type * as user from "../user.js";
+import type * as verify from "../verify.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -33,6 +35,8 @@ declare const fullApi: ApiFromModules<{
   movieLists: typeof movieLists;
   movies: typeof movies;
   router: typeof router;
+  user: typeof user;
+  verify: typeof verify;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

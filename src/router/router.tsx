@@ -3,23 +3,53 @@ import { StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as SplashScreen from 'expo-splash-screen'
+import { use as run } from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
 import useStyles from './styles'
 import { StackProps } from './types'
+import enUS from '@i18n/locales/en-us.json'
+import ptBR from '@i18n/locales/pt-br.json'
 import { fontImports, useTheme } from '@providers/theme'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { routes } from '@router'
+import Auth from '@screens/auth'
 import Home from '@screens/home'
 import Movie from '@screens/movie'
+import PasswordRecovery from '@screens/password_recovery'
+import Profile from '@screens/profile'
+import Search from '@screens/search'
+import WatchedMovie from '@screens/watched_movie'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
 
-const screenOptions = {
-  // tabBarHideOnKeyboard: true,
-  headerShown: false,
+const resources = {
+  'pt-BR': ptBR,
+  'en-US': enUS,
 }
+
+const initI18n = async (): Promise<void> => {
+  // const json = await AsyncStorage.getItem('userData')
+  // const savedLanguage = JSON.parse(json)?.language
+
+  // if (!user.language) {
+  //   savedLanguage = Localization.locale
+  // }
+
+  run(initReactI18next).init({
+    // compatibilityJSON: 'v3',
+    resources,
+    // lng: savedLanguage,
+    fallbackLng: 'en-US',
+    interpolation: {
+      escapeValue: false,
+    },
+  })
+}
+
+initI18n()
 
 SplashScreen.preventAutoHideAsync()
 
@@ -29,7 +59,8 @@ SplashScreen.setOptions({
 })
 
 const Router = (): React.ReactNode => {
-  const { colors } = useTheme()
+  const [appReady, setAppReady] = React.useState(false)
+  const { semantics } = useTheme()
   const styles = useStyles()
 
   React.useEffect(() => {
@@ -42,23 +73,34 @@ const Router = (): React.ReactNode => {
       } catch (e: any) {
         print('error on start', e, 'blue')
       } finally {
-        SplashScreen.hide()
+        setAppReady(true)
       }
     }
-
     prepare()
   }, [])
+
+  if (!appReady) return null
 
   return (
     <NavigationContainer>
       <StatusBar
         animated={true}
-        backgroundColor={colors.background.default}
+        backgroundColor={semantics.background.base.default}
         barStyle={'light-content'}
       />
 
-      <View style={styles.container}>
-        <Stack.Navigator screenOptions={screenOptions}>
+      <View
+        style={styles.container}
+        onLayout={SplashScreen.hideAsync}
+      >
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: semantics.background.base.default,
+            },
+          }}
+        >
           <Stack.Screen
             name={routes.home}
             component={Home}
@@ -66,6 +108,66 @@ const Router = (): React.ReactNode => {
           <Stack.Screen
             name={routes.movie}
             component={Movie}
+          />
+
+          <Stack.Screen
+            name={routes.password_recovery}
+            component={PasswordRecovery}
+          />
+          {/* <Stack.Screen
+            name={routes.search}
+            component={Search}
+          /> */}
+
+          <Stack.Screen
+            name={routes.search}
+            component={Search}
+            options={{
+              presentation: 'formSheet',
+              // sheetAllowedDetents: 'fitToContents',
+
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
+            }}
+          />
+
+          <Stack.Screen
+            name={routes.watched_movie}
+            component={WatchedMovie}
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+              sheetInitialDetentIndex: 'last',
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
+            }}
+          />
+          <Stack.Screen
+            name={routes.profile}
+            component={Profile}
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+              sheetInitialDetentIndex: 'last',
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
+            }}
+          />
+
+          <Stack.Screen
+            name={routes.auth}
+            component={Auth}
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+              sheetInitialDetentIndex: 'last',
+              contentStyle: {
+                backgroundColor: semantics.container.base.original,
+              },
+            }}
           />
         </Stack.Navigator>
 
