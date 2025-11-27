@@ -78,18 +78,22 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   }
 
   const handleAppleSignIn = async (): Promise<void> => {
-    try {
-      const credential = await AppleAuthentication.signInAsync({
-        requestedScopes: [
-          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-          AppleAuthentication.AppleAuthenticationScope.EMAIL,
-        ],
-      })
-
-      console.log(JSON.stringify(credential, null, 2))
-    } catch (e) {
-      console.log(JSON.stringify(e, null, 2))
-    }
+    const credential = await AppleAuthentication.signInAsync({
+      requestedScopes: [
+        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+      ],
+    })
+    console.log(credential)
+    // try {
+    //   // signed in
+    // } catch (e) {
+    //   if (e.code === 'ERR_REQUEST_CANCELED') {
+    //     // handle that the user canceled the sign-in flow
+    //   } else {
+    //     // handle other errors
+    //   }
+    // }
   }
 
   const signInContent = (

@@ -1,11 +1,9 @@
 import { ConfigContext, ExpoConfig } from 'expo/config'
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  const isProduction = process.env.APP_ENV === 'production'
-
   return {
     ...config,
-    name: isProduction ? 'Absolute Cinema' : 'Absolute Development',
+    name: 'Absolute Cinema',
     slug: 'absolute-cinema',
     version: '1.0',
     orientation: 'portrait',
@@ -31,9 +29,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ios: {
       usesAppleSignIn: true,
       supportsTablet: true,
-      bundleIdentifier: isProduction
-        ? 'com.joaofleao.absolute-cinema'
-        : 'com.joaofleao.absolute-cinema.dev',
+      bundleIdentifier: 'com.joaofleao.absolute-cinema',
+
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
       },
