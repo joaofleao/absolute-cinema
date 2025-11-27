@@ -2,7 +2,9 @@ name: Run expo doctor
 
 on:
   pull_request:
-    branches: [main, dependabot/**]
+    branches:
+      - main
+      - dev
 
 jobs:
   expo-doctor:
