@@ -11,6 +11,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     newArchEnabled: true,
     plugins: [
       'expo-apple-authentication',
+      'expo-web-browser',
+      'expo-secure-store',
       [
         'expo-splash-screen',
         {
@@ -24,7 +26,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           resizeMode: 'contain',
         },
       ],
-      'expo-secure-store',
     ],
     ios: {
       usesAppleSignIn: true,

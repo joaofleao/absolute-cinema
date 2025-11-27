@@ -27,6 +27,7 @@
     "expo-secure-store": "~14.2.4",
     "expo-splash-screen": "^0.30.10",
     "expo-status-bar": "~2.2.3",
+    "expo-web-browser": "~14.2.0",
     "i18next": "^25.3.6",
     "react": "19.0.0",
     "react-dom": "19.0.0",
