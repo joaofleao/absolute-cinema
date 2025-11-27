@@ -44,7 +44,16 @@
   "profile": {
     "sign_out": "Sair",
     "switch_to_ptbr": "Mudar para Português",
-    "switch_to_enus": "Mudar para Inglês"
+    "switch_to_enus": "Mudar para Inglês",
+    "delete_account": "Excluir conta",
+    "delete_account_title": "Você está prestes a solicitar a exclusão de sua conta",
+    "delete_account_message": "Essa ação não pode ser desfeita, todos os seus dados serão perdidos.",
+    "delete_account_confirm": "excluir contar",
+    "delete_account_deny": "Manter Conta",
+
+    "deleted_account_title": "Você solicitou a exclusão da sua conta",
+    "deleted_account_message": "Seus dados serão removidos em até 24 horas, nenhuma ação é necessária de sua parte.",
+    "deleted_account_confirm": "Sair do Absolute Cinema"
   },
   "watched_movie": {
     "watched_at": "Assitido dia",

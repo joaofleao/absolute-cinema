@@ -87,16 +87,14 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <Row wrap>
+        <Row center>
           <Button
             title={t('auth:forgot_password')}
             onPress={() => {
               Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
             }}
           />
-        </Row>
 
-        <Row wrap>
           <Button
             loading={loading}
             title={t('auth:sign_in')}
@@ -134,7 +132,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
         onChangeText={setCode}
       />
 
-      <Row wrap>
+      <Row center>
         <Button
           loading={loading}
           title={t('auth:sign_in')}
@@ -162,7 +160,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
         onChangeText={setConfirmPassword}
         passwordConfirmation={password}
       />
-      <Row wrap>
+      <Row center>
         <Button
           title={t('auth:sign_up')}
           variant="accent"
