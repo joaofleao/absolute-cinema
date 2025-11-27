@@ -12,6 +12,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     icon: './src/assets/app/icon.png',
     newArchEnabled: true,
     plugins: [
+      'expo-apple-authentication',
       [
         'expo-splash-screen',
         {
@@ -28,6 +29,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       'expo-secure-store',
     ],
     ios: {
+      usesAppleSignIn: true,
       supportsTablet: true,
       bundleIdentifier: isProduction
         ? 'com.joaofleao.absolute-cinema'

@@ -75,6 +75,14 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       .finally(() => setLoading(false))
   }
 
+  const handleAppleSignIn = async (): Promise<void> => {
+    void signIn('apple', {
+      flow,
+      email,
+      password,
+    })
+  }
+
   const signInContent = (
     <>
       <View style={styles.content}>
@@ -109,9 +117,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           <Button
             title="apple"
             icon={<IconApple />}
-            onPress={() => {
-              Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
-            }}
+            onPress={handleAppleSignIn}
           />
           <Button
             title="google"

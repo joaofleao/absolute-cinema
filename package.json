@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^7.3.25",
     "convex": "^1.25.4",
     "expo": "~53.0.24",
+    "expo-apple-authentication": "~7.2.4",
     "expo-blur": "~14.1.5",
     "expo-dev-client": "~5.2.4",
     "expo-font": "^13.3.2",
