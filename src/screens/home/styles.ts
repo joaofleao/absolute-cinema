@@ -20,7 +20,7 @@ const useStyles = (): StylesReturn => {
 
   return StyleSheet.create({
     logo: {
-      width: 153,
+      width: 159,
       height: 118,
     },
     datepicker: {

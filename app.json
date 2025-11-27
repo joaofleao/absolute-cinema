@@ -16,7 +16,7 @@
             "image": "./src/assets/app//splash-icon-dark.png",
             "backgroundColor": "#1A0000"
           },
-          "imageWidth": 250,
+          "imageWidth": 440,
           "resizeMode": "contain"
         }
       ],
