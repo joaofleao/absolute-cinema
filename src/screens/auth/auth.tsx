@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Alert, View } from 'react-native'
+import * as AppleAuthentication from 'expo-apple-authentication'
 import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
@@ -13,6 +14,7 @@ import SegmentedControl from '@components/segmented_control'
 import Typography from '@components/typography'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { ScreenType } from '@router'
+import print from '@utils/print'
 
 const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -76,11 +78,18 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   }
 
   const handleAppleSignIn = async (): Promise<void> => {
-    void signIn('apple', {
-      flow,
-      email,
-      password,
-    })
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      })
+
+      console.log(JSON.stringify(credential, null, 2))
+    } catch (e) {
+      console.log(JSON.stringify(e, null, 2))
+    }
   }
 
   const signInContent = (
