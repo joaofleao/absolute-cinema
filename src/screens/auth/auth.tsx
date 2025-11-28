@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Alert, View } from 'react-native'
-import * as AppleAuthentication from 'expo-apple-authentication'
+import { openAuthSessionAsync } from 'expo-web-browser'
 import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
@@ -77,22 +77,14 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   }
 
   const handleAppleSignIn = async (): Promise<void> => {
-    const credential = await AppleAuthentication.signInAsync({
-      requestedScopes: [
-        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-        AppleAuthentication.AppleAuthenticationScope.EMAIL,
-      ],
-    })
-    console.log(credential)
-    // try {
-    //   // signed in
-    // } catch (e) {
-    //   if (e.code === 'ERR_REQUEST_CANCELED') {
-    //     // handle that the user canceled the sign-in flow
-    //   } else {
-    //     // handle other errors
-    //   }
-    // }
+    const { redirect } = await signIn('apple', { redirectTo: 'absolute-cinema://' })
+
+    const result = await openAuthSessionAsync(redirect!.toString(), 'absolute-cinema://')
+    if (result.type === 'success') {
+      const { url } = result
+      const code = new URL(url).searchParams.get('code')!
+      await signIn('apple', { code })
+    }
   }
 
   const signInContent = (
