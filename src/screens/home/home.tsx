@@ -21,10 +21,10 @@ import Select from '@components/select'
 import { TinyArrow, TinyCheckmark, TinyChevron, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
-import { routes, ScreenType } from '@router'
+import { routes, TabType } from '@router'
 import { LanguageCode, languages } from '@utils/languages'
 
-const Home: ScreenType<'home'> = ({ navigation, route }) => {
+const Home: TabType<'watched'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { t, i18n } = useTranslation()
   const theme = useTheme()

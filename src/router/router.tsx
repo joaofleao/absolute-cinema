@@ -1,5 +1,4 @@
 import React from 'react'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -12,6 +11,7 @@ import { StackProps } from './types'
 import enUS from '@i18n/locales/en-us.json'
 import ptBR from '@i18n/locales/pt-br.json'
 import { fontImports, useTheme } from '@providers/theme'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { routes } from '@router'
@@ -25,6 +25,24 @@ import WatchedMovie from '@screens/watched_movie'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
+const Tabs = createBottomTabNavigator<StackProps>()
+
+const renderTabs = (): React.ReactElement => {
+  return (
+    <Tabs.Navigator
+      backBehavior="none"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Tabs.Screen
+        key={routes.watched}
+        name={routes.watched}
+        component={Home}
+      />
+    </Tabs.Navigator>
+  )
+}
 
 const resources = {
   'pt-BR': ptBR,
@@ -102,10 +120,8 @@ const Router = (): React.ReactNode => {
             },
           }}
         >
-          <Stack.Screen
-            name={routes.home}
-            component={Home}
-          />
+          <Stack.Screen name={routes.home}>{renderTabs}</Stack.Screen>
+
           <Stack.Screen
             name={routes.movie}
             component={Movie}
@@ -115,17 +131,13 @@ const Router = (): React.ReactNode => {
             name={routes.password_recovery}
             component={PasswordRecovery}
           />
-          {/* <Stack.Screen
-            name={routes.search}
-            component={Search}
-          /> */}
 
           <Stack.Screen
             name={routes.search}
             component={Search}
             options={{
               presentation: 'formSheet',
-              // sheetAllowedDetents: 'fitToContents',
+              sheetAllowedDetents: 'fitToContents',
 
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
