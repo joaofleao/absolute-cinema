@@ -3,6 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "types": ["node"],
+
     "baseUrl": ".",
     "paths": {
       "@utils/*": ["./src/utils/*"],
@@ -18,5 +19,6 @@
     },
     "jsx": "react-jsx"
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules/**"]
 }

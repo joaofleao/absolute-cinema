@@ -7,5 +7,5 @@ export interface ButtonProps extends TouchableOpacityProps {
   title: string
   icon?: React.ReactElement<IconProps>
   loading?: boolean
-  variant?: keyof SemanticsType
+  variant?: keyof SemanticsType | 'ghost'
 }

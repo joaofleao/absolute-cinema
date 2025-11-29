@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Alert, View } from 'react-native'
-import { openAuthSessionAsync } from 'expo-web-browser'
+import * as AppleAuthentication from 'expo-apple-authentication'
 import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
 import Button from '@components/button'
 import EmailInput from '@components/email_input'
-import { IconApple, IconGoogle } from '@components/icon'
+import { IconApple } from '@components/icon'
 import OTPInput from '@components/otp_input'
 import PasswordInput from '@components/password_input'
 import Row from '@components/row'
@@ -77,14 +77,14 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   }
 
   const handleAppleSignIn = async (): Promise<void> => {
-    const { redirect } = await signIn('apple', { redirectTo: 'absolute-cinema://' })
+    const credentials = await AppleAuthentication.signInAsync({
+      requestedScopes: [
+        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+      ],
+    })
 
-    const result = await openAuthSessionAsync(redirect!.toString(), 'absolute-cinema://')
-    if (result.type === 'success') {
-      const { url } = result
-      const code = new URL(url).searchParams.get('code')!
-      await signIn('apple', { code })
-    }
+    await signIn('native-apple', credentials)
   }
 
   const signInContent = (
@@ -99,8 +99,9 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <Row center>
+        <View style={styles.buttons}>
           <Button
+            variant="ghost"
             title={t('auth:forgot_password')}
             onPress={() => {
               Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
@@ -113,7 +114,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
             variant="accent"
             onPress={handleSignIn}
           />
-        </Row>
+        </View>
       </View>
       <View style={styles.footer}>
         <Typography>{t('auth:continue_with')}</Typography>
@@ -123,13 +124,13 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
             icon={<IconApple />}
             onPress={handleAppleSignIn}
           />
-          <Button
+          {/* <Button
             title="google"
             icon={<IconGoogle />}
             onPress={() => {
               Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
             }}
-          />
+          /> */}
         </Row>
       </View>
     </>
