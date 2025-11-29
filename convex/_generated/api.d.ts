@@ -18,6 +18,7 @@ import type * as http from "../http.js";
 import type * as movieLists from "../movieLists.js";
 import type * as movies from "../movies.js";
 import type * as native_apple from "../native_apple.js";
+import type * as native_google from "../native_google.js";
 import type * as node from "../node.js";
 import type * as router from "../router.js";
 import type * as user from "../user.js";
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   movieLists: typeof movieLists;
   movies: typeof movies;
   native_apple: typeof native_apple;
+  native_google: typeof native_google;
   node: typeof node;
   router: typeof router;
   user: typeof user;

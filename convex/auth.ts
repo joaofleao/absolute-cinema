@@ -1,4 +1,5 @@
 import { nativeAppleHandler } from './native_apple'
+import { nativeGoogleHandler } from './native_google'
 import { verify } from './verify'
 import { ConvexCredentials } from '@convex-dev/auth/providers/ConvexCredentials'
 import { Password } from '@convex-dev/auth/providers/Password'
@@ -12,6 +13,10 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
     ConvexCredentials({
       id: 'native-apple',
       authorize: nativeAppleHandler,
+    }),
+    ConvexCredentials({
+      id: 'native-google',
+      authorize: nativeGoogleHandler,
     }),
   ],
 })

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { Alert, View } from 'react-native'
 import * as AppleAuthentication from 'expo-apple-authentication'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import useStyles from './styles'
 import Button from '@components/button'
 import EmailInput from '@components/email_input'
-import { IconApple } from '@components/icon'
+import { IconApple, IconGoogle } from '@components/icon'
 import OTPInput from '@components/otp_input'
 import PasswordInput from '@components/password_input'
 import Row from '@components/row'
@@ -14,6 +15,7 @@ import SegmentedControl from '@components/segmented_control'
 import Typography from '@components/typography'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { ScreenType } from '@router'
+import print from '@utils/print'
 
 const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -21,7 +23,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
 
   const { signIn } = useAuthActions()
 
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<'email' | 'google' | 'apple'>()
   const [email, setEmail] = useState<string>('')
   const [code, setCode] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -35,7 +37,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   const [flow, setFlow] = useState('signIn')
 
   const handleSignUp = async (): Promise<void> => {
-    setLoading(true)
+    setLoading('email')
     void signIn('password', {
       flow,
       email,
@@ -45,11 +47,11 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
         setFlow('email-verification')
       })
       .catch((error) => Alert.alert(error.message))
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(undefined))
   }
 
   const handleSignIn = async (): Promise<void> => {
-    setLoading(true)
+    setLoading('email')
     void signIn('password', {
       flow,
       email,
@@ -59,11 +61,11 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
         navigation.pop()
       })
       .catch((error) => Alert.alert(error.message))
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(undefined))
   }
 
   const handleVerify = async (): Promise<void> => {
-    setLoading(true)
+    setLoading('email')
     void signIn('password', {
       flow,
       email,
@@ -73,18 +75,44 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       .then(() => {
         navigation.pop()
       })
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(undefined))
+  }
+
+  const handleGoogleSignIn = async (): Promise<void> => {
+    await GoogleSignin.hasPlayServices()
+
+    try {
+      const nativeResult = await GoogleSignin.signIn()
+      if (nativeResult.type === 'success') {
+        const convexResult = await signIn('native-google', nativeResult)
+        if (convexResult) navigation.pop()
+      }
+    } catch (e) {
+      print('google sign in', JSON.stringify(e), 'yellow')
+    } finally {
+      setLoading(undefined)
+    }
   }
 
   const handleAppleSignIn = async (): Promise<void> => {
-    const credentials = await AppleAuthentication.signInAsync({
-      requestedScopes: [
-        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-        AppleAuthentication.AppleAuthenticationScope.EMAIL,
-      ],
-    })
+    setLoading('apple')
 
-    await signIn('native-apple', credentials)
+    try {
+      const nativeResult = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      })
+      if (nativeResult) {
+        const convexResult = await signIn('native-apple', nativeResult)
+        if (convexResult) navigation.pop()
+      }
+    } catch (e) {
+      print('google sign in', JSON.stringify(e), 'yellow')
+    } finally {
+      setLoading(undefined)
+    }
   }
 
   const signInContent = (
@@ -109,7 +137,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           />
 
           <Button
-            loading={loading}
+            loading={loading === 'email'}
             title={t('auth:sign_in')}
             variant="accent"
             onPress={handleSignIn}
@@ -120,17 +148,17 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
         <Typography>{t('auth:continue_with')}</Typography>
         <Row wrap>
           <Button
+            loading={loading === 'apple'}
             title="apple"
             icon={<IconApple />}
             onPress={handleAppleSignIn}
           />
-          {/* <Button
+          <Button
+            loading={loading === 'google'}
             title="google"
             icon={<IconGoogle />}
-            onPress={() => {
-              Alert.alert(t('overall:not_implemented'), t('overall:feature_not_implemented'))
-            }}
-          /> */}
+            onPress={handleGoogleSignIn}
+          />
         </Row>
       </View>
     </>
@@ -145,7 +173,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
 
       <Row center>
         <Button
-          loading={loading}
+          loading={loading === 'email'}
           title={t('auth:sign_in')}
           variant="accent"
           onPress={handleVerify}
@@ -173,6 +201,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       />
       <Row center>
         <Button
+          loading={loading === 'email'}
           title={t('auth:sign_up')}
           variant="accent"
           onPress={handleSignUp}

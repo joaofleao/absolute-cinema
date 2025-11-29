@@ -1,4 +1,5 @@
 import React from 'react'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'

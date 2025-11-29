@@ -1,3 +1,4 @@
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
@@ -17,6 +18,10 @@ const secureStorage = {
   setItem: SecureStore.setItemAsync,
   removeItem: SecureStore.deleteItemAsync,
 }
+
+GoogleSignin.configure({
+  iosClientId: '674386239678-bnrobvq969mockak51tqpbgpjb0lu1qq.apps.googleusercontent.com',
+})
 
 export default function App(): React.ReactElement {
   return (

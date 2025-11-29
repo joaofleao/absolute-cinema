@@ -15,6 +15,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       'expo-web-browser',
       'expo-secure-store',
       [
+        '@react-native-google-signin/google-signin',
+        {
+          iosUrlScheme: 'com.googleusercontent.apps.674386239678-bnrobvq969mockak51tqpbgpjb0lu1qq',
+        },
+      ],
+      [
         'expo-splash-screen',
         {
           backgroundColor: '#660000',
@@ -35,6 +41,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
 
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
+        CFBundleURLTypes: [
+          {
+            CFBundleURLSchemes: [
+              'com.googleusercontent.apps.674386239678-bnrobvq969mockak51tqpbgpjb0lu1qq',
+            ],
+          },
+        ],
       },
       icon: {
         light: './src/assets/app/icon.png',
@@ -47,7 +60,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         backgroundColor: '#660000',
       },
       edgeToEdgeEnabled: true,
-      package: 'com.joaofleao.absolutecinema',
+      package: 'com.joaofleao.absolute-cinema',
     },
     web: {
       favicon: './src/assets/app/favicon.png',

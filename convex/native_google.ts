@@ -1,27 +1,28 @@
 import { internal } from './_generated/api'
 import { createAccount, retrieveAccount } from '@convex-dev/auth/server'
 
-export const nativeAppleHandler = async (credentials: any, ctx: any) => {
+export const nativeGoogleHandler = async (credentials: any, ctx: any) => {
   // Extract the identity token from the credentials
-  const { identityToken, user: clientAppleUserId } = credentials
+  const { idToken, user } = credentials.data
+  const { id: clientGoogleUserId, name } = user
 
-  if (!identityToken || !clientAppleUserId) {
-    throw new Error('Invalid Apple credentials')
+  if (!idToken || !clientGoogleUserId) {
+    throw new Error('Invalid Google credentials')
   }
 
-  const validatedTokenData = await ctx.runAction(internal.node.verifyTokenApple, {
-    identityToken: identityToken as string,
+  const validatedTokenData = await ctx.runAction(internal.node.verifyTokenGoogle, {
+    idToken: idToken as string,
   })
 
   // Verify that the user ID from the token matches the one from the client
-  if (validatedTokenData.userid !== clientAppleUserId) {
+  if (validatedTokenData.userid !== clientGoogleUserId) {
     throw new Error('User ID mismatch')
   }
 
   try {
     // Check if user already exists
     const existingAccount = await retrieveAccount(ctx, {
-      provider: 'native-apple',
+      provider: 'native-google',
       account: { id: validatedTokenData.email },
     })
 
@@ -39,7 +40,7 @@ export const nativeAppleHandler = async (credentials: any, ctx: any) => {
     account: { id: validatedTokenData.email },
     profile: {
       email: validatedTokenData.email,
-      name: validatedTokenData.full_name,
+      name: name,
       emailVerificationTime: Date.now(),
     },
     shouldLinkViaEmail: true,
