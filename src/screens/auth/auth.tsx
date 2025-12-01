@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { Alert, View } from 'react-native'
+import { Alert, Linking, View } from 'react-native'
 import * as AppleAuthentication from 'expo-apple-authentication'
 import { useTranslation } from 'react-i18next'
+import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
 import useStyles from './styles'
 import Button from '@components/button'
@@ -14,6 +15,7 @@ import Row from '@components/row'
 import SegmentedControl from '@components/segmented_control'
 import Typography from '@components/typography'
 import { useAuthActions } from '@convex-dev/auth/react'
+import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
 import print from '@utils/print'
 
@@ -22,12 +24,14 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   const { t } = useTranslation()
 
   const { signIn } = useAuthActions()
+  const { semantics } = useTheme()
 
   const [loading, setLoading] = useState<'email' | 'google' | 'apple'>()
   const [email, setEmail] = useState<string>('')
   const [code, setCode] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const catchConvexError = useConvexErrorHandler()
 
   const flows = {
     signIn: t('auth:sign_in'),
@@ -46,7 +50,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       .then(() => {
         setFlow('email-verification')
       })
-      .catch((error) => Alert.alert(error.message))
+      .catch(catchConvexError)
       .finally(() => setLoading(undefined))
   }
 
@@ -60,7 +64,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       .then(() => {
         navigation.pop()
       })
-      .catch((error) => Alert.alert(error.message))
+      .catch(catchConvexError)
       .finally(() => setLoading(undefined))
   }
 
@@ -71,7 +75,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       email,
       code,
     })
-      .catch((error) => Alert.alert(error.message))
+      .catch(catchConvexError)
       .then(() => {
         navigation.pop()
       })
@@ -137,6 +141,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           />
 
           <Button
+            disabled={email.length === 0 || password.length === 0}
             loading={loading === 'email'}
             title={t('auth:sign_in')}
             variant="accent"
@@ -166,10 +171,24 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
 
   const verificationContent = (
     <View style={styles.content}>
+      <Typography
+        title
+        center
+      >
+        {t('auth:verify')}
+      </Typography>
       <OTPInput
         value={code}
         onChangeText={setCode}
       />
+
+      <Typography
+        body
+        color={semantics.background.foreground.light}
+        center
+      >
+        {t('auth:spam')}
+      </Typography>
 
       <Row center>
         <Button
@@ -201,12 +220,21 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       />
       <Row center>
         <Button
+          disabled={email.length === 0 || password.length === 0 || password !== confirmPassword}
           loading={loading === 'email'}
           title={t('auth:sign_up')}
           variant="accent"
           onPress={handleSignUp}
         />
       </Row>
+
+      <Typography
+        description
+        center
+        onPress={() => Linking.openURL(`${process.env.PRIVACY_POLICY_URL}`)}
+      >
+        {t('auth:privacy_policy')}
+      </Typography>
     </View>
   )
 

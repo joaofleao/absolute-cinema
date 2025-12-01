@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { ActivityIndicator, Alert, View } from 'react-native'
-import { useKeyboardHandler } from 'react-native-keyboard-controller'
-import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useAction, useConvexAuth, useMutation } from 'convex/react'
 import { useTranslation } from 'react-i18next'
+import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
 import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
@@ -22,25 +21,6 @@ import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
 import { LanguageCode, languages } from '@utils/languages'
 
-const useGradualAnimation = (): { height: SharedValue<number> } => {
-  const height = useSharedValue(0)
-
-  useKeyboardHandler(
-    {
-      onMove: (event) => {
-        'worklet'
-        height.value = event.height
-      },
-      onEnd: (event) => {
-        'worklet'
-        height.value = event.height
-      },
-    },
-    [],
-  )
-  return { height }
-}
-
 interface TMDBMovie {
   id: number
   title: string
@@ -55,10 +35,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
   const { isAuthenticated } = useConvexAuth()
-  const { height } = useGradualAnimation()
-  const keyboardSensitive = useAnimatedStyle(() => {
-    return { height: height.value }
-  }, [height])
+  const catchConvexError = useConvexErrorHandler()
 
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
@@ -127,8 +104,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         await addToWatchlist({ movieId }).then(() => {
           Alert.alert(`"${tmdbMovie.title}" ${t('overall:add_watchlist')}`)
         })
-    } catch (error: any) {
-      Alert.alert(error.message)
+    } catch (error) {
+      catchConvexError(error)
     } finally {
       setSaveLoading(undefined)
     }
@@ -158,8 +135,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
       })
 
       if (movieId) await markAsWatched({ movieId, watchedAt: date.getTime() })
-    } catch (error: any) {
-      Alert.alert(error.message)
+    } catch (error) {
+      catchConvexError(error)
     } finally {
       setSelectedMovie(undefined)
       setCalendarDropdown(false)
@@ -228,21 +205,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         }}
       />
 
-      {/* <View
-        collapsable={false}
-        style={{
-          zIndex: 100,
-          backgroundColor: 'red',
-          padding: 20,
-          position: 'absolute',
-          width: '100%',
-          bottom: 0,
-        }}
-      >
-        {footer}
-      </View> */}
-
-      {/* <Dropdown
+      <Dropdown
         visible={calendarDropdown}
         setVisible={setCalendarDropdown}
       >
@@ -268,7 +231,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
             onPress={watchMovie}
           />
         </View>
-      </Dropdown> */}
+      </Dropdown>
     </>
   )
 }

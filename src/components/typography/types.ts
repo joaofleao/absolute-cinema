@@ -11,4 +11,10 @@ export interface TypographyProps extends TextProps {
   legend?: boolean
 
   color?: string
+
+  center?: boolean
+  auto?: boolean
+  left?: boolean
+  right?: boolean
+  justify?: boolean
 }

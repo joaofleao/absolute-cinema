@@ -42,7 +42,10 @@
     "sign_in": "Entrar",
     "sign_up": "Registrar",
     "continue_with": "Continue com",
-    "forgot_password": "Esqueceu a senha?"
+    "forgot_password": "Esqueceu a senha?",
+    "verify": "Verifique seu email com o código de 4 digitos que foi enviado.",
+    "spam": "Lembre-se de verificar a caixa de spam.",
+    "privacy_policy": "Ao se registrar, você concorda com a os ternos de uso e a política de privacidade."
   },
   "profile": {
     "sign_out": "Sair",
@@ -61,5 +64,24 @@
   "watched_movie": {
     "watched_at": "Assitido dia",
     "delete": "Deletar"
+  },
+  "errors": {
+    "wrong_password": {
+      "title": "Senha Incorreta",
+      "message": "Verifique se essa é a senha que foi utilizada no registro."
+    },
+    "wrong_email": {
+      "title": "Conta não encontrada",
+      "message": "Não existe uma conta com esse email. "
+    },
+    "already_exists": {
+      "title": "Email em uso",
+      "message": "Este email está associado a uma conta existente."
+    },
+    "unknown_error": {
+      "title": "Erro desconhecido"
+    },
+    "continue": "Continuar",
+    "report": "Reportar"
   }
 }

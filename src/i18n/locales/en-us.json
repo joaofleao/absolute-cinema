@@ -11,7 +11,7 @@
     "not_implemented": "Not implemented",
     "feature_not_implemented": "This feature is not implemented yet.",
     "add_watchlist": "added to your watchlist",
-    "remove_watchlist": "added from your watchlist"
+    "remove_watchlist": "removed from your watchlist"
   },
   "home": {
     "watched": "Watched",
@@ -42,7 +42,10 @@
     "sign_in": "Sign In",
     "sign_up": "Register",
     "continue_with": "Continue with",
-    "forgot_password": "Forgot password?"
+    "forgot_password": "Forgot password?",
+    "verify": "verify your email by providing the 4 digit code that was sent.",
+    "spam": "Remember to verify the spam inbox as well.",
+    "privacy_policy": "by registering, you agree with the privacy policy and the terms of usage."
   },
   "profile": {
     "sign_out": "Sign Out",
@@ -61,5 +64,24 @@
   "watched_movie": {
     "watched_at": "Watched at",
     "delete": "Delete"
+  },
+  "errors": {
+    "wrong_password": {
+      "title": "Incorrect Password",
+      "message": "Make sure you are providing the password you registered with."
+    },
+    "wrong_email": {
+      "title": "Account not found",
+      "message": "There isn't an account assigned to thie email."
+    },
+    "already_exists": {
+      "title": "Email already in use",
+      "message": "This email is already assigned to an user, use another email"
+    },
+    "unknown_error": {
+      "title": "Unkown Error"
+    },
+    "continue": "Continue",
+    "report": "Report"
   }
 }

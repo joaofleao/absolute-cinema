@@ -16,11 +16,12 @@ const useStyles = (): StylesReturn => {
       borderWidth: 1,
       height: 40,
       width: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
 
       borderColor: semantics.container.stroke.default,
       backgroundColor: semantics.container.base.default,
       flexDirection: 'row',
-      alignItems: 'center',
       gap: 8,
     },
   })

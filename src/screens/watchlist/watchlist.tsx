@@ -4,6 +4,7 @@ import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
 import { useTranslation } from 'react-i18next'
+import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
 import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
@@ -35,6 +36,7 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
   const [date, setDate] = useState<Date>(new Date(Date.now()))
   const [saveLoading, setSaveLoading] = useState<number>()
   const [selectedMovie, setSelectedMovie] = useState<number>()
+  const catchConvexError = useConvexErrorHandler()
 
   const watchlist = useQuery(api.movies.getUserWatchlist) || []
   const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
@@ -62,8 +64,8 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
         await addToWatchlist({ movieId: existingMovie._id }).then(() => {
           Alert.alert(`"${existingMovie.title}" ${t('overall:add_watchlist')}`)
         })
-    } catch (error: any) {
-      Alert.alert(error.message)
+    } catch (error) {
+      catchConvexError(error)
     } finally {
       setSaveLoading(undefined)
     }
@@ -81,8 +83,8 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
 
       if (existingMovie)
         await markAsWatched({ movieId: existingMovie._id, watchedAt: date.getTime() })
-    } catch (error: any) {
-      Alert.alert(error.message)
+    } catch (error) {
+      catchConvexError(error)
     } finally {
       setSelectedMovie(undefined)
       setCalendarDropdown(false)
@@ -107,15 +109,13 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
           languages[movie.originalLanguage as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
         onLongPress: async (): Promise<void> => {
           setSaveLoading(movie.tmdbId)
-          try {
-            await removeFromWatchlist({ movieId: movie._id }).then(() =>
-              Alert.alert(`"${movie.title}" ${t('overall:remove_watchlist')}`),
-            )
-          } catch (error: any) {
-            Alert.alert(error.message)
-          } finally {
-            setSaveLoading(undefined)
-          }
+
+          await removeFromWatchlist({ movieId: movie._id })
+            .then(() => Alert.alert(`"${movie.title}" ${t('overall:remove_watchlist')}`))
+            .catch(catchConvexError)
+            .finally(() => {
+              setSaveLoading(undefined)
+            })
         },
       })),
 

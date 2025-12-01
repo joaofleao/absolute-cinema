@@ -46,7 +46,7 @@ const SearchInput = ({
         style={styles.leading}
       >
         <IconMagnifyingGlass
-          color={semantics.container.foreground.default}
+          color={semantics.container.foreground.light}
           size={16}
         />
       </Pressable>

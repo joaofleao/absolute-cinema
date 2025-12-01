@@ -1,4 +1,4 @@
-import { Text } from 'react-native'
+import { Text, TextStyle } from 'react-native'
 
 import useStyles from './styles'
 import { TypographyProps } from './types'
@@ -14,9 +14,22 @@ const Typography = ({
   description = false,
   legend = false,
   color,
+  center = false,
+  auto = false,
+  left = false,
+  right = false,
+  justify = false,
   ...props
 }: TypographyProps): React.ReactElement => {
   const styles = useStyles({ color })
+
+  const getTextAlign = (): TextStyle['textAlign'] => {
+    if (center) return 'center'
+    if (auto) return 'auto'
+    if (left) return 'left'
+    if (right) return 'right'
+    if (justify) return 'justify'
+  }
 
   return (
     <Text
@@ -29,6 +42,7 @@ const Typography = ({
         body && styles.body,
         description && styles.description,
         legend && styles.legend,
+        { textAlign: getTextAlign() },
         style,
       ]}
       {...props}

@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { api } from 'convex/_generated/api'
 import { useAction } from 'convex/react'
 import { useTranslation } from 'react-i18next'
+import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
 import useStyles from './styles'
 import Button from '@components/button'
@@ -23,11 +24,12 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
   const [deleteModal, setDeleteModal] = useState<boolean>(false)
   const [deletedModal, setDeletedModal] = useState<boolean>(false)
   const deleteAccount = useAction(api.user.deleteAccount)
+  const catchConvexError = useConvexErrorHandler()
 
   const handleDelete = async (): Promise<void> => {
     setLoadingDelete(true)
     void deleteAccount()
-      .catch((error) => Alert.alert(error.message))
+      .catch(catchConvexError)
       .then(() => {
         setDeleteModal(false)
         setDeletedModal(true)
@@ -38,7 +40,7 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
   const handleSignOut = async (): Promise<void> => {
     setLoadingSignOut(true)
     void signOut()
-      .catch((error) => Alert.alert(error.message))
+      .catch(catchConvexError)
       .then(() => {
         navigation.pop()
       })
