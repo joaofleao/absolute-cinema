@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Keyboard, Pressable, TextInput, View } from 'react-native'
+import { Pressable, TextInput, View } from 'react-native'
 
 import useStyles from './styles'
 import { SearchInputProps } from './types'
@@ -12,6 +12,7 @@ const SearchInput = ({
   onChangeText,
   onDebouncedText,
   onClear,
+  style,
   ...props
 }: SearchInputProps): React.ReactElement => {
   const inputRef = useRef<TextInput>(null)
@@ -35,12 +36,11 @@ const SearchInput = ({
 
   const handleClear = (): void => {
     inputRef.current?.clear()
-    Keyboard.dismiss()
     onClear?.()
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, style]}>
       <Pressable
         onPress={() => inputRef.current?.focus()}
         style={styles.leading}
@@ -64,15 +64,18 @@ const SearchInput = ({
       />
 
       {inputRef?.current?.isFocused() && (
-        <Pressable
-          onPress={handleClear}
-          style={styles.trailing}
-        >
-          <IconX
-            color={semantics.container.foreground.default}
-            size={16}
-          />
-        </Pressable>
+        <>
+          <View style={styles.divider} />
+          <Pressable
+            onPress={handleClear}
+            style={styles.trailing}
+          >
+            <IconX
+              color={semantics.container.foreground.default}
+              size={16}
+            />
+          </Pressable>
+        </>
       )}
     </View>
   )

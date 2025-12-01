@@ -8,6 +8,8 @@ import { initReactI18next } from 'react-i18next'
 
 import useStyles from './styles'
 import { StackProps } from './types'
+import { IconBookmarks, IconFilm } from '@components/icon'
+import NavBar from '@components/nav_bar'
 import enUS from '@i18n/locales/en-us.json'
 import ptBR from '@i18n/locales/pt-br.json'
 import { fontImports, useTheme } from '@providers/theme'
@@ -16,33 +18,17 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { routes } from '@router'
 import Auth from '@screens/auth'
-import Home from '@screens/home'
 import Movie from '@screens/movie'
 import PasswordRecovery from '@screens/password_recovery'
 import Profile from '@screens/profile'
 import Search from '@screens/search'
 import WatchedMovie from '@screens/watched_movie'
+import WatchedMovies from '@screens/watched_movies'
+import Watchlist from '@screens/watchlist'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
 const Tabs = createBottomTabNavigator<StackProps>()
-
-const renderTabs = (): React.ReactElement => {
-  return (
-    <Tabs.Navigator
-      backBehavior="none"
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Tabs.Screen
-        key={routes.watched}
-        name={routes.watched}
-        component={Home}
-      />
-    </Tabs.Navigator>
-  )
-}
 
 const resources = {
   'pt-BR': ptBR,
@@ -100,6 +86,40 @@ const Router = (): React.ReactNode => {
 
   if (!appReady) return null
 
+  const renderTabs = (): React.ReactElement => {
+    return (
+      <Tabs.Navigator
+        backBehavior="none"
+        screenOptions={{
+          headerShown: false,
+          sceneStyle: {
+            backgroundColor: semantics.background.base.default,
+          },
+        }}
+        tabBar={(props) => (
+          <NavBar
+            tabs={[
+              { icon: <IconFilm />, label: routes.watched },
+              { icon: <IconBookmarks />, label: routes.watchlist },
+            ]}
+            {...props}
+          />
+        )}
+      >
+        <Tabs.Screen
+          key={routes.watched}
+          name={routes.watched}
+          component={WatchedMovies}
+        />
+        <Tabs.Screen
+          key={routes.watchlist}
+          name={routes.watchlist}
+          component={Watchlist}
+        />
+      </Tabs.Navigator>
+    )
+  }
+
   return (
     <NavigationContainer>
       <StatusBar
@@ -137,6 +157,8 @@ const Router = (): React.ReactNode => {
             component={Search}
             options={{
               presentation: 'formSheet',
+              sheetExpandsWhenScrolledToEdge: false,
+              sheetInitialDetentIndex: 'last',
               sheetAllowedDetents: 'fitToContents',
 
               contentStyle: {
@@ -151,7 +173,6 @@ const Router = (): React.ReactNode => {
             options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
-              sheetInitialDetentIndex: 'last',
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
@@ -163,7 +184,6 @@ const Router = (): React.ReactNode => {
             options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
-              sheetInitialDetentIndex: 'last',
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
@@ -176,7 +196,6 @@ const Router = (): React.ReactNode => {
             options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
-              sheetInitialDetentIndex: 'last',
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },

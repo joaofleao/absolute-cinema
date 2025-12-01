@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { ActivityIndicator, Alert, View } from 'react-native'
+import { useKeyboardHandler } from 'react-native-keyboard-controller'
+import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useAction, useConvexAuth, useMutation } from 'convex/react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,13 +11,35 @@ import useStyles from './styles'
 import Button from '@components/button'
 import DottedText from '@components/dotted_text'
 import Dropdown from '@components/dropdown'
+import { IconX } from '@components/icon'
+import IconButton from '@components/icon_button'
 import ListView, { ListViewItemProps } from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import SearchInput from '@components/search_input'
 import { TinyCheckmark, TinyPlus } from '@components/tiny_icon'
+import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
 import { LanguageCode, languages } from '@utils/languages'
+
+const useGradualAnimation = (): { height: SharedValue<number> } => {
+  const height = useSharedValue(0)
+
+  useKeyboardHandler(
+    {
+      onMove: (event) => {
+        'worklet'
+        height.value = event.height
+      },
+      onEnd: (event) => {
+        'worklet'
+        height.value = event.height
+      },
+    },
+    [],
+  )
+  return { height }
+}
 
 interface TMDBMovie {
   id: number
@@ -31,16 +55,19 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
   const { isAuthenticated } = useConvexAuth()
+  const { height } = useGradualAnimation()
+  const keyboardSensitive = useAnimatedStyle(() => {
+    return { height: height.value }
+  }, [height])
 
-  const [query, setQuery] = useState('')
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
-  const [results, setResults] = useState<TMDBMovie[]>([])
+  const [results, setResults] = useState<TMDBMovie[]>()
   const [loading, setLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState<number>()
   const [selectedMovie, setSelectedMovie] = useState<number>()
 
-  const refinedResults: ListViewItemProps[] = results.map((movie) => ({
+  const refinedResults: ListViewItemProps[] = (results ?? []).map((movie) => ({
     _id: movie.id,
     title: movie.title,
     posterPath: movie.poster_path,
@@ -80,6 +107,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
   const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
     if (!isAuthenticated) navigation.navigate('auth')
+    if (!results) return
     setSaveLoading(movie)
     try {
       const tmdbMovie = results.find((original) => {
@@ -107,12 +135,14 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   }
 
   const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
+    if (!results) return
     if (!isAuthenticated) navigation.navigate('auth')
     else setSelectedMovie(movie)
     setCalendarDropdown(true)
   }
 
   const watchMovie = async (): Promise<void> => {
+    if (!results) return
     try {
       const tmdbMovie = results.find((original) => {
         return original.id === selectedMovie
@@ -133,31 +163,45 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     } finally {
       setSelectedMovie(undefined)
       setCalendarDropdown(false)
-      setQuery('')
-      setResults([])
     }
   }
 
-  const header = (
-    <SearchInput
-      value={query}
-      debounce={2000}
-      onChangeText={(txt) => {
-        setLoading(true)
-        setQuery(txt)
-      }}
-      onDebouncedText={handleSearch}
-      onClear={() => {
-        setResults([])
-        setLoading(false)
-        setQuery('')
-      }}
-    />
+  const footer = (
+    <View style={[styles.footer]}>
+      <SearchInput
+        autoFocus
+        style={styles.input}
+        debounce={2000}
+        onChangeText={() => {
+          setLoading(true)
+        }}
+        onDebouncedText={handleSearch}
+        onClear={() => {
+          setResults([])
+          setLoading(false)
+        }}
+      />
+      <IconButton
+        onPress={navigation.goBack}
+        icon={<IconX />}
+      />
+    </View>
   )
 
+  const noResultsState = (
+    <View style={styles.content}>
+      <DottedText>{t('search:no_results')}</DottedText>
+    </View>
+  )
   const emptyState = (
     <View style={styles.content}>
-      {loading ? <ActivityIndicator /> : <DottedText>{t('search:empty_state')}</DottedText>}
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Typography color={theme.semantics.background.foreground.light}>
+          {t('search:empty_state')}
+        </Typography>
+      )}
     </View>
   )
 
@@ -165,9 +209,12 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     <>
       <ListView
         style={styles.list}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="always"
+        automaticallyAdjustKeyboardInsets
+        header={footer}
         data={refinedResults}
-        header={header}
-        empty={emptyState}
+        empty={results?.length === 0 ? noResultsState : emptyState}
         topButton={{
           title: t('search:watch'),
           icon: <TinyCheckmark />,
@@ -181,7 +228,21 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         }}
       />
 
-      <Dropdown
+      {/* <View
+        collapsable={false}
+        style={{
+          zIndex: 100,
+          backgroundColor: 'red',
+          padding: 20,
+          position: 'absolute',
+          width: '100%',
+          bottom: 0,
+        }}
+      >
+        {footer}
+      </View> */}
+
+      {/* <Dropdown
         visible={calendarDropdown}
         setVisible={setCalendarDropdown}
       >
@@ -207,7 +268,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
             onPress={watchMovie}
           />
         </View>
-      </Dropdown>
+      </Dropdown> */}
     </>
   )
 }

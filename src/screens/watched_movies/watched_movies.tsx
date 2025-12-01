@@ -13,8 +13,6 @@ import Button from '@components/button'
 import DottedText from '@components/dotted_text'
 import Dropdown from '@components/dropdown'
 import GalleryView from '@components/gallery_view'
-import { IconGallery, IconList, IconMagnifyingGlass } from '@components/icon'
-import IconButton from '@components/icon_button'
 import ListView from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import Select from '@components/select'
@@ -24,7 +22,7 @@ import { useTheme } from '@providers/theme'
 import { routes, TabType } from '@router'
 import { LanguageCode, languages } from '@utils/languages'
 
-const Home: TabType<'watched'> = ({ navigation, route }) => {
+const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { t, i18n } = useTranslation()
   const theme = useTheme()
@@ -51,7 +49,6 @@ const Home: TabType<'watched'> = ({ navigation, route }) => {
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
   const [year, setYear] = useState<number>(uniqueYears.length === 0 ? 0 : new Date().getFullYear())
 
-  const [list, setList] = useState<'watchlist' | 'watchedMovies'>('watchedMovies')
   const [sort, setSort] = useState<'ascending' | 'descending'>('ascending')
 
   const isSaveLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
@@ -154,68 +151,59 @@ const Home: TabType<'watched'> = ({ navigation, route }) => {
           center={[width / 2, width]}
         />
       </View>
+
       <View style={styles.banner}>
         <Image
           style={styles.logo}
           source={require('@assets/mascot.png')}
         />
-
         <View style={styles.title}>
           <Typography color={theme.semantics.background.foreground.light}>ABSOLUTE</Typography>
           <Typography display>CINEMA</Typography>
         </View>
+      </View>
+
+      <View style={styles.content}>
         <Unauthenticated>
           <DottedText>{t('home:nothing')}</DottedText>
-          <Typography color={theme.semantics.background.foreground.light}>
+          <Typography
+            onPress={() => navigation.navigate('auth')}
+            color={theme.semantics.background.foreground.light}
+          >
             {t('home:sign_in')}
           </Typography>
         </Unauthenticated>
+
         <Authenticated>
-          <View style={styles.content}>
-            <Bar.Root>
-              <Select
-                label={t('home:select_year')}
-                data={[{ name: t('home:all'), id: 0 }, ...uniqueYears]}
-                onSelect={setYear}
-                selected={year}
-                renderAnchor={({ selectedOption, setVisible, visible }) => (
-                  <Bar.Item
-                    onPress={() => setVisible(true)}
-                    icon={<TinyChevron orientation="down" />}
-                  >
-                    {selectedOption?.name as string}
-                  </Bar.Item>
-                )}
-              />
+          <Bar.Root>
+            <Select
+              label={t('home:select_year')}
+              data={[{ name: t('home:all'), id: 0 }, ...uniqueYears]}
+              onSelect={setYear}
+              selected={year}
+              renderAnchor={({ selectedOption, setVisible, visible }) => (
+                <Bar.Item
+                  onPress={() => setVisible(true)}
+                  icon={<TinyChevron orientation="down" />}
+                >
+                  {selectedOption?.name as string}
+                </Bar.Item>
+              )}
+            />
 
-              <Select
-                label={t('home:select_year')}
-                data={[
-                  { id: 'watchedMovies', name: t('home:watched') },
-                  { id: 'watchlist', name: t('home:watchlist') },
-                ]}
-                onSelect={setList}
-                selected={list}
-                renderAnchor={({ selectedOption, setVisible, visible }) => (
-                  <Bar.Item
-                    onPress={() => setVisible(true)}
-                    icon={<TinyChevron orientation="down" />}
-                  >
-                    {selectedOption?.name as string}
-                  </Bar.Item>
-                )}
-              />
+            <Bar.Item
+              onPress={() => setViewMode((prev) => (prev === 'gallery' ? 'list' : 'gallery'))}
+            >
+              {viewMode === 'gallery' ? t('home:list') : t('home:gallery')}
+            </Bar.Item>
 
-              <Bar.Item
-                onPress={() =>
-                  setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))
-                }
-                icon={<TinyArrow orientation={sort === 'descending' ? 'up' : 'down'} />}
-              >
-                {t('home:by_date')}
-              </Bar.Item>
-            </Bar.Root>
-          </View>
+            <Bar.Item
+              onPress={() => setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))}
+              icon={<TinyArrow orientation={sort === 'descending' ? 'up' : 'down'} />}
+            >
+              {t('home:by_date')}
+            </Bar.Item>
+          </Bar.Root>
         </Authenticated>
       </View>
     </>
@@ -233,8 +221,8 @@ const Home: TabType<'watched'> = ({ navigation, route }) => {
     <>
       {viewMode === 'gallery' && (
         <GalleryView
-          style={styles.flatlists}
-          data={data[list]}
+          contentContainerStyle={styles.flatlists}
+          data={data.watchedMovies}
           header={header}
           empty={emptyState}
         />
@@ -243,8 +231,8 @@ const Home: TabType<'watched'> = ({ navigation, route }) => {
       {viewMode === 'list' && (
         <ListView
           responsive
-          style={styles.flatlists}
-          data={data[list]}
+          contentContainerStyle={styles.flatlists}
+          data={data.watchedMovies}
           header={header}
           empty={emptyState}
           topButton={{
@@ -253,40 +241,29 @@ const Home: TabType<'watched'> = ({ navigation, route }) => {
             onPress: handleWatch,
           }}
           bottomButton={{
-            title: list === 'watchlist' ? t('home:bump') : t('home:save'),
-            icon: list === 'watchlist' ? <TinyArrow /> : <TinyPlus />,
+            title: t('home:save'),
+            icon: <TinyPlus />,
             loading: isSaveLoading,
             onPress: handleSave,
           }}
         />
       )}
 
-      <View style={styles.footer}>
-        <IconButton
-          onPress={() => navigation.navigate(routes.search)}
-          icon={<IconMagnifyingGlass />}
-        />
-      </View>
-
       <View style={styles.header}>
+        <View />
+
         <Authenticated>
-          <IconButton
-            onPress={() => {
-              setViewMode((prev) => (prev === 'gallery' ? 'list' : 'gallery'))
-            }}
-            icon={viewMode === 'gallery' ? <IconList /> : <IconGallery />}
-          />
           <Avatar onPress={() => navigation.navigate(routes.profile)} />
         </Authenticated>
 
         <Unauthenticated>
-          <View />
           <Avatar
             onPress={() => navigation.navigate(routes.auth)}
             label={t('auth:sign_in')}
           />
         </Unauthenticated>
       </View>
+
       <Dropdown
         visible={calendarDropdown}
         setVisible={setCalendarDropdown}
@@ -318,4 +295,4 @@ const Home: TabType<'watched'> = ({ navigation, route }) => {
   )
 }
 
-export default Home
+export default WatchedMovies

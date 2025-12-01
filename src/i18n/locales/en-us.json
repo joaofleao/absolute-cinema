@@ -17,17 +17,20 @@
     "watched": "Watched",
     "watchlist": "Watchlist",
     "by_date": "By Date",
+    "gallery": "Gallery",
+    "list": "List",
     "empty_state": "No movies yet",
     "select_year": "Select Year",
     "all": "All",
     "bump": "Bump",
     "watch": "Watch",
     "save": "Save",
-    "nothing": "Absolutely nothing",
-    "sign_in": "sign in to continue"
+    "nothing": "Absolutely nothing yet",
+    "sign_in": "sign in to track movies"
   },
   "search": {
-    "empty_state": "No movies found",
+    "no_results": "No movies found",
+    "empty_state": "Search movies",
     "save": "Save",
     "watch": "Watch",
     "unreleased": "Unreleased",

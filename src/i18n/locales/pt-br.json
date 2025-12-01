@@ -17,17 +17,20 @@
     "watched": "Assistidos",
     "watchlist": "Lista",
     "by_date": "Por Data",
+    "gallery": "Galeria",
+    "list": "Lista",
     "empty_state": "Sem filmes ainda",
     "select_year": "Selecionar ano",
     "all": "Todos",
     "bump": "Subir",
     "watch": "Assistir",
     "save": "Salvar",
-    "nothing": "absolutamente nada",
-    "sign_in": "entre para continuar"
+    "nothing": "absolutamente nada ainds",
+    "sign_in": "entre para marcar filmes"
   },
   "search": {
-    "empty_state": "Nenhum filme encontrado",
+    "no_results": "Nenhum filme encontrado",
+    "empty_state": "Busque filmes",
     "save": "Salvar",
     "watch": "Assistir",
     "unreleased": "Não Lançado",

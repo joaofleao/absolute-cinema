@@ -8,7 +8,6 @@ type StylesReturn = {
   content: ViewStyle
   gradient: ViewStyle
   gradientContainer: ViewStyle
-  footer: ViewStyle
   header: ViewStyle
   datepicker: ViewStyle
   flatlists: ViewStyle
@@ -30,7 +29,7 @@ const useStyles = (): StylesReturn => {
       position: 'relative',
       alignItems: 'center',
       gap: 20,
-      paddingBlock: 60,
+      paddingTop: 60,
     },
     title: {
       alignItems: 'center',
@@ -50,14 +49,7 @@ const useStyles = (): StylesReturn => {
       height: width * 2,
       width: width,
     },
-    footer: {
-      position: 'absolute',
-      bottom,
-      paddingHorizontal: 20,
-      paddingBottom: 20,
-      maxWidth: '100%',
-      alignSelf: 'flex-end',
-    },
+
     header: {
       justifyContent: 'space-between',
       flexDirection: 'row',
@@ -70,10 +62,10 @@ const useStyles = (): StylesReturn => {
       alignSelf: 'flex-end',
     },
     flatlists: {
-      paddingTop: top,
-      paddingBottom: bottom,
-      paddingRight: right,
-      paddingLeft: left,
+      paddingTop: top + 16,
+      paddingBottom: bottom + 88,
+      paddingRight: right + 16,
+      paddingLeft: left + 16,
     },
   })
 }
