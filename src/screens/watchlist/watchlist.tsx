@@ -62,7 +62,7 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
       const existingMovie = await getMovie({ tmdbId: movie })
       if (existingMovie)
         await addToWatchlist({ movieId: existingMovie._id }).then(() => {
-          Alert.alert(`"${existingMovie.title}" ${t('overall:add_watchlist')}`)
+          Alert.alert(`"${existingMovie.title[i18n.language]}" ${t('overall:add_watchlist')}`)
         })
     } catch (error) {
       catchConvexError(error)
@@ -110,7 +110,9 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
           setSaveLoading(movie.tmdbId)
 
           await removeFromWatchlist({ movieId: movie._id })
-            .then(() => Alert.alert(`"${movie.title}" ${t('overall:remove_watchlist')}`))
+            .then(() =>
+              Alert.alert(`"${movie.title[i18n.language]}" ${t('overall:remove_watchlist')}`),
+            )
             .catch(catchConvexError)
             .finally(() => {
               setSaveLoading(undefined)

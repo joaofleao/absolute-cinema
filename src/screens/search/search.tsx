@@ -91,7 +91,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
       if (movieId)
         await addToWatchlist({ movieId }).then(() => {
-          Alert.alert(`"${tmdbMovie.title}" ${t('overall:add_watchlist')}`)
+          Alert.alert(`"${tmdbMovie.title[i18n.language]}" ${t('overall:add_watchlist')}`)
         })
     } catch (error) {
       catchConvexError(error)

@@ -39,6 +39,7 @@ const useStyles = (): StylesReturn => {
       alignItems: 'center',
       justifyContent: 'center',
       gap: 48,
+      paddingTop: 20,
     },
     gradientContainer: {
       position: 'absolute',

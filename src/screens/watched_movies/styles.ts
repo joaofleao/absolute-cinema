@@ -40,6 +40,7 @@ const useStyles = (): StylesReturn => {
       alignItems: 'center',
       justifyContent: 'center',
       gap: 20,
+      paddingTop: 20,
     },
     gradientContainer: {
       position: 'absolute',
