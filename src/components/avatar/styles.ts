@@ -19,13 +19,15 @@ const useStyles = (): StylesReturn => {
       backgroundColor: semantics.container.base.default,
       flexDirection: 'row',
       overflow: 'hidden',
-      height: 40,
-      // width: 40,
+
       justifyContent: 'center',
       alignItems: 'center',
     },
     iconContainer: {
-      padding: 8,
+      minWidth: 40,
+      minHeight: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     image: {
       width: '100%',
