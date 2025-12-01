@@ -6,6 +6,7 @@ import { SearchInputProps } from './types'
 import { IconMagnifyingGlass, IconX } from '@components/icon'
 import { useStrings } from '@providers/strings'
 import { useTheme } from '@providers/theme'
+
 const SearchInput = ({
   debounce = 0,
   value,
@@ -16,27 +17,32 @@ const SearchInput = ({
   ...props
 }: SearchInputProps): React.ReactElement => {
   const inputRef = useRef<TextInput>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null) // Ref to store the timeout ID
   const styles = useStyles()
   const { semantics } = useTheme()
   const { search } = useStrings()
 
-  let timeoutId: NodeJS.Timeout
-
   const debouncer = (text: string): void => {
-    timeoutId = setTimeout(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    timeoutRef.current = setTimeout(() => {
       onDebouncedText?.(text)
     }, debounce)
   }
 
   const handleChangeText = (text: string): void => {
     onChangeText?.(text)
-    clearTimeout(timeoutId)
     debouncer(text)
   }
 
   const handleClear = (): void => {
     inputRef.current?.clear()
     onClear?.()
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
   }
 
   return (

@@ -105,8 +105,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
         posterPath: movie.posterPath,
         date: new Date(movie.addedAt).toLocaleDateString(),
         voteAverage: movie.voteAverage,
-        language:
-          languages[movie.originalLanguage as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+        language: languages[movie.originalLanguage as LanguageCode][i18n.language],
         onLongPress: async (): Promise<void> => {
           setSaveLoading(movie.tmdbId)
           try {
@@ -135,8 +134,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
         posterPath: movie.posterPath,
         date: new Date(movie.watchedAt).toLocaleDateString(),
         voteAverage: movie.voteAverage,
-        language:
-          languages[movie.originalLanguage as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+        language: languages[movie.originalLanguage as LanguageCode][i18n.language],
         onPress: (): void => navigation.navigate('watched_movie', { movie }),
       })),
   }

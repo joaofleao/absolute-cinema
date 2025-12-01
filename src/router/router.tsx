@@ -4,14 +4,14 @@ import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as SplashScreen from 'expo-splash-screen'
 import { use as run } from 'i18next'
-import { initReactI18next } from 'react-i18next'
+import { initReactI18next, useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
 import { StackProps } from './types'
 import { IconBookmarks, IconFilm } from '@components/icon'
 import NavBar from '@components/nav_bar'
-import enUS from '@i18n/locales/en-us.json'
-import ptBR from '@i18n/locales/pt-br.json'
+import enUS from '@i18n/locales/en_US.json'
+import ptBR from '@i18n/locales/pt_BR.json'
 import { fontImports, useTheme } from '@providers/theme'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
@@ -30,27 +30,20 @@ import print from '@utils/print'
 const Stack = createNativeStackNavigator<StackProps>()
 const Tabs = createBottomTabNavigator<StackProps>()
 
-const resources = {
-  'pt-BR': ptBR,
-  'en-US': enUS,
-}
-
 const initI18n = async (): Promise<void> => {
   // const json = await AsyncStorage.getItem('userData')
   // const savedLanguage = JSON.parse(json)?.language
-
   // if (!user.language) {
   //   savedLanguage = Localization.locale
   // }
-
   run(initReactI18next).init({
-    // compatibilityJSON: 'v3',
-    resources,
-    // lng: savedLanguage,
-    fallbackLng: 'en-US',
-    interpolation: {
-      escapeValue: false,
+    resources: {
+      pt_BR: ptBR,
+      en_US: enUS,
     },
+    // lng: savedLanguage,
+    fallbackLng: 'en_US',
+    interpolation: { escapeValue: false },
   })
 }
 
@@ -67,6 +60,7 @@ const Router = (): React.ReactNode => {
   const [appReady, setAppReady] = React.useState(false)
   const { semantics } = useTheme()
   const styles = useStyles()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     async function prepare(): Promise<void> {
@@ -99,8 +93,8 @@ const Router = (): React.ReactNode => {
         tabBar={(props) => (
           <NavBar
             tabs={[
-              { icon: <IconFilm />, label: routes.watched },
-              { icon: <IconBookmarks />, label: routes.watchlist },
+              { icon: <IconFilm />, label: t('overall:watched'), id: routes.watched },
+              { icon: <IconBookmarks />, label: t('overall:watchlist'), id: routes.watchlist },
             ]}
             {...props}
           />

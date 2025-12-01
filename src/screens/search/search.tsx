@@ -21,15 +21,6 @@ import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router'
 import { LanguageCode, languages } from '@utils/languages'
 
-interface TMDBMovie {
-  id: number
-  title: string
-  poster_path?: string
-  release_date: string
-  vote_average: number
-  original_language: string
-}
-
 const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { t, i18n } = useTranslation()
@@ -37,9 +28,15 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const { isAuthenticated } = useConvexAuth()
   const catchConvexError = useConvexErrorHandler()
 
+  const searchMovies = useAction(api.movies.searchMovies)
+  const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
+  const markAsWatched = useMutation(api.movies.markAsWatched)
+  const addToWatchlist = useMutation(api.movies.addToWatchlist)
+
+  const [results, setResults] = useState<Awaited<ReturnType<typeof searchMovies>>>()
+
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
-  const [results, setResults] = useState<TMDBMovie[]>()
   const [loading, setLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState<number>()
   const [selectedMovie, setSelectedMovie] = useState<number>()
@@ -53,21 +50,14 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         ? t('search:unrelesed')
         : new Date(movie.release_date).getFullYear().toString(),
     voteAverage: movie.vote_average,
-    language:
-      languages[movie.original_language as LanguageCode][i18n.language as 'en-US' | 'pt-BR'],
+    language: languages[movie.original_language as LanguageCode][i18n.language],
   }))
-
-  const searchMovies = useAction(api.movies.searchMovies)
-  const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
-  const markAsWatched = useMutation(api.movies.markAsWatched)
-  const addToWatchlist = useMutation(api.movies.addToWatchlist)
 
   const handleSearch = async (query: string): Promise<void> => {
     if (!query.trim()) return
     try {
-      const searchResults: TMDBMovie[] = await searchMovies({
+      const searchResults = await searchMovies({
         query: query.trim(),
-        language: i18n.language,
       })
 
       setResults(searchResults)
@@ -87,9 +77,8 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     if (!results) return
     setSaveLoading(movie)
     try {
-      const tmdbMovie = results.find((original) => {
-        return original.id === movie
-      })!
+      const tmdbMovie = results.find((original) => original.id === movie)
+      if (!tmdbMovie) throw Error
 
       const movieId = await getOrCreateMovie({
         tmdbId: tmdbMovie.id,
@@ -97,7 +86,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         releaseDate: tmdbMovie.release_date,
         voteAverage: tmdbMovie.vote_average,
         originalLanguage: tmdbMovie.original_language,
-        ...(tmdbMovie.poster_path && { posterPath: tmdbMovie.poster_path }),
+        posterPath: tmdbMovie.poster_path,
       })
 
       if (movieId)
@@ -120,10 +109,12 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
   const watchMovie = async (): Promise<void> => {
     if (!results) return
+
     try {
       const tmdbMovie = results.find((original) => {
         return original.id === selectedMovie
-      })!
+      })
+      if (!tmdbMovie) throw Error
 
       const movieId = await getOrCreateMovie({
         tmdbId: tmdbMovie.id,
@@ -131,7 +122,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         releaseDate: tmdbMovie.release_date,
         voteAverage: tmdbMovie.vote_average,
         originalLanguage: tmdbMovie.original_language,
-        ...(tmdbMovie.poster_path && { posterPath: tmdbMovie.poster_path }),
+        posterPath: tmdbMovie.poster_path,
       })
 
       if (movieId) await markAsWatched({ movieId, watchedAt: date.getTime() })

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
 import { GalleryViewItemProps } from './types'
@@ -16,22 +17,30 @@ const GalleryViewItem = ({
 }: GalleryViewItemProps): React.ReactElement => {
   const styles = useStyles()
   const theme = useTheme()
+  const { i18n } = useTranslation()
 
   const content = (
     <>
-      {posterPath && (
+      {posterPath[i18n.language] !== undefined && (
         <Image
           style={styles.image}
-          source={{ uri: 'https://image.tmdb.org/t/p/w1280/' + posterPath }}
+          source={{ uri: 'https://image.tmdb.org/t/p/w1280/' + posterPath[i18n.language] }}
         />
       )}
-      {!posterPath && (
+      {posterPath[i18n.language] === undefined && posterPath.en_US !== undefined && (
+        <Image
+          style={styles.image}
+          source={{ uri: 'https://image.tmdb.org/t/p/w1280/' + posterPath.en_US }}
+        />
+      )}
+
+      {posterPath[i18n.language] === undefined && posterPath.en_US === undefined && (
         <Typography
           numberOfLines={6}
           style={styles.title}
           color={theme.semantics.container.foreground.default}
         >
-          {title}
+          {title[i18n.language]}
         </Typography>
       )}
     </>

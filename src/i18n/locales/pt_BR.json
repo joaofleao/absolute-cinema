@@ -11,7 +11,10 @@
     "not_implemented": "Não implementado",
     "feature_not_implemented": "Este recurso não está implementado ainda.",
     "add_watchlist": "salvo na sua lista",
-    "remove_watchlist": "removido da sua lista"
+    "remove_watchlist": "removido da sua lista",
+    "watched": "Assistidos",
+    "watchlist": "Lista",
+    "tmdb_error": "Erro ao buscar filme. Verifique a chave do TMDB."
   },
   "home": {
     "watched": "Assistidos",
@@ -35,8 +38,7 @@
     "watch": "Assistir",
     "unreleased": "Não Lançado",
     "cancel": "Cancelar",
-    "submit": "Enviar",
-    "tmdb_error": "Erro ao buscar filme. Verifique a chave do TMDB."
+    "submit": "Enviar"
   },
   "auth": {
     "sign_in": "Entrar",

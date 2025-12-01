@@ -17,9 +17,16 @@ export type StackProps = {
       watchId: Id<'watchedMovies'>
       _id: Id<'movies'>
       _creationTime: number
-      posterPath?: string | undefined
       tmdbId: number
-      title: string
+      title: {
+        original: string
+        pt_BR: string
+        en_US: string
+      }
+      posterPath: {
+        pt_BR?: string
+        en_US?: string
+      }
       releaseDate: string
       voteAverage: number
       originalLanguage: string

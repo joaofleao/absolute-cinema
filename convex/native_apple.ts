@@ -1,6 +1,7 @@
 import { internal } from './_generated/api'
 import { createAccount, retrieveAccount } from '@convex-dev/auth/server'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
 export const nativeAppleHandler = async (credentials: any, ctx: any) => {
   // Extract the identity token from the credentials
   const { identityToken, user: clientAppleUserId } = credentials
@@ -27,11 +28,11 @@ export const nativeAppleHandler = async (credentials: any, ctx: any) => {
 
     if (existingAccount) {
       // User exists, return their ID
-      console.log('User exists, returning their ID')
+
       return { userId: existingAccount.user._id }
     }
   } catch (error) {
-    console.log('User does not exist, creating user')
+    throw error
   }
 
   const createdAccount = await createAccount(ctx, {

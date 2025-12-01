@@ -47,7 +47,7 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
       .finally(() => setLoadingSignOut(false))
   }
   const handleSwitchLanguage = async (): Promise<void> => {
-    i18n.changeLanguage(i18n.language === 'en-US' ? 'pt-BR' : 'en-US')
+    i18n.changeLanguage(i18n.language === 'en_US' ? 'pt_BR' : 'en_US')
   }
 
   return (
@@ -57,7 +57,7 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
           <Button
             onPress={handleSwitchLanguage}
             title={
-              i18n.language === 'en-US' ? t('profile:switch_to_ptbr') : t('profile:switch_to_enus')
+              i18n.language === 'en_US' ? t('profile:switch_to_ptbr') : t('profile:switch_to_enus')
             }
             icon={<IconLanguages />}
           />

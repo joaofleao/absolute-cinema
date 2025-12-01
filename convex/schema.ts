@@ -7,8 +7,15 @@ const applicationTables = {
   // Store movie information from TMDB
   movies: defineTable({
     tmdbId: v.number(),
-    title: v.string(),
-    posterPath: v.optional(v.string()),
+    title: v.object({
+      original: v.string(),
+      pt_BR: v.string(),
+      en_US: v.string(),
+    }),
+    posterPath: v.object({
+      pt_BR: v.optional(v.string()),
+      en_US: v.optional(v.string()),
+    }),
     releaseDate: v.string(),
     voteAverage: v.number(),
     originalLanguage: v.string(),

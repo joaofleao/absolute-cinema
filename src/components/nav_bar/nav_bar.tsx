@@ -12,7 +12,7 @@ const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement =>
 
   const renderTabs = (tab: TabType, index: number): React.ReactElement => {
     const handleTabPress = (): void => {
-      navigation.navigate(tab.label)
+      navigation.navigate(tab.id)
     }
 
     return (

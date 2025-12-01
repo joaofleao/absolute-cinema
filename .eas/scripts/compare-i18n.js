@@ -18,8 +18,8 @@ function getKeys(obj, prefix = '') {
 }
 
 const basePath = resolve(__dirname, '../../src/i18n/locales')
-const en = JSON.parse(readFileSync(join(basePath, 'en-us.json'), 'utf8'))
-const pt = JSON.parse(readFileSync(join(basePath, 'pt-br.json'), 'utf8'))
+const en = JSON.parse(readFileSync(join(basePath, 'en_US.json'), 'utf8'))
+const pt = JSON.parse(readFileSync(join(basePath, 'pt_BR.json'), 'utf8'))
 
 const enKeys = getKeys(en).sort()
 const ptKeys = getKeys(pt).sort()
@@ -29,10 +29,10 @@ const extraInPt = ptKeys.filter((k) => !enKeys.includes(k))
 
 if (missingInPt.length || extraInPt.length) {
   if (missingInPt.length) {
-    console.error('Missing keys in pt-br.json:', missingInPt)
+    console.error('Missing keys in pt_BR.json:', missingInPt)
   }
   if (extraInPt.length) {
-    console.error('Extra keys in pt-br.json:', extraInPt)
+    console.error('Extra keys in pt_BR.json:', extraInPt)
   }
   process.exit(1)
 } else {

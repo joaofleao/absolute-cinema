@@ -1,7 +1,9 @@
 import { IconProps } from '@components/icon'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import { StackProps } from '@router'
 
 export type TabType = {
+  id: keyof StackProps
   label: string
   icon: React.ReactElement<IconProps>
 }

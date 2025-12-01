@@ -11,7 +11,10 @@
     "not_implemented": "Not implemented",
     "feature_not_implemented": "This feature is not implemented yet.",
     "add_watchlist": "added to your watchlist",
-    "remove_watchlist": "removed from your watchlist"
+    "remove_watchlist": "removed from your watchlist",
+    "watched": "watched",
+    "watchlist": "watchlist",
+    "tmdb_error": "Failed to search movies. Please check your TMDB API key."
   },
   "home": {
     "watched": "Watched",
@@ -35,8 +38,7 @@
     "watch": "Watch",
     "unreleased": "Unreleased",
     "cancel": "Cancel",
-    "submit": "Submit",
-    "tmdb_error": "Failed to search movies. Please check your TMDB API key."
+    "submit": "Submit"
   },
   "auth": {
     "sign_in": "Sign In",

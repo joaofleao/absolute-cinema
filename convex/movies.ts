@@ -3,28 +3,77 @@ import { v } from 'convex/values'
 import { action, mutation, query } from './_generated/server'
 import { getAuthUserId } from '@convex-dev/auth/server'
 
-export const searchMovies = action({
-  args: { query: v.string(), language: v.optional(v.string()) },
-  handler: async (ctx, args) => {
-    let url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(args.query)}`
+interface TMDBMovie {
+  id: number
+  original_language: string
+  original_title: string
+  overview: string
+  popularity: number
+  poster_path: string
+  release_date: string
+  title: string
+  video: false
+  vote_average: number
+  vote_count: number
+}
 
-    if (args.language) {
-      url += `&language=${encodeURIComponent(args.language)}`
+interface TMDBRefinedMovie extends Omit<TMDBMovie, 'title' | 'poster_path'> {
+  title: {
+    original: string
+    en_US: string
+    pt_BR: string
+  }
+  poster_path: {
+    en_US?: string
+    pt_BR?: string
+  }
+}
+
+export const searchMovies = action({
+  args: {
+    query: v.string(),
+    page: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const urlPT = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(args.query)}&page=${encodeURIComponent(args.page ?? 1)}&language=pt-BR`
+    const urlEN = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(args.query)}&page=${encodeURIComponent(args.page ?? 1)}&language=en-US`
+
+    const headers = {
+      Authorization: `Bearer ${process.env.TMDB_BEARER_TOKEN}`,
+      accept: 'application/json',
     }
 
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${process.env.TMDB_BEARER_TOKEN}`,
-        accept: 'application/json',
-      },
-    })
+    const responsePT = await fetch(urlPT, { headers })
+    const responseEN = await fetch(urlEN, { headers })
 
-    if (!response.ok) {
+    if (!responsePT.ok && !responseEN.ok) {
       throw new Error('Failed to search movies')
     }
 
-    const data = await response.json()
-    return data.results.slice(0, 10) // Return top 10 results
+    const data: { results: TMDBMovie[] } = await responseEN.json()
+    const dataPT: { results: TMDBMovie[] } = await responsePT.json()
+
+    const internationalized: TMDBRefinedMovie[] = data.results
+      .map((enElement) => {
+        const portuguese = dataPT.results.find((ptElement) => ptElement.id === enElement.id)
+
+        let withLanguages = {
+          ...enElement,
+          title: {
+            original: enElement.original_title,
+            en_US: enElement.title,
+            pt_BR: portuguese?.title ?? enElement.title,
+          },
+          poster_path: {
+            en_US: enElement.poster_path,
+            pt_BR: portuguese?.poster_path ?? enElement.poster_path,
+          },
+        }
+        return withLanguages
+      })
+      .sort((a, b) => b.popularity - a.popularity)
+
+    return internationalized
   },
 })
 
@@ -32,8 +81,15 @@ export const searchMovies = action({
 export const getOrCreateMovie = mutation({
   args: {
     tmdbId: v.number(),
-    title: v.string(),
-    posterPath: v.optional(v.string()),
+    title: v.object({
+      original: v.string(),
+      pt_BR: v.string(),
+      en_US: v.string(),
+    }),
+    posterPath: v.object({
+      pt_BR: v.optional(v.string()),
+      en_US: v.optional(v.string()),
+    }),
     releaseDate: v.string(),
     voteAverage: v.number(),
     originalLanguage: v.string(),

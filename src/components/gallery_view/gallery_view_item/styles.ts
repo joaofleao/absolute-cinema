@@ -1,4 +1,4 @@
-import { Dimensions, ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native'
+import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import { useTheme } from '@providers/theme'
 
