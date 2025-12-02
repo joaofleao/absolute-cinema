@@ -20,7 +20,7 @@ import Select from '@components/select'
 import { TinyArrow, TinyCheckmark, TinyChevron } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
-import { routes, TabType } from '@router'
+import { TabType } from '@router/types'
 import { LanguageCode, languages } from '@utils/languages'
 
 const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
@@ -250,13 +250,13 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
         <View />
 
         <Authenticated>
-          <Avatar onPress={() => navigation.navigate(routes.profile)} />
+          <Avatar onPress={() => navigation.navigate('profile')} />
         </Authenticated>
 
         <Unauthenticated>
           <View />
           <Avatar
-            onPress={() => navigation.navigate(routes.auth)}
+            onPress={() => navigation.navigate('auth')}
             label={t('auth:sign_in')}
           />
         </Unauthenticated>

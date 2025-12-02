@@ -12,7 +12,7 @@ import { IconDoor, IconLanguages } from '@components/icon'
 import Modal from '@components/modal'
 import Row from '@components/row'
 import { useAuthActions } from '@convex-dev/auth/react'
-import { ScreenType } from '@router'
+import { ScreenType } from '@router/types'
 
 const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
   const styles = useStyles()

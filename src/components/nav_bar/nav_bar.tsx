@@ -6,7 +6,6 @@ import NavBarItem from './nav_bar_item'
 import useStyles from './styles'
 import { NavBarProps, TabType } from './types'
 import { IconMagnifyingGlass } from '@components/icon'
-import { routes } from '@router/index'
 
 const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement => {
   const styles = useStyles()
@@ -44,7 +43,7 @@ const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement =>
     <View style={[styles.container, styles.trailing]}>
       <View style={styles.background}>
         <NavBarItem
-          onPress={() => navigation.navigate(routes.search)}
+          onPress={() => navigation.navigate('search')}
           icon={<IconMagnifyingGlass />}
         />
       </View>

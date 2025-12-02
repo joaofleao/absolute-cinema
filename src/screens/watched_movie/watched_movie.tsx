@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import useStyles from './styles'
 import Button from '@components/button'
 import Typography from '@components/typography'
-import { ScreenType } from '@router'
+import { ScreenType } from '@router/types'
 
 const WatchedMovie: ScreenType<'watched_movie'> = ({ navigation, route }) => {
   const styles = useStyles()

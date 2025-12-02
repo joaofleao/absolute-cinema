@@ -8,7 +8,7 @@ import Button from '@components/button'
 import { IconLanguages } from '@components/icon'
 import IconButton from '@components/icon_button'
 import { TinyCheckmark, TinyChevron } from '@components/tiny_icon'
-import { ScreenType } from '@router'
+import { ScreenType } from '@router/types'
 import formatString from '@utils/format_string'
 
 const Onboarding: ScreenType<'onboarding'> = ({ navigation, route }) => {

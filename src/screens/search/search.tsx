@@ -18,7 +18,7 @@ import SearchInput from '@components/search_input'
 import { TinyCheckmark, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
-import { ScreenType } from '@router'
+import { ScreenType } from '@router/types'
 import { LanguageCode, languages } from '@utils/languages'
 
 const Search: ScreenType<'search'> = ({ navigation, route }) => {

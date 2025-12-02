@@ -2,7 +2,7 @@ import { Image, ScrollView, View } from 'react-native'
 
 import useStyles from './styles'
 import Typography from '@components/typography'
-import { ScreenType } from '@router'
+import { ScreenType } from '@router/types'
 
 const PasswordRecovery: ScreenType<'password_recovery'> = ({ navigation, route }) => {
   const styles = useStyles()

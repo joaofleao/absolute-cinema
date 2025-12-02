@@ -8,7 +8,7 @@
     "paths": {
       "@utils/*": ["./src/utils/*"],
       "@screens/*": ["./src/screens/*"],
-      "@i18n/*": ["./src/i18n/*"],
+      "@translations/*": ["./src/translations/*"],
       "@providers/*": ["./src/providers/*"],
       "@components/*": ["./src/components/*"],
       "@router/*": ["./src/router/*"],

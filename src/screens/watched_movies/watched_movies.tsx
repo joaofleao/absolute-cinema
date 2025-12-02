@@ -20,7 +20,7 @@ import Select from '@components/select'
 import { TinyArrow, TinyCheckmark, TinyChevron, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
-import { routes, TabType } from '@router'
+import { TabType } from '@router/types'
 import { LanguageCode, languages } from '@utils/languages'
 
 const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
@@ -253,12 +253,12 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
         <View />
 
         <Authenticated>
-          <Avatar onPress={() => navigation.navigate(routes.profile)} />
+          <Avatar onPress={() => navigation.navigate('profile')} />
         </Authenticated>
 
         <Unauthenticated>
           <Avatar
-            onPress={() => navigation.navigate(routes.auth)}
+            onPress={() => navigation.navigate('auth')}
             label={t('auth:sign_in')}
           />
         </Unauthenticated>

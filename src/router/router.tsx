@@ -11,13 +11,10 @@ import useStyles from './styles'
 import { StackProps } from './types'
 import { IconBookmarks, IconFilm } from '@components/icon'
 import NavBar from '@components/nav_bar'
-import enUS from '@i18n/locales/en_US.json'
-import ptBR from '@i18n/locales/pt_BR.json'
 import { fontImports, useTheme } from '@providers/theme'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { routes } from '@router'
 import Auth from '@screens/auth'
 import Movie from '@screens/movie'
 import Onboarding from '@screens/onboarding'
@@ -27,6 +24,8 @@ import Search from '@screens/search'
 import WatchedMovie from '@screens/watched_movie'
 import WatchedMovies from '@screens/watched_movies'
 import Watchlist from '@screens/watchlist'
+import enUS from '@translations/locales/en_US.json'
+import ptBR from '@translations/locales/pt_BR.json'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
@@ -90,21 +89,21 @@ const Router = (): React.ReactNode => {
         tabBar={(props) => (
           <NavBar
             tabs={[
-              { icon: <IconFilm />, label: t('overall:watched'), id: routes.watched },
-              { icon: <IconBookmarks />, label: t('overall:watchlist'), id: routes.watchlist },
+              { icon: <IconFilm />, label: t('overall:watched'), id: 'watched' },
+              { icon: <IconBookmarks />, label: t('overall:watchlist'), id: 'watchlist' },
             ]}
             {...props}
           />
         )}
       >
         <Tabs.Screen
-          key={routes.watched}
-          name={routes.watched}
+          key={'watched'}
+          name={'watched'}
           component={WatchedMovies}
         />
         <Tabs.Screen
-          key={routes.watchlist}
-          name={routes.watchlist}
+          key={'watchlist'}
+          name={'watchlist'}
           component={Watchlist}
         />
       </Tabs.Navigator>
@@ -131,20 +130,20 @@ const Router = (): React.ReactNode => {
             },
           }}
         >
-          <Stack.Screen name={routes.home}>{renderTabs}</Stack.Screen>
+          <Stack.Screen name={'home'}>{renderTabs}</Stack.Screen>
 
           <Stack.Screen
-            name={routes.movie}
+            name={'movie'}
             component={Movie}
           />
 
           <Stack.Screen
-            name={routes.password_recovery}
+            name={'password_recovery'}
             component={PasswordRecovery}
           />
 
           <Stack.Screen
-            name={routes.search}
+            name={'search'}
             component={Search}
             options={{
               presentation: 'formSheet',
@@ -159,7 +158,7 @@ const Router = (): React.ReactNode => {
           />
 
           <Stack.Screen
-            name={routes.watched_movie}
+            name={'watched_movie'}
             component={WatchedMovie}
             options={{
               presentation: 'formSheet',
@@ -170,7 +169,7 @@ const Router = (): React.ReactNode => {
             }}
           />
           <Stack.Screen
-            name={routes.profile}
+            name={'profile'}
             component={Profile}
             options={{
               presentation: 'formSheet',
@@ -182,7 +181,7 @@ const Router = (): React.ReactNode => {
           />
 
           <Stack.Screen
-            name={routes.auth}
+            name={'auth'}
             component={Auth}
             options={{
               presentation: 'formSheet',
@@ -193,7 +192,7 @@ const Router = (): React.ReactNode => {
             }}
           />
           <Stack.Screen
-            name={routes.onboarding}
+            name={'onboarding'}
             component={Onboarding}
             options={{
               animation: 'slide_from_left',

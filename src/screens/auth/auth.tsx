@@ -16,7 +16,7 @@ import SegmentedControl from '@components/segmented_control'
 import Typography from '@components/typography'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { useTheme } from '@providers/theme'
-import { ScreenType } from '@router'
+import { ScreenType } from '@router/types'
 import print from '@utils/print'
 
 const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
