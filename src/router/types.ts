@@ -8,6 +8,7 @@ export type StackProps = {
   profile: undefined
   watchlist: undefined
   watched: undefined
+  onboarding: undefined
 
   movie: undefined
   password_recovery: undefined

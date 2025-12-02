@@ -2,6 +2,7 @@ import React from 'react'
 import { StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'
+import * as SecureStore from 'expo-secure-store'
 import * as SplashScreen from 'expo-splash-screen'
 import { use as run } from 'i18next'
 import { initReactI18next, useTranslation } from 'react-i18next'
@@ -19,6 +20,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { routes } from '@router'
 import Auth from '@screens/auth'
 import Movie from '@screens/movie'
+import Onboarding from '@screens/onboarding'
 import PasswordRecovery from '@screens/password_recovery'
 import Profile from '@screens/profile'
 import Search from '@screens/search'
@@ -31,18 +33,13 @@ const Stack = createNativeStackNavigator<StackProps>()
 const Tabs = createBottomTabNavigator<StackProps>()
 
 const initI18n = async (): Promise<void> => {
-  // const json = await AsyncStorage.getItem('userData')
-  // const savedLanguage = JSON.parse(json)?.language
-  // if (!user.language) {
-  //   savedLanguage = Localization.locale
-  // }
+  const lng = SecureStore.getItem('language') ?? 'en_US'
   run(initReactI18next).init({
     resources: {
       pt_BR: ptBR,
       en_US: enUS,
     },
-    // lng: savedLanguage,
-    fallbackLng: 'en_US',
+    lng,
     interpolation: { escapeValue: false },
   })
 }
@@ -193,6 +190,13 @@ const Router = (): React.ReactNode => {
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
+            }}
+          />
+          <Stack.Screen
+            name={routes.onboarding}
+            component={Onboarding}
+            options={{
+              animation: 'slide_from_left',
             }}
           />
         </Stack.Navigator>

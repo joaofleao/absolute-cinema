@@ -85,5 +85,12 @@
     },
     "continue": "Continue",
     "report": "Report"
+  },
+  "onboarding": {
+    "switch_to_ptbr": "Switch to Portuguese",
+    "switch_to_enus": "Switch to English",
+    "first": "This is to \n%Absolute Cinema%. \n\nWe register your watched movies. \n\nthat's it.",
+    "second": "%Save% what you want to watch. \n\n%Mark% movies as watched.",
+    "third": "No ratings, \nNo reviews, \n\njust pure \n%Absolute Cinema%."
   }
 }

@@ -1,12 +1,15 @@
 import { StyleSheet, ViewStyle } from 'react-native'
 
-import { useTheme } from '@providers/theme'
+import { SemanticsType, useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
 }
+type StylesProps = {
+  variant: keyof SemanticsType
+}
 
-const useStyles = (): StylesReturn => {
+const useStyles = ({ variant }: StylesProps): StylesReturn => {
   const { semantics } = useTheme()
 
   return StyleSheet.create({
@@ -19,8 +22,8 @@ const useStyles = (): StylesReturn => {
       alignItems: 'center',
       justifyContent: 'center',
 
-      borderColor: semantics.container.stroke.default,
-      backgroundColor: semantics.container.base.default,
+      borderColor: semantics[variant].stroke.default,
+      backgroundColor: semantics[variant].base.default,
       flexDirection: 'row',
       gap: 8,
     },

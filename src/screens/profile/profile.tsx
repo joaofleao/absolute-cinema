@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { View } from 'react-native'
 import { api } from 'convex/_generated/api'
 import { useAction } from 'convex/react'
+import { setItem } from 'expo-secure-store'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
@@ -46,8 +47,10 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
       })
       .finally(() => setLoadingSignOut(false))
   }
+
   const handleSwitchLanguage = async (): Promise<void> => {
     i18n.changeLanguage(i18n.language === 'en_US' ? 'pt_BR' : 'en_US')
+    setItem('language', i18n.language)
   }
 
   return (

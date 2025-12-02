@@ -85,5 +85,12 @@
     },
     "continue": "Continuar",
     "report": "Reportar"
+  },
+  "onboarding": {
+    "switch_to_ptbr": "Mudar para Português",
+    "switch_to_enus": "Mudar para Inglês",
+    "first": "Bem-vindo ao \n%Absolute Cinema%. \n\nNós registramos os filmes que você assistiu. \n\nSó isso.",
+    "second": "%Salve% o que você quer assistir. \n\n%Marque% os filmes como assistidos.",
+    "third": "Sem avaliações, \nSem críticas, \n\napenas \n%Absolute Cinema%."
   }
 }

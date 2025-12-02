@@ -1,5 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
+import { getItem } from 'expo-secure-store'
 
 import NavBarItem from './nav_bar_item'
 import useStyles from './styles'
@@ -9,6 +10,11 @@ import { routes } from '@router/index'
 
 const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement => {
   const styles = useStyles()
+
+  setTimeout(() => {
+    const onb = getItem('onboarding')
+    if (onb !== 'done') navigation.navigate('onboarding')
+  }, 2000)
 
   const renderTabs = (tab: TabType, index: number): React.ReactElement => {
     const handleTabPress = (): void => {
