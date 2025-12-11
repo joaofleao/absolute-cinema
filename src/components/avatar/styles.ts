@@ -24,6 +24,7 @@ const useStyles = (): StylesReturn => {
       alignItems: 'center',
     },
     iconContainer: {
+      padding: 8,
       minWidth: 40,
       minHeight: 40,
       alignItems: 'center',

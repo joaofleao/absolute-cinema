@@ -6,19 +6,25 @@ import { authTables } from '@convex-dev/auth/server'
 const applicationTables = {
   // Store movie information from TMDB
   movies: defineTable({
-    tmdbId: v.number(),
     title: v.object({
       original: v.string(),
       pt_BR: v.string(),
       en_US: v.string(),
     }),
     posterPath: v.object({
-      pt_BR: v.optional(v.string()),
-      en_US: v.optional(v.string()),
+      pt_BR: v.string(),
+      en_US: v.string(),
     }),
-    releaseDate: v.string(),
-    voteAverage: v.number(),
-    originalLanguage: v.string(),
+    backdropPath: v.optional(v.string()),
+    imdbId: v.optional(v.string()),
+    originalLanguage: v.optional(v.string()),
+    overview: v.optional(v.string()),
+    releaseDate: v.optional(v.string()),
+    runtime: v.optional(v.number()),
+    status: v.optional(v.string()),
+    tagline: v.optional(v.string()),
+    voteAverage: v.optional(v.number()),
+    tmdbId: v.optional(v.number()),
   }).index('by_tmdb_id', ['tmdbId']),
 
   // User's watchlist
@@ -50,8 +56,7 @@ const applicationTables = {
   oscarEditions: defineTable({
     number: v.number(),
     year: v.number(),
-    categories: v.array(v.string()), // Array of category IDs
-    date: v.string(),
+    date: v.number(),
   }).index('by_number', ['number']),
 
   // All categories ever created for the oscars
@@ -64,61 +69,27 @@ const applicationTables = {
   }),
 
   oscarNomination: defineTable({
-    movieId: v.id('movies'),
-    editionId: v.id('oscarEditions'),
-    category: v.id('oscarCategories'),
+    movieId: v.id('movies'), //exchange
+    editionId: v.id('oscarEditions'), //omit
+    categoryId: v.id('oscarCategories'), //exchange
+    actorId: v.optional(v.id('actors')), //exchange
+    country: v.optional(v.string()),
     winner: v.optional(v.boolean()),
-
-    // For overall nominations
-    nominee: v.optional(
-      v.object({
-        pt_BR: v.optional(v.string()),
-        en_US: v.optional(v.string()),
-      }),
-    ),
-
-    // For leading/supportive actor/actress nominations
-    actorId: v.optional(v.id('actors')),
-    character: v.optional(
-      v.object({
-        pt_BR: v.optional(v.string()),
-        en_US: v.optional(v.string()),
-      }),
-    ),
-
-    // For country nominations
-    country: v.optional(
-      v.object({
-        pt_BR: v.optional(v.string()),
-        en_US: v.optional(v.string()),
-      }),
-    ),
-
-    // For song nominations
     song: v.optional(v.string()),
     url: v.optional(v.string()),
-  }),
-
-  // Movie lists that users can join
-  movieLists: defineTable({
-    name: v.string(),
-    description: v.string(),
-    createdBy: v.id('users'),
-    movies: v.array(v.number()), // Array of TMDB IDs
-    isPublic: v.boolean(),
-  })
-    .index('by_creator', ['createdBy'])
-    .index('by_public', ['isPublic']),
-
-  // User enrollments in movie lists
-  movieListEnrollments: defineTable({
-    userId: v.id('users'),
-    movieListId: v.id('movieLists'),
-    enrolledAt: v.number(),
-  })
-    .index('by_user', ['userId'])
-    .index('by_list', ['movieListId'])
-    .index('by_user_and_list', ['userId', 'movieListId']),
+    nominee: v.optional(
+      v.object({
+        pt_BR: v.string(),
+        en_US: v.string(),
+      }),
+    ),
+    character: v.optional(
+      v.object({
+        pt_BR: v.string(),
+        en_US: v.string(),
+      }),
+    ),
+  }).index('by_edition', ['editionId']),
 }
 
 export default defineSchema({

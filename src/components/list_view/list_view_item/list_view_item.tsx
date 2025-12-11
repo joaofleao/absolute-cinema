@@ -11,9 +11,9 @@ import { useTheme } from '@providers/theme'
 
 const ListViewItem = ({
   _id,
-  title,
+  title: titleProp,
   date,
-  posterPath,
+  posterPath: posterProp,
   style,
   voteAverage,
   language,
@@ -26,6 +26,13 @@ const ListViewItem = ({
   const styles = useStyle()
   const theme = useTheme()
   const { i18n } = useTranslation()
+  const title = typeof titleProp === 'string' ? titleProp : titleProp[i18n.language]
+  const posterPath =
+    posterProp === undefined
+      ? undefined
+      : typeof posterProp === 'string'
+        ? posterProp
+        : posterProp[i18n.language]
 
   const renderButton = (
     button: typeof topButton,
@@ -63,28 +70,18 @@ const ListViewItem = ({
 
   const content = (
     <>
-      {posterPath[i18n.language] !== undefined && (
+      {posterPath !== undefined && (
         <Image
           style={styles.image}
-          source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath[i18n.language]}` }}
-          alt={title[i18n.language]}
+          source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
+          alt={title}
         />
       )}
 
-      {posterPath[i18n.language] === undefined && posterPath.en_US !== undefined && (
-        <Image
-          style={styles.image}
-          source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath.en_US}` }}
-          alt={title[i18n.language]}
-        />
-      )}
-
-      {posterPath[i18n.language] && posterPath['en_US'] === undefined && (
-        <View style={styles.imagePlaceholder} />
-      )}
+      {posterPath === undefined && <View style={styles.imagePlaceholder} />}
 
       <View style={{ flex: 1, gap: 4 }}>
-        <Typography body>{title[i18n.language]}</Typography>
+        <Typography body>{typeof title === 'string' ? title : title}</Typography>
         <Rating value={voteAverage} />
         <Typography legend>{`${date} ${language}`}</Typography>
       </View>

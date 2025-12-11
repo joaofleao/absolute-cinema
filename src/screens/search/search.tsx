@@ -29,7 +29,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const catchConvexError = useConvexErrorHandler()
 
   const searchMovies = useAction(api.movies.searchMovies)
-  const getOrCreateMovie = useMutation(api.movies.getOrCreateMovie)
+  const getOrCreateMovie = useAction(api.movies.getOrCreateMovie)
   const markAsWatched = useMutation(api.movies.markAsWatched)
   const addToWatchlist = useMutation(api.movies.addToWatchlist)
 
@@ -58,6 +58,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     try {
       const searchResults = await searchMovies({
         query: query.trim(),
+        language: i18n.language,
       })
 
       setResults(searchResults)
@@ -82,16 +83,11 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
       const movieId = await getOrCreateMovie({
         tmdbId: tmdbMovie.id,
-        title: tmdbMovie.title,
-        releaseDate: tmdbMovie.release_date,
-        voteAverage: tmdbMovie.vote_average,
-        originalLanguage: tmdbMovie.original_language,
-        posterPath: tmdbMovie.poster_path,
       })
 
       if (movieId)
         await addToWatchlist({ movieId }).then(() => {
-          Alert.alert(`"${tmdbMovie.title[i18n.language]}" ${t('overall:add_watchlist')}`)
+          Alert.alert(`"${tmdbMovie.title}" ${t('overall:add_watchlist')}`)
         })
     } catch (error) {
       catchConvexError(error)
@@ -118,11 +114,6 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
       const movieId = await getOrCreateMovie({
         tmdbId: tmdbMovie.id,
-        title: tmdbMovie.title,
-        releaseDate: tmdbMovie.release_date,
-        voteAverage: tmdbMovie.vote_average,
-        originalLanguage: tmdbMovie.original_language,
-        posterPath: tmdbMovie.poster_path,
       })
 
       if (movieId) await markAsWatched({ movieId, watchedAt: date.getTime() })

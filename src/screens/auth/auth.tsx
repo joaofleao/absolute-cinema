@@ -113,7 +113,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
         if (convexResult) navigation.pop()
       }
     } catch (e) {
-      print('google sign in', JSON.stringify(e), 'yellow')
+      print('apple sign in', JSON.stringify(e), 'yellow')
     } finally {
       setLoading(undefined)
     }
