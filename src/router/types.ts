@@ -1,4 +1,4 @@
-import { Id } from 'convex/_generated/dataModel'
+import { GenericId } from 'convex/values'
 
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -15,8 +15,8 @@ export type StackProps = {
   watched_movie: {
     movie: {
       watchedAt: number
-      watchId: Id<'watchedMovies'>
-      _id: Id<'movies'>
+      watchId: GenericId<'watchedMovies'>
+      _id: GenericId<'movies'>
       _creationTime: number
       tmdbId: number
       title: {
@@ -25,12 +25,18 @@ export type StackProps = {
         en_US: string
       }
       posterPath: {
-        pt_BR?: string
-        en_US?: string
+        pt_BR: string
+        en_US: string
       }
-      releaseDate: string
-      voteAverage: number
-      originalLanguage: string
+      releaseDate?: string
+      voteAverage?: number
+      originalLanguage?: string
+      status?: string
+      backdropPath?: string
+      imdbId?: string
+      overview?: string
+      runtime?: number
+      tagline?: string
     }
   }
   search: undefined

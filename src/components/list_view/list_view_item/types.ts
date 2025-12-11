@@ -24,7 +24,7 @@ export interface ListViewItemProps extends Omit<TouchableOpacityProps, 'onPress'
         en_US: string
       }
     | string
-  voteAverage: number
+  voteAverage?: number
   date: string
   language: string
   topButton?: ListViewItemActionProps

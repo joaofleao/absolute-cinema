@@ -16,8 +16,7 @@ import Dropdown from '@components/dropdown'
 import GalleryView from '@components/gallery_view'
 import ListView from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
-import Select from '@components/select'
-import { TinyArrow, TinyCheckmark, TinyChevron } from '@components/tiny_icon'
+import { TinyArrow, TinyCheckmark } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { TabType } from '@router/types'
@@ -39,23 +38,13 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
   const catchConvexError = useConvexErrorHandler()
 
   const watchlist = useQuery(api.movies.getUserWatchlist) || []
-  const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
-  const uniqueYears = watchedMovies
-    .map((movie) => new Date(movie.watchedAt).getFullYear())
-    .filter((year, index, self) => self.indexOf(year) === index)
-    .map((year) => ({
-      id: year,
-      name: year.toString(),
-    }))
-
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
-  const [year, setYear] = useState<number>(uniqueYears.length === 0 ? 0 : new Date().getFullYear())
-
   const [sort, setSort] = useState<'ascending' | 'descending'>('ascending')
 
   const isSaveLoading: ListViewItemActionProps['loading'] = (movie): boolean => {
     return movie === saveLoading
   }
+
   const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
     setSaveLoading(movie)
     try {
@@ -91,53 +80,32 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
     }
   }
 
-  const data = {
-    watchlist: watchlist
-      .sort((a, b) =>
-        sort === 'ascending'
-          ? new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
-          : new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime(),
-      )
-      .filter((movie) => new Date(movie.addedAt).getFullYear() === year || year === 0)
-      .map((movie) => ({
-        _id: movie.tmdbId,
-        title: movie.title,
-        posterPath: movie.posterPath,
-        date: new Date(movie.addedAt).toLocaleDateString(),
-        voteAverage: movie.voteAverage,
-        language: languages[movie.originalLanguage as LanguageCode][i18n.language],
-        onLongPress: async (): Promise<void> => {
-          setSaveLoading(movie.tmdbId)
+  const data = watchlist
+    .sort((a, b) =>
+      sort === 'ascending'
+        ? new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
+        : new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime(),
+    )
+    .map((movie) => ({
+      _id: movie.tmdbId,
+      title: movie.title,
+      posterPath: movie.posterPath,
+      date: new Date(movie.addedAt).toLocaleDateString(),
+      voteAverage: movie.voteAverage,
+      language: languages[movie.originalLanguage as LanguageCode][i18n.language],
+      onLongPress: async (): Promise<void> => {
+        setSaveLoading(movie.tmdbId)
 
-          await removeFromWatchlist({ movieId: movie._id })
-            .then(() =>
-              Alert.alert(`"${movie.title[i18n.language]}" ${t('overall:remove_watchlist')}`),
-            )
-            .catch(catchConvexError)
-            .finally(() => {
-              setSaveLoading(undefined)
-            })
-        },
-      })),
-
-    watchedMovies: watchedMovies
-      .sort((a, b) =>
-        sort === 'ascending'
-          ? new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime()
-          : new Date(a.watchedAt).getTime() - new Date(b.watchedAt).getTime(),
-      )
-      .filter((movie) => new Date(movie.watchedAt).getFullYear() === year || year === 0)
-      .map((movie) => ({
-        id: movie.watchId,
-        _id: movie.tmdbId,
-        title: movie.title,
-        posterPath: movie.posterPath,
-        date: new Date(movie.watchedAt).toLocaleDateString(),
-        voteAverage: movie.voteAverage,
-        language: languages[movie.originalLanguage as LanguageCode][i18n.language],
-        onPress: (): void => navigation.navigate('watched_movie', { movie }),
-      })),
-  }
+        await removeFromWatchlist({ movieId: movie._id })
+          .then(() =>
+            Alert.alert(`"${movie.title[i18n.language]}" ${t('overall:remove_watchlist')}`),
+          )
+          .catch(catchConvexError)
+          .finally(() => {
+            setSaveLoading(undefined)
+          })
+      },
+    }))
 
   const { width } = Dimensions.get('window')
 
@@ -170,21 +138,6 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
         <Authenticated>
           <View style={styles.content}>
             <Bar.Root>
-              <Select
-                label={t('home:select_year')}
-                data={[{ name: t('home:all'), id: 0 }, ...uniqueYears]}
-                onSelect={setYear}
-                selected={year}
-                renderAnchor={({ selectedOption, setVisible, visible }) => (
-                  <Bar.Item
-                    onPress={() => setVisible(true)}
-                    icon={<TinyChevron orientation="down" />}
-                  >
-                    {selectedOption?.name as string}
-                  </Bar.Item>
-                )}
-              />
-
               <Bar.Item
                 onPress={() => setViewMode((prev) => (prev === 'gallery' ? 'list' : 'gallery'))}
               >
@@ -219,7 +172,7 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
       {viewMode === 'gallery' && (
         <GalleryView
           contentContainerStyle={styles.flatlists}
-          data={data.watchlist}
+          data={data}
           header={header}
           empty={emptyState}
         />
@@ -229,7 +182,7 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
         <ListView
           responsive
           contentContainerStyle={styles.flatlists}
-          data={data.watchlist}
+          data={data}
           header={header}
           empty={emptyState}
           topButton={{

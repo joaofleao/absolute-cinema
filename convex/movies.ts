@@ -1,4 +1,4 @@
-import { ConvexError, v } from 'convex/values'
+import { ConvexError, v, VObject } from 'convex/values'
 
 import { api, internal } from './_generated/api'
 import type { Id } from './_generated/dataModel'
@@ -167,7 +167,7 @@ export const insertMovie = internalMutation({
     status: v.optional(v.string()),
     tagline: v.optional(v.string()),
     voteAverage: v.optional(v.number()),
-    tmdbId: v.optional(v.number()),
+    tmdbId: v.number(),
   },
   returns: v.id('movies'),
   handler: async (ctx, args) => {
@@ -201,7 +201,7 @@ export const getMovie = mutation({
       status: v.optional(v.string()),
       tagline: v.optional(v.string()),
       voteAverage: v.optional(v.number()),
-      tmdbId: v.optional(v.number()),
+      tmdbId: v.number(),
     }),
     v.null(),
   ),
@@ -346,7 +346,7 @@ export const getUserWatchlist = query({
       status: v.optional(v.string()),
       tagline: v.optional(v.string()),
       voteAverage: v.optional(v.number()),
-      tmdbId: v.optional(v.number()),
+      tmdbId: v.number(),
       addedAt: v.number(),
     }),
   ),
@@ -394,7 +394,7 @@ export const getUserWatchedMovies = query({
       status: v.optional(v.string()),
       tagline: v.optional(v.string()),
       voteAverage: v.optional(v.number()),
-      tmdbId: v.optional(v.number()),
+      tmdbId: v.number(),
       watchedAt: v.number(),
       watchId: v.id('watchedMovies'),
     }),

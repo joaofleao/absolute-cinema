@@ -31,14 +31,12 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   const getMovie = useMutation(api.movies.getMovie)
   const markAsWatched = useMutation(api.movies.markAsWatched)
   const addToWatchlist = useMutation(api.movies.addToWatchlist)
-  const removeFromWatchlist = useMutation(api.movies.removeFromWatchlist)
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
   const [saveLoading, setSaveLoading] = useState<number>()
   const [selectedMovie, setSelectedMovie] = useState<number>()
   const catchConvexError = useConvexErrorHandler()
 
-  const watchlist = useQuery(api.movies.getUserWatchlist) || []
   const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
   const uniqueYears = watchedMovies
     .map((movie) => new Date(movie.watchedAt).getFullYear())
@@ -91,53 +89,23 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
     }
   }
 
-  const data = {
-    watchlist: watchlist
-      .sort((a, b) =>
-        sort === 'ascending'
-          ? new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
-          : new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime(),
-      )
-      .filter((movie) => new Date(movie.addedAt).getFullYear() === year || year === 0)
-      .map((movie) => ({
-        _id: movie.tmdbId,
-        title: movie.title,
-        posterPath: movie.posterPath,
-        date: new Date(movie.addedAt).toLocaleDateString(),
-        voteAverage: movie.voteAverage,
-        language: languages[movie.originalLanguage as LanguageCode][i18n.language],
-        onLongPress: async (): Promise<void> => {
-          setSaveLoading(movie.tmdbId)
-          try {
-            await removeFromWatchlist({ movieId: movie._id }).then(() =>
-              Alert.alert(`"${movie.title[i18n.language]}" ${t('overall:remove_watchlist')}`),
-            )
-          } catch (error) {
-            catchConvexError(error)
-          } finally {
-            setSaveLoading(undefined)
-          }
-        },
-      })),
-
-    watchedMovies: watchedMovies
-      .sort((a, b) =>
-        sort === 'ascending'
-          ? new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime()
-          : new Date(a.watchedAt).getTime() - new Date(b.watchedAt).getTime(),
-      )
-      .filter((movie) => new Date(movie.watchedAt).getFullYear() === year || year === 0)
-      .map((movie) => ({
-        id: movie.watchId,
-        _id: movie.tmdbId,
-        title: movie.title,
-        posterPath: movie.posterPath,
-        date: new Date(movie.watchedAt).toLocaleDateString(),
-        voteAverage: movie.voteAverage,
-        language: languages[movie.originalLanguage as LanguageCode][i18n.language],
-        onPress: (): void => navigation.navigate('watched_movie', { movie }),
-      })),
-  }
+  const data = watchedMovies
+    .sort((a, b) =>
+      sort === 'ascending'
+        ? new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime()
+        : new Date(a.watchedAt).getTime() - new Date(b.watchedAt).getTime(),
+    )
+    .filter((movie) => new Date(movie.watchedAt).getFullYear() === year || year === 0)
+    .map((movie) => ({
+      id: movie.watchId,
+      _id: movie.tmdbId,
+      title: movie.title,
+      posterPath: movie.posterPath,
+      date: new Date(movie.watchedAt).toLocaleDateString(),
+      voteAverage: movie.voteAverage,
+      language: languages[movie.originalLanguage as LanguageCode][i18n.language],
+      onPress: (): void => navigation.navigate('watched_movie', { movie }),
+    }))
 
   const { width } = Dimensions.get('window')
 
@@ -222,7 +190,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
       {viewMode === 'gallery' && (
         <GalleryView
           contentContainerStyle={styles.flatlists}
-          data={data.watchedMovies}
+          data={data}
           header={header}
           empty={emptyState}
         />
@@ -232,7 +200,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
         <ListView
           responsive
           contentContainerStyle={styles.flatlists}
-          data={data.watchedMovies}
+          data={data}
           header={header}
           empty={emptyState}
           topButton={{

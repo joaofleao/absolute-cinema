@@ -24,7 +24,7 @@ const applicationTables = {
     status: v.optional(v.string()),
     tagline: v.optional(v.string()),
     voteAverage: v.optional(v.number()),
-    tmdbId: v.optional(v.number()),
+    tmdbId: v.number(),
   }).index('by_tmdb_id', ['tmdbId']),
 
   // User's watchlist

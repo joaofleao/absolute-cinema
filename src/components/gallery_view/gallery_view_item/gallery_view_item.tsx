@@ -21,20 +21,14 @@ const GalleryViewItem = ({
 
   const content = (
     <>
-      {posterPath[i18n.language] !== undefined && (
+      {posterPath !== undefined && (
         <Image
           style={styles.image}
           source={{ uri: 'https://image.tmdb.org/t/p/w1280/' + posterPath[i18n.language] }}
         />
       )}
-      {posterPath[i18n.language] === undefined && posterPath.en_US !== undefined && (
-        <Image
-          style={styles.image}
-          source={{ uri: 'https://image.tmdb.org/t/p/w1280/' + posterPath.en_US }}
-        />
-      )}
 
-      {posterPath[i18n.language] === undefined && posterPath.en_US === undefined && (
+      {posterPath === undefined && (
         <Typography
           numberOfLines={6}
           style={styles.title}
