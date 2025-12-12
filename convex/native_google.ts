@@ -18,13 +18,17 @@ export const nativeGoogleHandler = async (credentials: any, ctx: any) => {
     throw new Error('User ID mismatch')
   }
 
-  const existingAccount = await retrieveAccount(ctx, {
-    provider: 'native-google',
-    account: { id: validatedTokenData.email },
-  })
+  try {
+    const existingAccount = await retrieveAccount(ctx, {
+      provider: 'native-google',
+      account: { id: validatedTokenData.email },
+    })
 
-  if (existingAccount) {
-    return { userId: existingAccount.user._id }
+    if (existingAccount) {
+      return { userId: existingAccount.user._id }
+    }
+  } catch (error) {
+    throw error
   }
 
   const createdAccount = await createAccount(ctx, {
