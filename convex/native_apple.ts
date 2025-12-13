@@ -26,8 +26,8 @@ export const nativeAppleHandler = async (credentials: any, ctx: any) => {
     if (existingAccount) {
       return { userId: existingAccount.user._id }
     }
-  } catch (error) {
-    throw error
+  } catch (e) {
+    console.log('User does not exist, creating user')
   }
 
   const createdAccount = await createAccount(ctx, {

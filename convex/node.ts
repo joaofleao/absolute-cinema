@@ -21,11 +21,10 @@ export const verifyTokenApple = internalAction({
   },
 })
 
-const client = new OAuth2Client()
-
 export const verifyTokenGoogle = internalAction({
   args: { idToken: v.string() },
   handler: async (ctx, { idToken }) => {
+    const client = new OAuth2Client()
     const result = await client.verifyIdToken({
       idToken,
       audience: '674386239678-bnrobvq969mockak51tqpbgpjb0lu1qq.apps.googleusercontent.com',
