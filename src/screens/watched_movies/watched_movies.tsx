@@ -127,13 +127,14 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
       </View>
 
       <Unauthenticated>
-        <DottedText>{t('home:nothing')}</DottedText>
-        <Typography
-          onPress={() => navigation.navigate('auth')}
-          color={theme.semantics.background.foreground.light}
-        >
-          {t('home:sign_in')}
-        </Typography>
+        <View style={styles.content}>
+          <Typography
+            onPress={() => navigation.navigate('auth')}
+            color={theme.semantics.background.foreground.light}
+          >
+            {t('home:sign_in')}
+          </Typography>
+        </View>
       </Unauthenticated>
       <Authenticated>
         <View style={styles.content}>
