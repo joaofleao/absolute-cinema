@@ -14,7 +14,7 @@ const useStyles = (): StylesReturn => {
     },
 
     list: {
-      gap: 16,
+      gap: 8,
       padding: 16,
     },
     gallery: {

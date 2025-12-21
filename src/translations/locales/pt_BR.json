@@ -10,8 +10,8 @@
     "password_match": "precisam ser iguais ",
     "not_implemented": "Não implementado",
     "feature_not_implemented": "Este recurso não está implementado ainda.",
-    "add_watchlist": "salvo na sua lista",
-    "remove_watchlist": "removido da sua lista",
+    "add_watchlist": "Salvo na sua lista",
+    "remove_watchlist": "Removido da sua lista",
     "watched": "Assistidos",
     "watchlist": "Lista",
     "tmdb_error": "Erro ao buscar filme. Verifique a chave do TMDB."
@@ -29,7 +29,9 @@
     "watch": "Assistir",
     "save": "Salvar",
     "nothing": "absolutamente nada ainda",
-    "sign_in": "entre para marcar filmes"
+    "sign_in": "entre para marcar filmes",
+    "movies": "filme",
+    "movies_plural": "filmes"
   },
   "search": {
     "no_results": "Nenhum filme encontrado",

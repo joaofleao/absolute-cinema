@@ -30,7 +30,7 @@ const NavBarItem = ({
           selected || selected === undefined
             ? semantics.container.foreground.default
             : semantics.container.foreground.light,
-        size: 20,
+        size: 16,
         filled: selected ?? false,
       })}
       {selected && label && <Typography>{label}</Typography>}

@@ -19,7 +19,7 @@ const GalleryView = ({
 
   const HORIZONTAL_PADDING = 16 + 16
   const GAP = 8
-  const MIN_ITEM_WIDTH = 100
+  const MIN_ITEM_WIDTH = 80
   const maxColumns = 6
 
   const columns = Math.max(

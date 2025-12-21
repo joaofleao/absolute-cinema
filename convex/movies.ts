@@ -1,4 +1,4 @@
-import { ConvexError, v, VObject } from 'convex/values'
+import { ConvexError, v } from 'convex/values'
 
 import { api, internal } from './_generated/api'
 import type { Id } from './_generated/dataModel'
@@ -175,7 +175,7 @@ export const insertMovie = internalMutation({
   },
 })
 
-export const getMovie = mutation({
+export const getMovie = query({
   args: {
     tmdbId: v.number(),
   },
@@ -202,6 +202,7 @@ export const getMovie = mutation({
       tagline: v.optional(v.string()),
       voteAverage: v.optional(v.number()),
       tmdbId: v.number(),
+      brazil: v.optional(v.boolean()),
     }),
     v.null(),
   ),
@@ -213,6 +214,8 @@ export const getMovie = mutation({
       .unique()
 
     if (existingMovie) return existingMovie
+
+    return null
   },
 })
 
@@ -220,7 +223,7 @@ export const getOrCreateMovie = action({
   args: { tmdbId: v.number() },
   returns: v.id('movies'),
   handler: async (ctx, args): Promise<Id<'movies'>> => {
-    const existingMovie = await ctx.runMutation(api.movies.getMovie, {
+    const existingMovie = await ctx.runQuery(api.movies.getMovie, {
       tmdbId: args.tmdbId,
     })
 
@@ -397,6 +400,7 @@ export const getUserWatchedMovies = query({
       tmdbId: v.number(),
       watchedAt: v.number(),
       watchId: v.id('watchedMovies'),
+      brazil: v.optional(v.boolean()),
     }),
   ),
   handler: async (ctx) => {

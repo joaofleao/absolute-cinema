@@ -10,7 +10,7 @@ export type ListViewItemActionProps = {
 }
 
 export interface ListViewItemProps extends Omit<TouchableOpacityProps, 'onPress'> {
-  _id: number
+  _id: string
   posterPath?:
     | {
         pt_BR: string

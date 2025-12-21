@@ -10,8 +10,8 @@
     "password_match": "PASSWORD Need to match",
     "not_implemented": "Not implemented",
     "feature_not_implemented": "This feature is not implemented yet.",
-    "add_watchlist": "added to your watchlist",
-    "remove_watchlist": "removed from your watchlist",
+    "add_watchlist": "Added to your watchlist",
+    "remove_watchlist": "Removed from your watchlist",
     "watched": "watched",
     "watchlist": "watchlist",
     "tmdb_error": "Failed to search movies. Please check your TMDB API key."
@@ -29,7 +29,9 @@
     "watch": "Watch",
     "save": "Save",
     "nothing": "Absolutely nothing yet",
-    "sign_in": "sign in to track movies"
+    "sign_in": "sign in to track movies",
+    "movies": "movie",
+    "movies_plural": "movies"
   },
   "search": {
     "no_results": "No movies found",

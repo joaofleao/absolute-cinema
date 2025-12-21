@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
+import { GenericId } from 'convex/values'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
@@ -28,13 +29,12 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
 
-  const getMovie = useMutation(api.movies.getMovie)
   const markAsWatched = useMutation(api.movies.markAsWatched)
   const addToWatchlist = useMutation(api.movies.addToWatchlist)
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
-  const [saveLoading, setSaveLoading] = useState<number>()
-  const [selectedMovie, setSelectedMovie] = useState<number>()
+  const [saveLoading, setSaveLoading] = useState<string>()
+  const [selectedMovie, setSelectedMovie] = useState<GenericId<'movies'>>()
   const catchConvexError = useConvexErrorHandler()
 
   const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
@@ -57,11 +57,9 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
     setSaveLoading(movie)
     try {
-      const existingMovie = await getMovie({ tmdbId: movie })
-      if (existingMovie)
-        await addToWatchlist({ movieId: existingMovie._id }).then(() => {
-          Alert.alert(`"${existingMovie.title[i18n.language]}" ${t('overall:add_watchlist')}`)
-        })
+      await addToWatchlist({ movieId: movie as GenericId<'movies'> }).then(() => {
+        Alert.alert(`${t('overall:add_watchlist')}`)
+      })
     } catch (error) {
       catchConvexError(error)
     } finally {
@@ -70,17 +68,14 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   }
 
   const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
-    setSelectedMovie(movie)
+    setSelectedMovie(movie as GenericId<'movies'>)
     setCalendarDropdown(true)
   }
 
   const watchMovie = async (): Promise<void> => {
     if (!selectedMovie) return
     try {
-      const existingMovie = await getMovie({ tmdbId: selectedMovie })
-
-      if (existingMovie)
-        await markAsWatched({ movieId: existingMovie._id, watchedAt: date.getTime() })
+      await markAsWatched({ movieId: selectedMovie, watchedAt: date.getTime() })
     } catch (error) {
       catchConvexError(error)
     } finally {
@@ -98,7 +93,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
     .filter((movie) => new Date(movie.watchedAt).getFullYear() === year || year === 0)
     .map((movie) => ({
       id: movie.watchId,
-      _id: movie.tmdbId,
+      _id: movie._id,
       title: movie.title,
       posterPath: movie.posterPath,
       date: new Date(movie.watchedAt).toLocaleDateString(),
@@ -131,18 +126,17 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
         </View>
       </View>
 
-      <View style={styles.content}>
-        <Unauthenticated>
-          <DottedText>{t('home:nothing')}</DottedText>
-          <Typography
-            onPress={() => navigation.navigate('auth')}
-            color={theme.semantics.background.foreground.light}
-          >
-            {t('home:sign_in')}
-          </Typography>
-        </Unauthenticated>
-
-        <Authenticated>
+      <Unauthenticated>
+        <DottedText>{t('home:nothing')}</DottedText>
+        <Typography
+          onPress={() => navigation.navigate('auth')}
+          color={theme.semantics.background.foreground.light}
+        >
+          {t('home:sign_in')}
+        </Typography>
+      </Unauthenticated>
+      <Authenticated>
+        <View style={styles.content}>
           <Bar.Root>
             <Select
               label={t('home:select_year')}
@@ -172,8 +166,12 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
               {t('home:by_date')}
             </Bar.Item>
           </Bar.Root>
-        </Authenticated>
-      </View>
+
+          <Typography legend>
+            {data.length} {data.length === 1 ? t('home:movies') : t('home:movies_plural')}
+          </Typography>
+        </View>
+      </Authenticated>
     </>
   )
 

@@ -1,26 +1,45 @@
 import { ConvexError, v } from 'convex/values'
 
-import { action, query } from './_generated/server'
+import { action, mutation, query } from './_generated/server'
 import { getAuthUserId } from '@convex-dev/auth/server'
+
+// export const updateProfileImage = mutation({
+//   args: { storageId: v.id('_storage') },
+//   returns: v.null(),
+//   handler: async (ctx, args) => {
+//     const userId = await getAuthUserId(ctx)
+//     if (!userId) throw new ConvexError('Not authenticated')
+
+//     const imageUrl = await ctx.storage.getUrl(args.storageId)
+//     if (!imageUrl) throw new ConvexError('Failed to get image URL')
+//     await ctx.db.patch(userId, { image: imageUrl })
+//   },
+// })
 
 export const getCurrentUser = query({
   args: {},
-  returns: v.object({
-    _id: v.id('users'),
-    _creationTime: v.number(),
-    name: v.optional(v.string()),
-    email: v.optional(v.string()),
-    phone: v.optional(v.string()),
-    image: v.optional(v.string()),
-    emailVerificationTime: v.optional(v.number()),
-    phoneVerificationTime: v.optional(v.number()),
-    isAnonymous: v.optional(v.boolean()),
-  }),
+  returns: v.union(
+    v.object({
+      _id: v.id('users'),
+      _creationTime: v.number(),
+      name: v.optional(v.string()),
+      email: v.optional(v.string()),
+      phone: v.optional(v.string()),
+      image: v.optional(v.string()),
+      emailVerificationTime: v.optional(v.number()),
+      phoneVerificationTime: v.optional(v.number()),
+      isAnonymous: v.optional(v.boolean()),
+      username: v.optional(v.string()),
+    }),
+    v.null(),
+  ),
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx)
-    if (!userId) throw new ConvexError('Invalid user data received')
+    if (!userId) return null
+
     const user = await ctx.db.get(userId)
-    if (!user) throw new ConvexError('Invalid user data received')
+    if (!user) return null
+
     return user
   },
 })
@@ -136,3 +155,176 @@ export const reportError = action({
     if (!res.ok) throw new ConvexError('Resend error: ' + JSON.stringify(await res.json()))
   },
 })
+
+export const searchByName = query({
+  args: { name: v.string() },
+  returns: v.array(
+    v.object({
+      _id: v.id('users'),
+      name: v.optional(v.string()),
+      image: v.optional(v.string()),
+      username: v.optional(v.string()),
+      following: v.boolean(),
+      follows: v.boolean(),
+    }),
+  ),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+    // if (!userId) throw new ConvexError('Not authenticated')
+
+    const users = await ctx.db
+      .query('users')
+      .withSearchIndex('search_name', (q) => q.search('name', args.name))
+      .filter((q) => q.neq(q.field('_id'), userId))
+      .take(5)
+
+    const enrichedUsers = userId
+      ? await Promise.all(
+          users.map(async (user) => {
+            const following = await ctx.db
+              .query('friends')
+              .withIndex('by_user', (q) => q.eq('userId', userId))
+              .unique()
+
+            const follows = await ctx.db
+              .query('friends')
+              .withIndex('by_friend', (q) => q.eq('friendId', userId))
+              .unique()
+
+            return {
+              _id: user._id,
+              name: user.name,
+              image: user.image,
+              username: user.username,
+              following: !!following,
+              follows: !!follows,
+            }
+          }),
+        )
+      : users.map((user) => ({
+          _id: user._id,
+          name: user.name,
+          image: user.image,
+          username: user.username,
+          following: false,
+          follows: false,
+        }))
+
+    return enrichedUsers
+  },
+})
+
+export const startFollowing = mutation({
+  args: { friendId: v.id('users') },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+    if (!userId) throw new ConvexError('Not authenticated')
+    if (userId === args.friendId) throw new ConvexError('Cannot follow yourself')
+
+    const existing = await ctx.db
+      .query('friends')
+      .withIndex('by_user_and_friend', (q) => q.eq('userId', userId).eq('friendId', args.friendId))
+      .first()
+
+    if (existing) throw new ConvexError('Already Flollows')
+
+    await ctx.db.insert('friends', {
+      userId,
+      friendId: args.friendId,
+    })
+  },
+})
+
+export const getFollowing = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id('users'),
+      name: v.optional(v.string()),
+      username: v.optional(v.string()),
+      image: v.optional(v.string()),
+    }),
+  ),
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx)
+    if (!userId) return []
+
+    const following = await ctx.db
+      .query('friends')
+      .withIndex('by_user', (q) => q.eq('userId', userId))
+      .collect()
+
+    const users = await Promise.all(
+      following.map(async (f) => {
+        const friend = await ctx.db.get(f.friendId)
+        return {
+          _id: friend!._id,
+          name: friend!.name,
+          username: friend!.username,
+          image: friend!.image,
+        }
+      }),
+    )
+
+    return users
+  },
+})
+
+export const getFollowers = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id('users'),
+      name: v.optional(v.string()),
+      image: v.optional(v.string()),
+      username: v.optional(v.string()),
+    }),
+  ),
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx)
+    if (!userId) return []
+
+    const following = await ctx.db
+      .query('friends')
+      .withIndex('by_friend', (q) => q.eq('friendId', userId))
+      .collect()
+
+    const users = await Promise.all(
+      following.map(async (f) => {
+        const friend = await ctx.db.get(f.userId)
+        return {
+          _id: friend!._id,
+          name: friend!.name,
+          username: friend!.username,
+          image: friend!.image,
+        }
+      }),
+    )
+
+    return users
+  },
+})
+
+// export const removeFriend = mutation({
+//   args: { friendId: v.id('users') },
+//   returns: v.null(),
+//   handler: async (ctx, args) => {
+//     const userId = await getAuthUserId(ctx)
+//     if (!userId) throw new ConvexError('Not authenticated')
+
+//     const friendships = await ctx.db
+//       .query('friends')
+//       .filter((q) =>
+//         q.or(
+//           q.and(q.eq(q.field('userId'), userId), q.eq(q.field('friendId'), args.friendId)),
+//           q.and(q.eq(q.field('userId'), args.friendId), q.eq(q.field('friendId'), userId)),
+//         ),
+//       )
+//       .collect()
+
+//     for (const friendship of friendships) {
+//       await ctx.db.delete(friendship._id)
+//     }
+//   },
+// })

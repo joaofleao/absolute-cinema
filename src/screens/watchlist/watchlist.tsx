@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
+import { GenericId } from 'convex/values'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
@@ -27,14 +28,13 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
   const { t, i18n } = useTranslation()
   const theme = useTheme()
 
-  const getMovie = useMutation(api.movies.getMovie)
   const markAsWatched = useMutation(api.movies.markAsWatched)
   const addToWatchlist = useMutation(api.movies.addToWatchlist)
   const removeFromWatchlist = useMutation(api.movies.removeFromWatchlist)
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
-  const [saveLoading, setSaveLoading] = useState<number>()
-  const [selectedMovie, setSelectedMovie] = useState<number>()
+  const [saveLoading, setSaveLoading] = useState<string>()
+  const [selectedMovie, setSelectedMovie] = useState<GenericId<'movies'>>()
   const catchConvexError = useConvexErrorHandler()
 
   const watchlist = useQuery(api.movies.getUserWatchlist) || []
@@ -48,11 +48,9 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
   const handleSave: ListViewItemActionProps['onPress'] = async (movie) => {
     setSaveLoading(movie)
     try {
-      const existingMovie = await getMovie({ tmdbId: movie })
-      if (existingMovie)
-        await addToWatchlist({ movieId: existingMovie._id }).then(() => {
-          Alert.alert(`"${existingMovie.title[i18n.language]}" ${t('overall:add_watchlist')}`)
-        })
+      await addToWatchlist({ movieId: movie as GenericId<'movies'> }).then(() => {
+        Alert.alert(`${t('overall:add_watchlist')}`)
+      })
     } catch (error) {
       catchConvexError(error)
     } finally {
@@ -61,17 +59,14 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
   }
 
   const handleWatch: ListViewItemActionProps['onPress'] = async (movie) => {
-    setSelectedMovie(movie)
+    setSelectedMovie(movie as GenericId<'movies'>)
     setCalendarDropdown(true)
   }
 
   const watchMovie = async (): Promise<void> => {
     if (!selectedMovie) return
     try {
-      const existingMovie = await getMovie({ tmdbId: selectedMovie })
-
-      if (existingMovie)
-        await markAsWatched({ movieId: existingMovie._id, watchedAt: date.getTime() })
+      await markAsWatched({ movieId: selectedMovie, watchedAt: date.getTime() })
     } catch (error) {
       catchConvexError(error)
     } finally {
@@ -87,14 +82,14 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
         : new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime(),
     )
     .map((movie) => ({
-      _id: movie.tmdbId,
+      _id: movie._id,
       title: movie.title,
       posterPath: movie.posterPath,
       date: new Date(movie.addedAt).toLocaleDateString(),
       voteAverage: movie.voteAverage,
       language: languages[movie.originalLanguage as LanguageCode][i18n.language],
       onLongPress: async (): Promise<void> => {
-        setSaveLoading(movie.tmdbId)
+        setSaveLoading(movie._id)
 
         await removeFromWatchlist({ movieId: movie._id })
           .then(() =>
@@ -124,38 +119,42 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
           style={styles.logo}
           source={require('@assets/mascot.png')}
         />
-
         <View style={styles.title}>
           <Typography color={theme.semantics.background.foreground.light}>ABSOLUTE</Typography>
           <Typography display>CINEMA</Typography>
         </View>
-        <Unauthenticated>
-          <DottedText>{t('home:nothing')}</DottedText>
-          <Typography color={theme.semantics.background.foreground.light}>
-            {t('home:sign_in')}
-          </Typography>
-        </Unauthenticated>
-        <Authenticated>
-          <View style={styles.content}>
-            <Bar.Root>
-              <Bar.Item
-                onPress={() => setViewMode((prev) => (prev === 'gallery' ? 'list' : 'gallery'))}
-              >
-                {viewMode === 'gallery' ? t('home:list') : t('home:gallery')}
-              </Bar.Item>
-
-              <Bar.Item
-                onPress={() =>
-                  setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))
-                }
-                icon={<TinyArrow orientation={sort === 'descending' ? 'up' : 'down'} />}
-              >
-                {t('home:by_date')}
-              </Bar.Item>
-            </Bar.Root>
-          </View>
-        </Authenticated>
       </View>
+      <Unauthenticated>
+        <DottedText>{t('home:nothing')}</DottedText>
+        <Typography
+          onPress={() => navigation.navigate('auth')}
+          color={theme.semantics.background.foreground.light}
+        >
+          {t('home:sign_in')}
+        </Typography>
+      </Unauthenticated>
+      <Authenticated>
+        <View style={styles.content}>
+          <Bar.Root>
+            <Bar.Item
+              onPress={() => setViewMode((prev) => (prev === 'gallery' ? 'list' : 'gallery'))}
+            >
+              {viewMode === 'gallery' ? t('home:list') : t('home:gallery')}
+            </Bar.Item>
+
+            <Bar.Item
+              onPress={() => setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))}
+              icon={<TinyArrow orientation={sort === 'descending' ? 'up' : 'down'} />}
+            >
+              {t('home:by_date')}
+            </Bar.Item>
+          </Bar.Root>
+
+          <Typography legend>
+            {data.length} {data.length === 1 ? t('home:movies') : t('home:movies_plural')}
+          </Typography>
+        </View>
+      </Authenticated>
     </>
   )
 
@@ -207,7 +206,6 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
         </Authenticated>
 
         <Unauthenticated>
-          <View />
           <Avatar
             onPress={() => navigation.navigate('auth')}
             label={t('auth:sign_in')}

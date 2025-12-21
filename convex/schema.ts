@@ -4,7 +4,22 @@ import { v } from 'convex/values'
 import { authTables } from '@convex-dev/auth/server'
 
 const applicationTables = {
-  // Store movie information from TMDB
+  users: defineTable({
+    name: v.optional(v.string()),
+    image: v.optional(v.string()),
+    email: v.optional(v.string()),
+    emailVerificationTime: v.optional(v.number()),
+    phone: v.optional(v.string()),
+    phoneVerificationTime: v.optional(v.number()),
+    isAnonymous: v.optional(v.boolean()),
+    username: v.optional(v.string()),
+  })
+    .index('email', ['email'])
+    .index('by_username', ['username'])
+    .searchIndex('search_name', {
+      searchField: 'name',
+    }),
+
   movies: defineTable({
     title: v.object({
       original: v.string(),
@@ -25,7 +40,12 @@ const applicationTables = {
     tagline: v.optional(v.string()),
     voteAverage: v.optional(v.number()),
     tmdbId: v.number(),
-  }).index('by_tmdb_id', ['tmdbId']),
+    brazil: v.optional(v.boolean()),
+  })
+    .index('by_tmdb_id', ['tmdbId'])
+    .searchIndex('search_title', {
+      searchField: 'title.en_US',
+    }),
 
   // User's watchlist
   watchlist: defineTable({
@@ -89,7 +109,18 @@ const applicationTables = {
         en_US: v.string(),
       }),
     ),
-  }).index('by_edition', ['editionId']),
+  })
+    .index('by_edition', ['editionId'])
+    .index('by_movie', ['movieId']),
+
+  // Friend relationships between users
+  friends: defineTable({
+    userId: v.id('users'),
+    friendId: v.id('users'),
+  })
+    .index('by_user', ['userId'])
+    .index('by_friend', ['friendId'])
+    .index('by_user_and_friend', ['userId', 'friendId']),
 }
 
 export default defineSchema({

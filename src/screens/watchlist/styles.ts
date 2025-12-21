@@ -19,8 +19,8 @@ const useStyles = (): StylesReturn => {
 
   return StyleSheet.create({
     logo: {
-      width: 159,
-      height: 118,
+      height: 90,
+      aspectRatio: 159 / 118,
     },
     datepicker: {
       alignSelf: 'center',
@@ -28,7 +28,7 @@ const useStyles = (): StylesReturn => {
     banner: {
       position: 'relative',
       alignItems: 'center',
-      gap: 20,
+      gap: 8,
       paddingTop: 60,
     },
     title: {
@@ -38,7 +38,7 @@ const useStyles = (): StylesReturn => {
     content: {
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 48,
+      gap: 20,
       paddingTop: 20,
     },
     gradientContainer: {

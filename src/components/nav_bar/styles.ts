@@ -14,12 +14,6 @@ const useStyles = (): StylesReturn => {
   const { semantics } = useTheme()
   const { bottom, left, right } = useSafeAreaInsets()
   return StyleSheet.create({
-    background: {
-      backgroundColor: semantics.container.base.default,
-      height: '100%',
-      width: '100%',
-      flexDirection: 'row',
-    },
     container: {
       borderWidth: 1,
       borderColor: semantics.container.stroke.default,
@@ -28,7 +22,11 @@ const useStyles = (): StylesReturn => {
       position: 'absolute',
       overflow: 'hidden',
       zIndex: 10,
-      bottom: bottom + 20,
+      bottom: bottom,
+    },
+    background: {
+      flexDirection: 'row',
+      backgroundColor: semantics.container.base.default,
     },
     leading: {
       left: left + 20,
