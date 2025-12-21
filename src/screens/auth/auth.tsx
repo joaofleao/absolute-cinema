@@ -149,7 +149,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
           />
         </View>
       </View>
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}>
         <Typography>{t('auth:continue_with')}</Typography>
         <Row wrap>
           <Button
@@ -165,7 +165,7 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
             onPress={handleGoogleSignIn}
           />
         </Row>
-      </View>
+      </View> */}
     </>
   )
 
