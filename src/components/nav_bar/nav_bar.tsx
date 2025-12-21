@@ -44,7 +44,7 @@ const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement =>
       <View style={styles.background}>
         <NavBarItem
           onPress={() => navigation.navigate('search')}
-          icon={<IconMagnifyingGlass />}
+          icon={<IconMagnifyingGlass size={20} />}
         />
       </View>
     </View>

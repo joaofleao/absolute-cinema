@@ -32,6 +32,7 @@ const NavBarItem = ({
             : semantics.container.foreground.light,
         size: 16,
         filled: selected ?? false,
+        ...icon.props,
       })}
       {selected && label && <Typography>{label}</Typography>}
     </TouchableOpacity>
