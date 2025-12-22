@@ -32,7 +32,6 @@ const useStyles = (): StylesReturn => {
       left: left + 20,
     },
     trailing: {
-      padding: 4,
       right: right + 20,
     },
   })
