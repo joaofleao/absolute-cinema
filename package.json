@@ -15,7 +15,7 @@
     "@convex-dev/auth": "^0.0.88",
     "@expo/ui": "~0.1.1-alpha.10",
     "@oslojs/crypto": "^1.0.1",
-    "@react-native-community/datetimepicker": "8.4.1",
+    "@react-native-community/datetimepicker": "8.6.0",
     "@react-native-google-signin/google-signin": "^16.0.0",
     "@react-navigation/bottom-tabs": "^7.8.8",
     "@react-navigation/native": "^7.1.17",
