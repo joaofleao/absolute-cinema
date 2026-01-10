@@ -37,6 +37,7 @@ const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement =>
             isPreferred: true,
             onPress: (): void => {
               Linking.openURL(latest.url)
+              setItem('version', null)
             },
           },
         ],

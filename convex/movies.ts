@@ -192,7 +192,7 @@ export const insertMovie = internalMutation({
     tagline: v.optional(v.string()),
     voteAverage: v.optional(v.number()),
     tmdbId: v.number(),
-    originCountry: v.array(v.string()),
+    originCountry: v.optional(v.array(v.string())),
   },
   returns: v.id('movies'),
   handler: async (ctx, args) => {

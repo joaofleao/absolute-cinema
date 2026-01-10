@@ -23,7 +23,8 @@ export const getLatestVersion = query({
   }),
   handler: async (ctx, args) => {
     const latest = await ctx.db.query('versions').order('desc').first()
-    return { ...latest!, changelog: latest!.changelog[args.language ?? 'en_US'] }
+    if (!latest) throw new ConvexError('No versions found')
+    return { ...latest!, changelog: latest.changelog[args.language ?? 'en_US'] }
   },
 })
 
@@ -83,7 +84,7 @@ export const getCurrentUser = query({
       isAnonymous: v.optional(v.boolean()),
       username: v.optional(v.string()),
 
-      language: v.optional(v.string()),
+      language: v.optional(v.union(v.literal('pt_BR'), v.literal('en_US'))),
 
       hidePlot: v.optional(v.boolean()),
       hideCast: v.optional(v.boolean()),

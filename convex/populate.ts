@@ -38,13 +38,30 @@ export const populateOriginCountry = internalAction({
     const movies = await ctx.runQuery(internal.populate.getAllMovies)
 
     for (const movie of movies) {
-      const movieDetails = await ctx.runAction(internal.movies.fetchMovie, {
-        tmdbId: movie,
-      })
-      await ctx.runMutation(internal.populate.patchCountry, {
-        tmdbId: movie,
-        originCountry: movieDetails.originCountry || [],
-      })
+      try {
+        const movieDetails = await ctx.runAction(internal.movies.fetchMovie, {
+          tmdbId: movie,
+        })
+        if (!movieDetails) {
+          console.error('populateOriginCountry: fetchMovie returned no data', {
+            tmdbId: movie,
+          })
+          continue
+        }
+        const originCountry = Array.isArray((movieDetails as any).originCountry)
+          ? (movieDetails as any).originCountry
+          : []
+        await ctx.runMutation(internal.populate.patchCountry, {
+          tmdbId: movie,
+          originCountry,
+        })
+      } catch (error) {
+        console.error('populateOriginCountry: failed to fetch or patch movie', {
+          tmdbId: movie,
+          error,
+        })
+        continue
+      }
     }
   },
 })
