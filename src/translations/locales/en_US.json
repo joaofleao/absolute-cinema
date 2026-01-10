@@ -17,6 +17,9 @@
     "tmdb_error": "Failed to search movies. Please check your TMDB API key."
   },
   "home": {
+    "new_version": "New Version Available",
+    "update": "A new version of the app is available. Please update to the latest version for the best experience.",
+    "update_now": "Update Now",
     "watched": "Watched",
     "watchlist": "Watchlist",
     "by_date": "By Date",

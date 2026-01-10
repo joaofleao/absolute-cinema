@@ -21,7 +21,6 @@ import { TinyArrow, TinyCheckmark } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { TabType } from '@router/types'
-import { LanguageCode, languages } from '@utils/languages'
 
 const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -37,7 +36,7 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
   const [selectedMovie, setSelectedMovie] = useState<GenericId<'movies'>>()
   const catchConvexError = useConvexErrorHandler()
 
-  const watchlist = useQuery(api.movies.getUserWatchlist) || []
+  const watchlist = useQuery(api.movies.getUserWatchlist, { language: i18n.language }) || []
   const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
   const [sort, setSort] = useState<'ascending' | 'descending'>('ascending')
 
@@ -87,14 +86,12 @@ const Watchlist: TabType<'watchlist'> = ({ navigation, route }) => {
       posterPath: movie.posterPath,
       date: new Date(movie.addedAt).toLocaleDateString(),
       voteAverage: movie.voteAverage,
-      language: languages[movie.originalLanguage as LanguageCode][i18n.language],
+      language: movie.originalLanguage,
       onLongPress: async (): Promise<void> => {
         setSaveLoading(movie._id)
 
         await removeFromWatchlist({ movieId: movie._id })
-          .then(() =>
-            Alert.alert(`"${movie.title[i18n.language]}" ${t('overall:remove_watchlist')}`),
-          )
+          .then(() => Alert.alert(`"${movie.title}" ${t('overall:remove_watchlist')}`))
           .catch(catchConvexError)
           .finally(() => {
             setSaveLoading(undefined)

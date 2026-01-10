@@ -3,6 +3,7 @@ import { ConvexError, v } from 'convex/values'
 import { api, internal } from './_generated/api'
 import type { Id } from './_generated/dataModel'
 import { action, internalAction, internalMutation, mutation, query } from './_generated/server'
+import { countries, languages } from './constants'
 import { getAuthUserId } from '@convex-dev/auth/server'
 
 interface TMDBMovieSearchResult {
@@ -36,12 +37,13 @@ interface TMDBMovie {
   status: string
   tagline: string
   vote_average: number
+  origin_country: string[]
 }
 
 export const searchMovies = action({
   args: {
     query: v.string(),
-    language: v.optional(v.string()),
+    language: v.optional(v.union(v.literal('en_US'), v.literal('pt_BR'))),
     page: v.optional(v.number()),
   },
   returns: v.array(
@@ -49,13 +51,14 @@ export const searchMovies = action({
       id: v.number(),
       title: v.string(),
       poster_path: v.optional(v.string()),
-      release_date: v.string(),
-      vote_average: v.number(),
-      original_language: v.string(),
+      release_date: v.optional(v.string()),
+      vote_average: v.optional(v.number()),
+      original_language: v.optional(v.string()),
     }),
   ),
   handler: async (ctx, args) => {
-    const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(args.query)}&page=${encodeURIComponent(args.page ?? 1)}&language=${args.language ?? 'en-US'}`
+    const language = args.language === 'pt_BR' ? 'pt-BR' : 'en-US'
+    const url = `https://api.themoviedb.org/3/search/movie?query=${args.query}&language=${language}`
 
     const headers = {
       Authorization: `Bearer ${process.env.TMDB_BEARER_TOKEN}`,
@@ -70,16 +73,19 @@ export const searchMovies = action({
 
     const sortedByPopularity = data.results.sort((a, b) => b.popularity - a.popularity)
 
-    const cleaned = sortedByPopularity.map((movie) => ({
+    const enrichedData = sortedByPopularity.map((movie) => ({
       id: movie.id,
       title: movie.title,
       poster_path: movie.poster_path === null ? undefined : movie.poster_path,
-      release_date: movie.release_date,
-      vote_average: movie.vote_average,
-      original_language: movie.original_language,
+      release_date: movie.release_date === null ? undefined : movie.release_date,
+      vote_average: movie.vote_average === null ? undefined : movie.vote_average,
+      original_language:
+        movie.original_language === null
+          ? undefined
+          : languages[movie.original_language][args.language ?? 'en_US'],
     }))
 
-    return cleaned
+    return enrichedData
   },
 })
 
@@ -99,12 +105,18 @@ export const fetchMovie = internalAction({
     backdropPath: v.optional(v.string()),
     imdbId: v.optional(v.string()),
     originalLanguage: v.optional(v.string()),
-    overview: v.optional(v.string()),
+    plot: v.optional(
+      v.object({
+        pt_BR: v.string(),
+        en_US: v.string(),
+      }),
+    ),
     releaseDate: v.optional(v.string()),
     runtime: v.optional(v.number()),
     status: v.optional(v.string()),
     tagline: v.optional(v.string()),
     voteAverage: v.optional(v.number()),
+    originCountry: v.optional(v.array(v.string())),
   }),
   handler: async (ctx, args) => {
     const urlEN = `https://api.themoviedb.org/3/movie/${args.tmdbId}?language=en-US`
@@ -128,21 +140,28 @@ export const fetchMovie = internalAction({
       title: {
         original: dataEN.original_title,
         en_US: dataEN.title,
-        pt_BR: dataPT.title,
+
+        pt_BR: dataPT.title ?? dataEN.title,
       },
       posterPath: {
         en_US: dataEN.poster_path,
-        pt_BR: dataPT.poster_path,
+        pt_BR: dataPT.poster_path ?? dataEN.poster_path,
       },
-      backdropPath: dataEN.backdrop_path,
+      backdropPath: dataEN.backdrop_path ?? undefined,
       imdbId: dataEN.imdb_id ?? undefined,
       originalLanguage: dataEN.original_language,
-      overview: dataEN.overview,
+      plot: dataEN.overview
+        ? {
+            en_US: dataEN.overview,
+            pt_BR: dataPT.overview ?? dataEN.overview,
+          }
+        : undefined,
       releaseDate: dataEN.release_date,
       runtime: dataEN.runtime,
       status: dataEN.status,
       tagline: dataEN.tagline,
       voteAverage: dataEN.vote_average,
+      originCountry: dataEN.origin_country,
     }
   },
 })
@@ -161,13 +180,19 @@ export const insertMovie = internalMutation({
     backdropPath: v.optional(v.string()),
     imdbId: v.optional(v.string()),
     originalLanguage: v.optional(v.string()),
-    overview: v.optional(v.string()),
+    plot: v.optional(
+      v.object({
+        pt_BR: v.string(),
+        en_US: v.string(),
+      }),
+    ),
     releaseDate: v.optional(v.string()),
     runtime: v.optional(v.number()),
     status: v.optional(v.string()),
     tagline: v.optional(v.string()),
     voteAverage: v.optional(v.number()),
     tmdbId: v.number(),
+    originCountry: v.array(v.string()),
   },
   returns: v.id('movies'),
   handler: async (ctx, args) => {
@@ -178,6 +203,7 @@ export const insertMovie = internalMutation({
 export const getMovie = query({
   args: {
     tmdbId: v.number(),
+    language: v.optional(v.union(v.literal('en_US'), v.literal('pt_BR'))),
   },
   returns: v.union(
     v.object({
@@ -188,21 +214,26 @@ export const getMovie = query({
         pt_BR: v.string(),
         en_US: v.string(),
       }),
-      posterPath: v.object({
-        pt_BR: v.string(),
-        en_US: v.string(),
-      }),
+      posterPath: v.string(),
       backdropPath: v.optional(v.string()),
       imdbId: v.optional(v.string()),
       originalLanguage: v.optional(v.string()),
-      overview: v.optional(v.string()),
+      plot: v.optional(v.string()),
       releaseDate: v.optional(v.string()),
       runtime: v.optional(v.number()),
       status: v.optional(v.string()),
       tagline: v.optional(v.string()),
       voteAverage: v.optional(v.number()),
       tmdbId: v.number(),
-      brazil: v.optional(v.boolean()),
+      originCountry: v.optional(
+        v.array(
+          v.object({
+            name: v.string(),
+            code: v.string(),
+            url: v.string(),
+          }),
+        ),
+      ),
     }),
     v.null(),
   ),
@@ -213,7 +244,22 @@ export const getMovie = query({
       .withIndex('by_tmdb_id', (q) => q.eq('tmdbId', args.tmdbId))
       .unique()
 
-    if (existingMovie) return existingMovie
+    if (existingMovie)
+      return {
+        ...existingMovie,
+        posterPath: existingMovie.posterPath[args.language ?? 'en_US'],
+        plot: existingMovie.plot ? existingMovie.plot[args.language ?? 'en_US'] : undefined,
+        originalLanguage: existingMovie.originalLanguage
+          ? languages[existingMovie.originalLanguage]?.[args.language ?? 'en_US']
+          : undefined,
+        originCountry: existingMovie.originCountry
+          ? existingMovie.originCountry.map((code) => ({
+              code,
+              name: countries[code]?.[args.language ?? 'en_US'] || code,
+              url: `https://hatscripts.github.io/circle-flags/flags/${code}.svg`,
+            }))
+          : undefined,
+      }
 
     return null
   },
@@ -227,7 +273,9 @@ export const getOrCreateMovie = action({
       tmdbId: args.tmdbId,
     })
 
-    if (existingMovie) return existingMovie._id
+    if (existingMovie) {
+      return existingMovie._id
+    }
 
     const movieDetails = await ctx.runAction(internal.movies.fetchMovie, {
       tmdbId: args.tmdbId,
@@ -326,34 +374,30 @@ export const markAsWatched = mutation({
 })
 
 export const getUserWatchlist = query({
-  args: {},
+  args: {
+    language: v.optional(v.union(v.literal('en_US'), v.literal('pt_BR'))),
+  },
   returns: v.array(
     v.object({
       _id: v.id('movies'),
       _creationTime: v.number(),
-      title: v.object({
-        original: v.string(),
-        pt_BR: v.string(),
-        en_US: v.string(),
-      }),
-      posterPath: v.object({
-        pt_BR: v.string(),
-        en_US: v.string(),
-      }),
+      title: v.string(),
+      posterPath: v.string(),
       backdropPath: v.optional(v.string()),
       imdbId: v.optional(v.string()),
       originalLanguage: v.optional(v.string()),
-      overview: v.optional(v.string()),
+      plot: v.optional(v.string()),
       releaseDate: v.optional(v.string()),
       runtime: v.optional(v.number()),
       status: v.optional(v.string()),
       tagline: v.optional(v.string()),
       voteAverage: v.optional(v.number()),
+      originCountry: v.optional(v.array(v.string())),
       tmdbId: v.number(),
       addedAt: v.number(),
     }),
   ),
-  handler: async (ctx) => {
+  handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx)
     if (!userId) return []
 
@@ -365,45 +409,50 @@ export const getUserWatchlist = query({
     const movies = await Promise.all(
       watchlistItems.map(async (item) => {
         const movie = await ctx.db.get(item.movieId)
-        return { ...movie!, addedAt: item.addedAt }
+        if (!movie) return
+        return {
+          ...movie,
+          addedAt: item.addedAt,
+          title: movie.title[args.language ?? 'en_US'],
+          posterPath: movie.posterPath[args.language ?? 'en_US'],
+          plot: movie.plot?.[args.language ?? 'en_US'],
+          originalLanguage: movie.originalLanguage
+            ? languages[movie.originalLanguage][args.language ?? 'en_US']
+            : undefined,
+        }
       }),
     )
 
-    return movies.filter(Boolean)
+    return movies.filter((e) => e !== undefined)
   },
 })
 
 export const getUserWatchedMovies = query({
-  args: {},
+  args: {
+    language: v.optional(v.union(v.literal('en_US'), v.literal('pt_BR'))),
+  },
   returns: v.array(
     v.object({
       _id: v.id('movies'),
       _creationTime: v.number(),
-      title: v.object({
-        original: v.string(),
-        pt_BR: v.string(),
-        en_US: v.string(),
-      }),
-      posterPath: v.object({
-        pt_BR: v.string(),
-        en_US: v.string(),
-      }),
+      title: v.string(),
+      posterPath: v.string(),
       backdropPath: v.optional(v.string()),
       imdbId: v.optional(v.string()),
       originalLanguage: v.optional(v.string()),
-      overview: v.optional(v.string()),
+      plot: v.optional(v.string()),
       releaseDate: v.optional(v.string()),
       runtime: v.optional(v.number()),
       status: v.optional(v.string()),
       tagline: v.optional(v.string()),
+      originCountry: v.optional(v.array(v.string())),
       voteAverage: v.optional(v.number()),
       tmdbId: v.number(),
       watchedAt: v.number(),
       watchId: v.id('watchedMovies'),
-      brazil: v.optional(v.boolean()),
     }),
   ),
-  handler: async (ctx) => {
+  handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx)
     if (!userId) return []
 
@@ -416,11 +465,22 @@ export const getUserWatchedMovies = query({
     const movies = await Promise.all(
       watchedItems.map(async (item) => {
         const movie = await ctx.db.get(item.movieId)
-        return { ...movie!, watchedAt: item.watchedAt, watchId: item._id }
+        if (!movie) return null
+        return {
+          ...movie,
+          watchedAt: item.watchedAt,
+          watchId: item._id,
+          title: movie.title[args.language ?? 'en_US'],
+          posterPath: movie.posterPath[args.language ?? 'en_US'],
+          plot: movie.plot?.[args.language ?? 'en_US'],
+          originalLanguage: movie.originalLanguage
+            ? languages[movie.originalLanguage][args.language ?? 'en_US']
+            : undefined,
+        }
       }),
     )
 
-    return movies.filter(Boolean)
+    return movies.filter((e) => e !== null)
   },
 })
 

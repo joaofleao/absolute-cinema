@@ -11,7 +11,7 @@ import { ScreenType } from '@router/types'
 const WatchedMovie: ScreenType<'watched_movie'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { watchId, posterPath, title, watchedAt } = route.params.movie
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const removeFromWatchedMovies = useMutation(api.movies.removeFromWatchedMovies)
 
   return (
@@ -20,14 +20,14 @@ const WatchedMovie: ScreenType<'watched_movie'> = ({ navigation, route }) => {
         {posterPath !== undefined ? (
           <Image
             style={styles.image}
-            source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath[i18n.language]}` }}
-            alt={title[i18n.language]}
+            source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
+            alt={title}
           />
         ) : (
           <View style={styles.imagePlaceholder} />
         )}
 
-        <Typography>{title[i18n.language]}</Typography>
+        <Typography>{title}</Typography>
         <Typography body>
           {t('watched_movie:watched_at') + ': ' + new Date(watchedAt).toLocaleDateString()}
         </Typography>

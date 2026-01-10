@@ -1,7 +1,11 @@
-import React from 'react'
-import { View } from 'react-native'
-import { getItem } from 'expo-secure-store'
+import React, { useEffect } from 'react'
+import { Alert, Linking, View } from 'react-native'
+import { api } from 'convex/_generated/api'
+import { useQuery } from 'convex/react'
+import { getItem, setItem } from 'expo-secure-store'
+import { useTranslation } from 'react-i18next'
 
+import packageJson from '../../../package.json'
 import NavBarItem from './nav_bar_item'
 import useStyles from './styles'
 import { NavBarProps, TabType } from './types'
@@ -9,6 +13,33 @@ import { IconMagnifyingGlass } from '@components/icon'
 
 const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement => {
   const styles = useStyles()
+  const { t, i18n } = useTranslation()
+  const latest = useQuery(api.user.getLatestVersion, {
+    language: i18n.language,
+  })
+
+  useEffect(() => {
+    if (latest === undefined) return
+    const ver = getItem('version')
+
+    if (ver === null) setItem('version', packageJson.version)
+
+    if (ver !== latest.version)
+      Alert.alert(
+        t('home:new_version'),
+        latest.changelog.length > 0 ? latest.changelog : t('home:update'),
+        [
+          {
+            text: t('home:update_now'),
+            isPreferred: true,
+            onPress: (): void => {
+              Linking.openURL(latest.url)
+            },
+          },
+        ],
+        { cancelable: false },
+      )
+  }, [latest])
 
   setTimeout(() => {
     const onb = getItem('onboarding')

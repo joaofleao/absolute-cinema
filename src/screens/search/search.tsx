@@ -19,7 +19,6 @@ import { TinyCheckmark, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router/types'
-import { LanguageCode, languages } from '@utils/languages'
 
 const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -38,19 +37,19 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
   const [loading, setLoading] = useState(false)
-  const [saveLoading, setSaveLoading] = useState<number>()
-  const [selectedMovie, setSelectedMovie] = useState<number>()
+  const [saveLoading, setSaveLoading] = useState<string>()
+  const [selectedMovie, setSelectedMovie] = useState<string>()
 
   const refinedResults: ListViewItemProps[] = (results ?? []).map((movie) => ({
-    _id: movie.id,
+    _id: `${movie.id}`,
     title: movie.title,
     posterPath: movie.poster_path,
     date:
-      movie.release_date === ''
+      movie.release_date && movie.release_date === ''
         ? t('search:unrelesed')
-        : new Date(movie.release_date).getFullYear().toString(),
+        : new Date(movie.release_date ?? '').getFullYear().toString(),
     voteAverage: movie.vote_average,
-    language: languages[movie.original_language as LanguageCode][i18n.language],
+    language: movie.original_language,
   }))
 
   const handleSearch = async (query: string): Promise<void> => {
@@ -78,7 +77,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     if (!results) return
     setSaveLoading(movie)
     try {
-      const tmdbMovie = results.find((original) => original.id === movie)
+      const tmdbMovie = results.find((original) => `${original.id}` === movie)
       if (!tmdbMovie) throw Error
 
       const movieId = await getOrCreateMovie({
@@ -108,7 +107,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
     try {
       const tmdbMovie = results.find((original) => {
-        return original.id === selectedMovie
+        return `${original.id}` === selectedMovie
       })
       if (!tmdbMovie) throw Error
 

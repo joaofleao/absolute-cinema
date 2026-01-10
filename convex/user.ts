@@ -3,18 +3,70 @@ import { ConvexError, v } from 'convex/values'
 import { action, mutation, query } from './_generated/server'
 import { getAuthUserId } from '@convex-dev/auth/server'
 
-// export const updateProfileImage = mutation({
-//   args: { storageId: v.id('_storage') },
-//   returns: v.null(),
-//   handler: async (ctx, args) => {
-//     const userId = await getAuthUserId(ctx)
-//     if (!userId) throw new ConvexError('Not authenticated')
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.storage.generateUploadUrl()
+  },
+})
 
-//     const imageUrl = await ctx.storage.getUrl(args.storageId)
-//     if (!imageUrl) throw new ConvexError('Failed to get image URL')
-//     await ctx.db.patch(userId, { image: imageUrl })
-//   },
-// })
+export const getLatestVersion = query({
+  args: {
+    language: v.optional(v.union(v.literal('en_US'), v.literal('pt_BR'))),
+  },
+  returns: v.object({
+    _id: v.id('versions'),
+    _creationTime: v.number(),
+    url: v.string(),
+    version: v.string(),
+    changelog: v.string(),
+  }),
+  handler: async (ctx, args) => {
+    const latest = await ctx.db.query('versions').order('desc').first()
+    return { ...latest!, changelog: latest!.changelog[args.language ?? 'en_US'] }
+  },
+})
+
+export const updateUser = mutation({
+  args: {
+    image: v.optional(v.union(v.id('_storage'), v.null())),
+    name: v.optional(v.string()),
+    username: v.optional(v.string()),
+    language: v.optional(v.union(v.literal('pt_BR'), v.literal('en_US'))),
+    hidePlot: v.optional(v.boolean()),
+    hideCast: v.optional(v.boolean()),
+    hideRate: v.optional(v.boolean()),
+    hidePoster: v.optional(v.boolean()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+    if (!userId) throw new ConvexError('Not authenticated')
+    const patch: Record<string, any> = {}
+
+    if (args.image === null) {
+      patch.image = null
+    }
+    if (args.image !== null && args.image !== undefined) {
+      const imageUrl = await ctx.storage.getUrl(args.image)
+      if (!imageUrl) throw new ConvexError('Failed to get image URL')
+      patch.image = imageUrl
+    }
+
+    if (args.name !== undefined) patch.name = args.name
+    if (args.username !== undefined) patch.username = args.username
+    if (args.language !== undefined) patch.language = args.language
+
+    if (args.hidePlot !== undefined) patch.hidePlot = args.hidePlot
+    if (args.hideCast !== undefined) patch.hideCast = args.hideCast
+    if (args.hideRate !== undefined) patch.hideRate = args.hideRate
+    if (args.hidePoster !== undefined) patch.hidePoster = args.hidePoster
+
+    if (Object.keys(patch).length > 0) {
+      await ctx.db.patch(userId, patch)
+    }
+  },
+})
 
 export const getCurrentUser = query({
   args: {},
@@ -30,6 +82,13 @@ export const getCurrentUser = query({
       phoneVerificationTime: v.optional(v.number()),
       isAnonymous: v.optional(v.boolean()),
       username: v.optional(v.string()),
+
+      language: v.optional(v.string()),
+
+      hidePlot: v.optional(v.boolean()),
+      hideCast: v.optional(v.boolean()),
+      hideRate: v.optional(v.boolean()),
+      hidePoster: v.optional(v.boolean()),
     }),
     v.null(),
   ),

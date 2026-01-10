@@ -11,7 +11,7 @@ export const searchActors = action({
     v.object({
       id: v.number(),
       name: v.string(),
-      profile_path: v.optional(v.string()),
+      profile_path: v.union(v.string(), v.null()),
       known_for: v.string(),
     }),
   ),
