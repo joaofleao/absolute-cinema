@@ -45,7 +45,7 @@ const EmailInput = ({
         style={styles.leading}
       >
         <IconEmail
-          color={semantics.container.foreground.default}
+          color={semantics.container.foreground.light}
           size={16}
         />
       </Pressable>

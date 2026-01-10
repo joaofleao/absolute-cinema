@@ -2,50 +2,44 @@ import React from 'react'
 import { StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'
+import * as SecureStore from 'expo-secure-store'
 import * as SplashScreen from 'expo-splash-screen'
 import { use as run } from 'i18next'
-import { initReactI18next } from 'react-i18next'
+import { initReactI18next, useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
 import { StackProps } from './types'
-import enUS from '@i18n/locales/en-us.json'
-import ptBR from '@i18n/locales/pt-br.json'
+import { IconBookmarks, IconFilm } from '@components/icon'
+import NavBar from '@components/nav_bar'
 import { fontImports, useTheme } from '@providers/theme'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { routes } from '@router'
 import Auth from '@screens/auth'
-import Home from '@screens/home'
 import Movie from '@screens/movie'
+import Onboarding from '@screens/onboarding'
 import PasswordRecovery from '@screens/password_recovery'
 import Profile from '@screens/profile'
 import Search from '@screens/search'
 import WatchedMovie from '@screens/watched_movie'
+import WatchedMovies from '@screens/watched_movies'
+import Watchlist from '@screens/watchlist'
+import enUS from '@translations/locales/en_US.json'
+import ptBR from '@translations/locales/pt_BR.json'
 import print from '@utils/print'
 
 const Stack = createNativeStackNavigator<StackProps>()
-
-const resources = {
-  'pt-BR': ptBR,
-  'en-US': enUS,
-}
+const Tabs = createBottomTabNavigator<StackProps>()
 
 const initI18n = async (): Promise<void> => {
-  // const json = await AsyncStorage.getItem('userData')
-  // const savedLanguage = JSON.parse(json)?.language
-
-  // if (!user.language) {
-  //   savedLanguage = Localization.locale
-  // }
-
+  const lng = SecureStore.getItem('language') ?? 'en_US'
   run(initReactI18next).init({
-    // compatibilityJSON: 'v3',
-    resources,
-    // lng: savedLanguage,
-    fallbackLng: 'en-US',
-    interpolation: {
-      escapeValue: false,
+    resources: {
+      pt_BR: ptBR,
+      en_US: enUS,
     },
+    lng,
+    interpolation: { escapeValue: false },
   })
 }
 
@@ -62,6 +56,7 @@ const Router = (): React.ReactNode => {
   const [appReady, setAppReady] = React.useState(false)
   const { semantics } = useTheme()
   const styles = useStyles()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     async function prepare(): Promise<void> {
@@ -80,6 +75,40 @@ const Router = (): React.ReactNode => {
   }, [])
 
   if (!appReady) return null
+
+  const renderTabs = (): React.ReactElement => {
+    return (
+      <Tabs.Navigator
+        backBehavior="none"
+        screenOptions={{
+          headerShown: false,
+          sceneStyle: {
+            backgroundColor: semantics.background.base.default,
+          },
+        }}
+        tabBar={(props) => (
+          <NavBar
+            tabs={[
+              { icon: <IconFilm />, label: t('overall:watched'), id: 'watched' },
+              { icon: <IconBookmarks />, label: t('overall:watchlist'), id: 'watchlist' },
+            ]}
+            {...props}
+          />
+        )}
+      >
+        <Tabs.Screen
+          key={'watched'}
+          name={'watched'}
+          component={WatchedMovies}
+        />
+        <Tabs.Screen
+          key={'watchlist'}
+          name={'watchlist'}
+          component={Watchlist}
+        />
+      </Tabs.Navigator>
+    )
+  }
 
   return (
     <NavigationContainer>
@@ -101,30 +130,26 @@ const Router = (): React.ReactNode => {
             },
           }}
         >
+          <Stack.Screen name={'home'}>{renderTabs}</Stack.Screen>
+
           <Stack.Screen
-            name={routes.home}
-            component={Home}
-          />
-          <Stack.Screen
-            name={routes.movie}
+            name={'movie'}
             component={Movie}
           />
 
           <Stack.Screen
-            name={routes.password_recovery}
+            name={'password_recovery'}
             component={PasswordRecovery}
           />
-          {/* <Stack.Screen
-            name={routes.search}
-            component={Search}
-          /> */}
 
           <Stack.Screen
-            name={routes.search}
+            name={'search'}
             component={Search}
             options={{
               presentation: 'formSheet',
-              // sheetAllowedDetents: 'fitToContents',
+              sheetExpandsWhenScrolledToEdge: false,
+              sheetInitialDetentIndex: 'last',
+              sheetAllowedDetents: 'fitToContents',
 
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
@@ -133,24 +158,22 @@ const Router = (): React.ReactNode => {
           />
 
           <Stack.Screen
-            name={routes.watched_movie}
+            name={'watched_movie'}
             component={WatchedMovie}
             options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
-              sheetInitialDetentIndex: 'last',
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
             }}
           />
           <Stack.Screen
-            name={routes.profile}
+            name={'profile'}
             component={Profile}
             options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
-              sheetInitialDetentIndex: 'last',
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
@@ -158,15 +181,21 @@ const Router = (): React.ReactNode => {
           />
 
           <Stack.Screen
-            name={routes.auth}
+            name={'auth'}
             component={Auth}
             options={{
               presentation: 'formSheet',
               sheetAllowedDetents: 'fitToContents',
-              sheetInitialDetentIndex: 'last',
               contentStyle: {
                 backgroundColor: semantics.container.base.original,
               },
+            }}
+          />
+          <Stack.Screen
+            name={'onboarding'}
+            component={Onboarding}
+            options={{
+              animation: 'slide_from_left',
             }}
           />
         </Stack.Navigator>

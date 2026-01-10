@@ -3,11 +3,12 @@
   "compilerOptions": {
     "strict": true,
     "types": ["node"],
+
     "baseUrl": ".",
     "paths": {
       "@utils/*": ["./src/utils/*"],
       "@screens/*": ["./src/screens/*"],
-      "@i18n/*": ["./src/i18n/*"],
+      "@translations/*": ["./src/translations/*"],
       "@providers/*": ["./src/providers/*"],
       "@components/*": ["./src/components/*"],
       "@router/*": ["./src/router/*"],
@@ -18,5 +19,6 @@
     },
     "jsx": "react-jsx"
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules/**"]
 }

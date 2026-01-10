@@ -18,15 +18,21 @@ const useStyles = (): StylesReturn => {
       borderColor: semantics.container.stroke.default,
       backgroundColor: semantics.container.base.default,
       flexDirection: 'row',
-      alignItems: 'center',
       overflow: 'hidden',
+
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     iconContainer: {
       padding: 8,
+      minWidth: 40,
+      minHeight: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     image: {
-      width: 40,
-      height: 40,
+      width: '100%',
+      height: '100%',
     },
   })
 }

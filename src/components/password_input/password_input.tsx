@@ -123,7 +123,7 @@ const PasswordInput = ({
           style={styles.leading}
         >
           <IconLock
-            color={semantics.background.foreground.default}
+            color={semantics.background.foreground.light}
             size={16}
           />
         </Pressable>
@@ -146,18 +146,19 @@ const PasswordInput = ({
           {...props}
         />
 
+        <View style={styles.divider} />
         <Pressable
           onPress={handleShow}
           style={styles.trailing}
         >
           {showPassword ? (
             <IconEyeClosed
-              color={semantics.background.foreground.light}
+              color={semantics.background.foreground.default}
               size={16}
             />
           ) : (
             <IconEyeOpen
-              color={semantics.background.foreground.light}
+              color={semantics.background.foreground.default}
               size={16}
             />
           )}

@@ -1,16 +1,16 @@
 import { StyleSheet, ViewStyle } from 'react-native'
 
-import { ButtonProps } from './types'
-import { useTheme } from '@providers/theme'
+import { SemanticsType, useTheme } from '@providers/theme'
 
 type StylesReturn = {
   root: ViewStyle
   content: ViewStyle
   loading: ViewStyle
   hide: ViewStyle
+  ghost: ViewStyle
 }
 type StylesProps = {
-  variant: Required<ButtonProps>['variant']
+  variant: keyof SemanticsType
 }
 
 const useStyles = ({ variant }: StylesProps): StylesReturn => {
@@ -26,6 +26,13 @@ const useStyles = ({ variant }: StylesProps): StylesReturn => {
       height: 40,
       backgroundColor: semantics[variant].base.default,
       borderColor: semantics[variant].stroke.default,
+      alignItems: 'center',
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
     },
     content: {
       flexDirection: 'row',

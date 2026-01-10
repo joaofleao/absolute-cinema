@@ -28,7 +28,7 @@ const Avatar = ({ ref, image, label, ...props }: AvatarProps): React.ReactElemen
       {!hasImage && (
         <View style={styles.iconContainer}>
           {hasLabel && <Typography>{label}</Typography>}
-          {!hasLabel && <IconPerson size={24} />}
+          {!hasLabel && <IconPerson size={16} />}
         </View>
       )}
     </TouchableOpacity>

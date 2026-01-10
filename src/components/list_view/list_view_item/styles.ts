@@ -25,6 +25,7 @@ const useStyles = (): StylesReturn => {
       padding: 8,
       borderRadius: 12,
       borderWidth: 1,
+      borderRightWidth: 0,
       borderColor: theme.semantics.container.stroke.default,
       backgroundColor: theme.semantics.container.base.default,
       flexDirection: 'row',
@@ -61,19 +62,13 @@ const useStyles = (): StylesReturn => {
       backgroundColor: theme.semantics.container.base.default,
       borderColor: theme.semantics.container.stroke.default,
       flex: 1,
-
-      borderStartWidth: 0,
-      borderBottomStartRadius: 0,
-      borderTopStartRadius: 0,
     },
     top: {
-      borderStartWidth: 0,
       borderBottomStartRadius: 0,
       borderTopStartRadius: 0,
       borderBottomEndRadius: 0,
     },
     bottom: {
-      borderStartWidth: 0,
       borderBottomStartRadius: 0,
       borderTopStartRadius: 0,
       borderTopEndRadius: 0,

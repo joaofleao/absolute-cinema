@@ -40,7 +40,6 @@ const useStyles = (): StylesReturn => {
       position: 'relative',
       alignItems: 'center',
       gap: 20,
-      // paddingBlock: 60,
     },
     title: {
       alignItems: 'center',
@@ -82,7 +81,9 @@ const useStyles = (): StylesReturn => {
     image: {
       width: 120,
       aspectRatio: 2 / 3,
-      borderRadius: 4,
+      backgroundColor: semantics.container.base.default,
+      borderWidth: 1,
+      borderColor: semantics.container.stroke.default,
     },
     imagePlaceholder: {
       width: 120,

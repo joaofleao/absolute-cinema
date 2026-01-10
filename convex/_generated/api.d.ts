@@ -13,11 +13,16 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as actors from "../actors.js";
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
-import type * as movieLists from "../movieLists.js";
 import type * as movies from "../movies.js";
+import type * as native_apple from "../native_apple.js";
+import type * as native_google from "../native_google.js";
+import type * as node from "../node.js";
+import type * as oscars from "../oscars.js";
 import type * as router from "../router.js";
+import type * as user from "../user.js";
 import type * as verify from "../verify.js";
 
 /**
@@ -29,11 +34,16 @@ import type * as verify from "../verify.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  actors: typeof actors;
   auth: typeof auth;
   http: typeof http;
-  movieLists: typeof movieLists;
   movies: typeof movies;
+  native_apple: typeof native_apple;
+  native_google: typeof native_google;
+  node: typeof node;
+  oscars: typeof oscars;
   router: typeof router;
+  user: typeof user;
   verify: typeof verify;
 }>;
 export declare const api: FilterApi<

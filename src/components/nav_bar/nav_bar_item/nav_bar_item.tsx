@@ -1,0 +1,42 @@
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
+
+import useStyles from './styles'
+import { NavBarItemProps } from './types'
+import { IconProps } from '@components/icon'
+import Typography from '@components/typography'
+import { useTheme } from '@providers/theme'
+
+const NavBarItem = ({
+  first = false,
+  last = false,
+  icon,
+  label,
+  selected,
+  style,
+  ...rest
+}: NavBarItemProps): React.ReactElement => {
+  const { semantics } = useTheme()
+  const styles = useStyles()
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={[styles.root, first && styles.first, last && styles.last, style]}
+      {...rest}
+    >
+      {React.cloneElement<IconProps>(icon, {
+        color:
+          selected || selected === undefined
+            ? semantics.container.foreground.default
+            : semantics.container.foreground.light,
+        size: 16,
+        filled: selected ?? false,
+        ...icon.props,
+      })}
+      {selected && label && <Typography>{label}</Typography>}
+    </TouchableOpacity>
+  )
+}
+
+export default NavBarItem

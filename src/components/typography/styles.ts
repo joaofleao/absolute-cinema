@@ -24,8 +24,8 @@ const useStyles = ({ color }: StylesProps): StylesReturn => {
     display: {
       color: color ?? semantics.background.foreground.default,
       fontFamily: fonts.primary.regular,
-      fontSize: 64,
-      lineHeight: 88,
+      fontSize: 40,
+      lineHeight: 50,
       letterSpacing: 1,
       textTransform: 'none',
     },

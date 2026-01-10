@@ -6,8 +6,12 @@ import { IconButtonProps } from './types'
 import { IconProps } from '@components/icon/types'
 import { useTheme } from '@providers/theme'
 
-const IconButton = ({ icon, ...props }: IconButtonProps): React.ReactElement => {
-  const styles = useStyles()
+const IconButton = ({
+  icon,
+  variant = 'container',
+  ...props
+}: IconButtonProps): React.ReactElement => {
+  const styles = useStyles({ variant })
   const theme = useTheme()
 
   return (
@@ -16,8 +20,9 @@ const IconButton = ({ icon, ...props }: IconButtonProps): React.ReactElement => 
       {...props}
     >
       {React.cloneElement<IconProps>(icon, {
-        color: theme.semantics.background.foreground.default,
-        size: 24,
+        color: theme.semantics[variant].foreground.default,
+        size: 16,
+        ...icon.props,
       })}
     </TouchableOpacity>
   )

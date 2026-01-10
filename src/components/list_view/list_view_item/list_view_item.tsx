@@ -1,5 +1,6 @@
 import React from 'react'
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, Pressable, View } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 import useStyle from './styles'
 import { ListViewItemProps } from './types'
@@ -10,9 +11,9 @@ import { useTheme } from '@providers/theme'
 
 const ListViewItem = ({
   _id,
-  title,
+  title: titleProp,
   date,
-  posterPath,
+  posterPath: posterProp,
   style,
   voteAverage,
   language,
@@ -24,6 +25,14 @@ const ListViewItem = ({
 }: ListViewItemProps): React.ReactElement => {
   const styles = useStyle()
   const theme = useTheme()
+  const { i18n } = useTranslation()
+  const title = typeof titleProp === 'string' ? titleProp : titleProp[i18n.language]
+  const posterPath =
+    posterProp === undefined
+      ? undefined
+      : typeof posterProp === 'string'
+        ? posterProp
+        : posterProp[i18n.language]
 
   const renderButton = (
     button: typeof topButton,
@@ -33,9 +42,9 @@ const ListViewItem = ({
     const isLoading = button.loading?.(_id) ?? false
 
     return (
-      <TouchableOpacity
+      <Pressable
         delayLongPress={3000}
-        activeOpacity={0.7}
+        // activeOpacity={0.7}
         style={[styles.button, position === 'top' ? styles.top : styles.bottom]}
         onPress={() => button.onPress(_id)}
         disabled={isLoading}
@@ -55,24 +64,24 @@ const ListViewItem = ({
         <View style={[styles.loading, !isLoading && styles.hide]}>
           <ActivityIndicator color={theme.semantics.container.foreground.default} />
         </View>
-      </TouchableOpacity>
+      </Pressable>
     )
   }
 
   const content = (
     <>
-      {posterPath !== undefined ? (
+      {posterPath !== undefined && (
         <Image
           style={styles.image}
           source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
           alt={title}
         />
-      ) : (
-        <View style={styles.imagePlaceholder} />
       )}
 
+      {posterPath === undefined && <View style={styles.imagePlaceholder} />}
+
       <View style={{ flex: 1, gap: 4 }}>
-        <Typography body>{title}</Typography>
+        <Typography body>{typeof title === 'string' ? title : title}</Typography>
         <Rating value={voteAverage} />
         <Typography legend>{`${date} ${language}`}</Typography>
       </View>
@@ -82,7 +91,7 @@ const ListViewItem = ({
   return (
     <View style={[{ flexDirection: 'row' }, style]}>
       {(onPress || onLongPress) && (
-        <TouchableOpacity
+        <Pressable
           onPress={(e) => onPress?.(e, props.id)}
           onLongPress={(e) => onLongPress?.(e, props.id)}
           style={[styles.root, topButton && bottomButton && styles.hasButtons]}
@@ -90,7 +99,7 @@ const ListViewItem = ({
           {...props}
         >
           {content}
-        </TouchableOpacity>
+        </Pressable>
       )}
 
       {!onPress && !onLongPress && (

@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next'
 import useStyles from './styles'
 import Button from '@components/button'
 import Typography from '@components/typography'
-import { ScreenType } from '@router'
+import { ScreenType } from '@router/types'
 
 const WatchedMovie: ScreenType<'watched_movie'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { watchId, posterPath, title, watchedAt } = route.params.movie
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const removeFromWatchedMovies = useMutation(api.movies.removeFromWatchedMovies)
 
   return (
@@ -20,14 +20,14 @@ const WatchedMovie: ScreenType<'watched_movie'> = ({ navigation, route }) => {
         {posterPath !== undefined ? (
           <Image
             style={styles.image}
-            source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
-            alt={title}
+            source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath[i18n.language]}` }}
+            alt={title[i18n.language]}
           />
         ) : (
           <View style={styles.imagePlaceholder} />
         )}
 
-        <Typography>{title}</Typography>
+        <Typography>{title[i18n.language]}</Typography>
         <Typography body>
           {t('watched_movie:watched_at') + ': ' + new Date(watchedAt).toLocaleDateString()}
         </Typography>

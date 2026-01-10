@@ -1,4 +1,4 @@
-import { Dimensions, ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native'
+import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import { useTheme } from '@providers/theme'
 
@@ -15,7 +15,6 @@ const useStyles = (): StylesReturn => {
     root: {
       alignItems: 'center',
       position: 'relative',
-      borderRadius: 4,
       borderWidth: 1,
       height: 40,
       backgroundColor: semantics.container.base.default,
