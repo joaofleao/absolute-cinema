@@ -22,7 +22,10 @@ const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement =>
     if (latest === undefined) return
     const ver = getItem('version')
 
-    if (ver === null) setItem('version', packageJson.version)
+    if (ver === null) {
+      setItem('version', packageJson.version)
+      return
+    }
 
     if (ver !== latest.version)
       Alert.alert(
