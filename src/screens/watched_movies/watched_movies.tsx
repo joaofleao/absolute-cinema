@@ -4,10 +4,10 @@ import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
 import { GenericId } from 'convex/values'
+import { api } from 'convex_api'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
-import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
 import Avatar from '@components/avatar'
 import Bar from '@components/bar'
@@ -22,7 +22,6 @@ import { TinyArrow, TinyCheckmark, TinyChevron, TinyPlus } from '@components/tin
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { TabType } from '@router/types'
-import { LanguageCode, languages } from '@utils/languages'
 
 const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -37,7 +36,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   const [selectedMovie, setSelectedMovie] = useState<GenericId<'movies'>>()
   const catchConvexError = useConvexErrorHandler()
 
-  const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
+  const watchedMovies = useQuery(api.movies.getUserWatchedMovies, { language: i18n.language }) || []
   const uniqueYears = watchedMovies
     .map((movie) => new Date(movie.watchedAt).getFullYear())
     .filter((year, index, self) => self.indexOf(year) === index)
@@ -98,7 +97,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
       posterPath: movie.posterPath,
       date: new Date(movie.watchedAt).toLocaleDateString(),
       voteAverage: movie.voteAverage,
-      language: languages[movie.originalLanguage as LanguageCode][i18n.language],
+      language: movie.originalLanguage,
       onPress: (): void => navigation.navigate('watched_movie', { movie }),
     }))
 

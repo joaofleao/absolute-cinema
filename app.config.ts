@@ -6,7 +6,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: 'Absolute Cinema',
     slug: 'absolute-cinema',
     scheme: 'absolute-cinema',
-    version: '1.0',
+    version: '1.1',
     orientation: 'portrait',
     icon: './src/assets/app/icon.png',
     newArchEnabled: true,

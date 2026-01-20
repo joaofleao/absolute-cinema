@@ -17,6 +17,9 @@
     "tmdb_error": "Failed to search movies. Please check your TMDB API key."
   },
   "home": {
+    "new_version": "New Version Available",
+    "update": "A new version of the app is available. Please update to the latest version for the best experience.",
+    "update_now": "Update Now",
     "watched": "Watched",
     "watchlist": "Watchlist",
     "by_date": "By Date",
@@ -91,7 +94,7 @@
   "onboarding": {
     "switch_to_ptbr": "Switch to Portuguese",
     "switch_to_enus": "Switch to English",
-    "first": "This is to \n%Absolute Cinema%. \n\nWe register your watched movies. \n\nthat's it.",
+    "first": "This is \n%Absolute Cinema%. \n\nWe register your watched movies. \n\nthat's it.",
     "second": "%Save% what you want to watch. \n\n%Mark% movies as watched.",
     "third": "No ratings, \nNo reviews, \n\njust pure \n%Absolute Cinema%."
   }

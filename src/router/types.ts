@@ -19,22 +19,15 @@ export type StackProps = {
       _id: GenericId<'movies'>
       _creationTime: number
       tmdbId: number
-      title: {
-        original: string
-        pt_BR: string
-        en_US: string
-      }
-      posterPath: {
-        pt_BR: string
-        en_US: string
-      }
+      title: string
+      posterPath: string
+      plot?: string
       releaseDate?: string
       voteAverage?: number
       originalLanguage?: string
       status?: string
       backdropPath?: string
       imdbId?: string
-      overview?: string
       runtime?: number
       tagline?: string
     }

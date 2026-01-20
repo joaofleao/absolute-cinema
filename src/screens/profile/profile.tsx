@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View } from 'react-native'
-import { api } from 'convex/_generated/api'
 import { useAction } from 'convex/react'
+import { api } from 'convex_api'
 import { setItem } from 'expo-secure-store'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
