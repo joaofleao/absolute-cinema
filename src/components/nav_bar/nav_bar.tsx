@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { Alert, Linking, View } from 'react-native'
-import { api } from 'convex/_generated/api'
 import { useQuery } from 'convex/react'
-import { getItem, setItem } from 'expo-secure-store'
+import { api } from 'convex_api'
+import { deleteItemAsync, getItem, setItem } from 'expo-secure-store'
 import { useTranslation } from 'react-i18next'
 
 import packageJson from '../../../package.json'
@@ -37,13 +37,13 @@ const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement =>
             isPreferred: true,
             onPress: (): void => {
               Linking.openURL(latest.url)
-              setItem('version', null)
+              deleteItemAsync('version')
             },
           },
         ],
         { cancelable: false },
       )
-  }, [latest])
+  }, [latest, t])
 
   setTimeout(() => {
     const onb = getItem('onboarding')

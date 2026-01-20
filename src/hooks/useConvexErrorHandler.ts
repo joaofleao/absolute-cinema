@@ -1,6 +1,6 @@
 import { Alert } from 'react-native'
-import { api } from 'convex/_generated/api'
 import { useAction } from 'convex/react'
+import { api } from 'convex_api'
 import { useTranslation } from 'react-i18next'
 
 const map: Record<string, string> = {

@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
+// import { GoogleSignin } from '@react-native-google-signin/google-signin'
+// import * as AppleAuthentication from 'expo-apple-authentication'
+// import print from '@utils/print'
 import { Alert, Linking, View } from 'react-native'
-import * as AppleAuthentication from 'expo-apple-authentication'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
@@ -16,7 +17,6 @@ import Typography from '@components/typography'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router/types'
-import print from '@utils/print'
 
 const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -81,42 +81,42 @@ const Auth: ScreenType<'auth'> = ({ navigation, route }) => {
       .finally(() => setLoading(undefined))
   }
 
-  const handleGoogleSignIn = async (): Promise<void> => {
-    await GoogleSignin.hasPlayServices()
+  // const handleGoogleSignIn = async (): Promise<void> => {
+  //   await GoogleSignin.hasPlayServices()
 
-    try {
-      const nativeResult = await GoogleSignin.signIn()
-      if (nativeResult.type === 'success') {
-        const convexResult = await signIn('native-google', nativeResult)
-        if (convexResult) navigation.pop()
-      }
-    } catch (e) {
-      print('google sign in', JSON.stringify(e), 'yellow')
-    } finally {
-      setLoading(undefined)
-    }
-  }
+  //   try {
+  //     const nativeResult = await GoogleSignin.signIn()
+  //     if (nativeResult.type === 'success') {
+  //       const convexResult = await signIn('native-google', nativeResult)
+  //       if (convexResult) navigation.pop()
+  //     }
+  //   } catch (e) {
+  //     print('google sign in', JSON.stringify(e), 'yellow')
+  //   } finally {
+  //     setLoading(undefined)
+  //   }
+  // }
 
-  const handleAppleSignIn = async (): Promise<void> => {
-    setLoading('apple')
+  // const handleAppleSignIn = async (): Promise<void> => {
+  //   setLoading('apple')
 
-    try {
-      const nativeResult = await AppleAuthentication.signInAsync({
-        requestedScopes: [
-          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-          AppleAuthentication.AppleAuthenticationScope.EMAIL,
-        ],
-      })
-      if (nativeResult) {
-        const convexResult = await signIn('native-apple', nativeResult)
-        if (convexResult) navigation.pop()
-      }
-    } catch (e) {
-      print('apple sign in', JSON.stringify(e), 'yellow')
-    } finally {
-      setLoading(undefined)
-    }
-  }
+  //   try {
+  //     const nativeResult = await AppleAuthentication.signInAsync({
+  //       requestedScopes: [
+  //         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+  //         AppleAuthentication.AppleAuthenticationScope.EMAIL,
+  //       ],
+  //     })
+  //     if (nativeResult) {
+  //       const convexResult = await signIn('native-apple', nativeResult)
+  //       if (convexResult) navigation.pop()
+  //     }
+  //   } catch (e) {
+  //     print('apple sign in', JSON.stringify(e), 'yellow')
+  //   } finally {
+  //     setLoading(undefined)
+  //   }
+  // }
 
   const signInContent = (
     <>

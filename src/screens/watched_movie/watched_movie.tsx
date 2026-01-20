@@ -1,6 +1,6 @@
 import { Image, ScrollView, View } from 'react-native'
-import { api } from 'convex/_generated/api'
 import { useMutation } from 'convex/react'
+import { api } from 'convex_api'
 import { useTranslation } from 'react-i18next'
 
 import useStyles from './styles'
