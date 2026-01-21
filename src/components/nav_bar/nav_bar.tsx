@@ -15,6 +15,7 @@ const NavBar = ({ tabs, navigation, state }: NavBarProps): React.ReactElement =>
   const styles = useStyles()
   const { t, i18n } = useTranslation()
   const latest = useQuery(api.user.getLatestVersion, {
+    app: 'absolute-cinema',
     language: i18n.language,
   })
 
