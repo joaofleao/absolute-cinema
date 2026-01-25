@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0"
   },
   "dependencies": {
-    "@auth/core": "^0.37.0",
+    "@auth/core": "^0.41.1",
     "@convex-dev/auth": "^0.0.88",
     "@expo/ui": "~0.1.1-alpha.10",
     "@oslojs/crypto": "^1.0.1",
