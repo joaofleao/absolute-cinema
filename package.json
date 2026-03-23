@@ -29,6 +29,7 @@
     "expo-sharing": "~55.0.14",
     "expo-splash-screen": "~55.0.12",
     "i18next": "^25.3.6",
+    "lottie-ios": "^4.6.0",
     "lottie-react-native": "7.3.6",
     "react": "19.2.0",
     "react-dom": "19.2.0",
