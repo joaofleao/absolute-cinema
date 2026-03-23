@@ -10,20 +10,46 @@
       "distribution": "internal",
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "APP_VARIANT": "absolute-dev",
+        "APP_NAME": "Absolute Dev",
+        "APP_SLUG": "absolute-cinema-dev",
+        "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema.dev",
+        "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema.dev"
       }
     },
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "absolute-dev",
+        "APP_NAME": "Absolute Dev",
+        "APP_SLUG": "absolute-cinema-dev",
+        "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema.dev",
+        "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema.dev"
+      }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "APP_NAME": "Absolute Cinema",
+        "APP_SLUG": "absolute-cinema",
+        "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema",
+        "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema"
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "APP_NAME": "Absolute Cinema",
+        "APP_SLUG": "absolute-cinema",
+        "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema",
+        "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema"
+      }
     }
   },
   "submit": {
