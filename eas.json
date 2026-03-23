@@ -14,7 +14,6 @@
       "env": {
         "APP_VARIANT": "absolute-dev",
         "APP_NAME": "Absolute Dev",
-        "APP_SLUG": "absolute-cinema-dev",
         "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema.dev",
         "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema.dev"
       }
@@ -25,7 +24,6 @@
       "env": {
         "APP_VARIANT": "absolute-dev",
         "APP_NAME": "Absolute Dev",
-        "APP_SLUG": "absolute-cinema-dev",
         "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema.dev",
         "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema.dev"
       }
@@ -37,7 +35,6 @@
       },
       "env": {
         "APP_NAME": "Absolute Cinema",
-        "APP_SLUG": "absolute-cinema",
         "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema",
         "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema"
       }
@@ -46,7 +43,6 @@
       "autoIncrement": true,
       "env": {
         "APP_NAME": "Absolute Cinema",
-        "APP_SLUG": "absolute-cinema",
         "IOS_BUNDLE_IDENTIFIER": "com.joaofleao.absolute-cinema",
         "ANDROID_PACKAGE": "com.joaofleao.absolute_cinema"
       }

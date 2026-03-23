@@ -1,7 +1,6 @@
 import { ConfigContext, ExpoConfig } from 'expo/config'
 
 const APP_NAME = process.env.APP_NAME || 'Absolute Cinema'
-const APP_SLUG = process.env.APP_SLUG || 'absolute-cinema'
 const IOS_BUNDLE_IDENTIFIER = process.env.IOS_BUNDLE_IDENTIFIER || 'com.joaofleao.absolute-cinema'
 const ANDROID_PACKAGE = process.env.ANDROID_PACKAGE || 'com.joaofleao.absolute_cinema'
 
@@ -9,8 +8,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
     name: APP_NAME,
-    slug: APP_SLUG,
-    scheme: APP_SLUG,
+    slug: 'absolute-cinema',
+    scheme: 'absolute-cinema',
     version: '1.1',
     orientation: 'portrait',
     icon: './src/assets/app/icon.png',
