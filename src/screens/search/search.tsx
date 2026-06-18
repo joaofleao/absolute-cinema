@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { ActivityIndicator, Alert, View } from 'react-native'
 import { useAction, useConvexAuth, useMutation } from 'convex/react'
@@ -124,10 +124,20 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     }
   }
 
+  const [search, setSearch] = React.useState('')
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        onSearchButtonPress: (event) => setSearch(event?.nativeEvent?.text),
+      },
+    })
+  }, [navigation])
+
   const footer = (
     <View style={[styles.footer]}>
       <SearchInput
-        autoFocus
+        // autoFocus
         style={styles.input}
         debounce={2000}
         onChangeText={() => {
@@ -166,11 +176,11 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   return (
     <>
       <ListView
-        style={styles.list}
+        style={styles.root}
+        contentContainerStyle={styles.container}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"
         automaticallyAdjustKeyboardInsets
-        header={footer}
         data={refinedResults}
         empty={results?.length === 0 ? noResultsState : emptyState}
         topButton={{
@@ -186,7 +196,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         }}
       />
 
-      <Dropdown
+      {/* <Dropdown
         visible={calendarDropdown}
         setVisible={setCalendarDropdown}
       >
@@ -212,7 +222,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
             onPress={watchMovie}
           />
         </View>
-      </Dropdown>
+      </Dropdown> */}
     </>
   )
 }

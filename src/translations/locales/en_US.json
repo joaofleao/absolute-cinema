@@ -12,8 +12,8 @@
     "feature_not_implemented": "This feature is not implemented yet.",
     "add_watchlist": "Added to your watchlist",
     "remove_watchlist": "Removed from your watchlist",
-    "watched": "watched",
-    "watchlist": "watchlist",
+    "movies": "Movies",
+    "profile": "Profile",
     "tmdb_error": "Failed to search movies. Please check your TMDB API key."
   },
   "home": {

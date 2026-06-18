@@ -12,8 +12,8 @@
     "feature_not_implemented": "Este recurso não está implementado ainda.",
     "add_watchlist": "Salvo na sua lista",
     "remove_watchlist": "Removido da sua lista",
-    "watched": "Assistidos",
-    "watchlist": "Lista",
+    "movies": "Filmes",
+    "profile": "Perfil",
     "tmdb_error": "Erro ao buscar filme. Verifique a chave do TMDB."
   },
   "home": {

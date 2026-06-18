@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useAction } from 'convex/react'
 import { api } from 'convex_api'
 import { setItem } from 'expo-secure-store'
@@ -43,7 +43,7 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
     void signOut()
       .catch(catchConvexError)
       .then(() => {
-        navigation.pop()
+        navigation.navigate('home')
       })
       .finally(() => setLoadingSignOut(false))
   }
@@ -55,7 +55,10 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
 
   return (
     <>
-      <View style={styles.root}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        style={styles.root}
+      >
         <View style={styles.header}>
           <Button
             onPress={handleSwitchLanguage}
@@ -77,7 +80,7 @@ const Profile: ScreenType<'profile'> = ({ navigation, route }) => {
             icon={<IconDoor />}
           />
         </View>
-      </View>
+      </ScrollView>
       <Modal
         setVisible={setDeleteModal}
         visible={deleteModal}

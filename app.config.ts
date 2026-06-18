@@ -8,6 +8,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
     name: APP_NAME,
+    backgroundColor: '#1a0000',
+    userInterfaceStyle: 'dark',
     slug: 'absolute-cinema',
     scheme: 'absolute-cinema',
     version: '1.1',

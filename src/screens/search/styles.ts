@@ -1,8 +1,12 @@
 import { StyleSheet, ViewStyle } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+import { useTheme } from '@providers/theme'
 
 type StylesReturn = {
+  root: ViewStyle
+  container: ViewStyle
   content: ViewStyle
-  list: ViewStyle
   input: ViewStyle
   datepicker: ViewStyle
   calendarFooter: ViewStyle
@@ -10,6 +14,8 @@ type StylesReturn = {
 }
 
 const useStyles = (): StylesReturn => {
+  const { top, bottom, right, left } = useSafeAreaInsets()
+  const { semantics } = useTheme()
   return StyleSheet.create({
     datepicker: {
       alignSelf: 'center',
@@ -20,7 +26,15 @@ const useStyles = (): StylesReturn => {
       margin: 10,
       paddingTop: 10,
     },
-    list: {},
+    root: {
+      backgroundColor: semantics.background.base.default,
+    },
+    container: {
+      backgroundColor: 'red',
+      paddingTop: top,
+      paddingBottom: bottom,
+      gap: 12,
+    },
     input: {
       flex: 1,
     },

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StatusBar, View } from 'react-native'
+import { Appearance, Button, Image, Platform, StatusBar, View } from 'react-native'
 import * as Fonts from 'expo-font'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as SecureStore from 'expo-secure-store'
@@ -11,8 +11,10 @@ import useStyles from './styles'
 import { StackProps } from './types'
 import { IconBookmarks, IconFilm } from '@components/icon'
 import NavBar from '@components/nav_bar'
+import { useSettings } from '@providers/settings'
 import { fontImports, useTheme } from '@providers/theme'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createNativeBottomTabNavigator } from '@react-navigation/bottom-tabs/unstable'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Auth from '@screens/auth'
@@ -28,8 +30,10 @@ import enUS from '@translations/locales/en_US.json'
 import ptBR from '@translations/locales/pt_BR.json'
 import print from '@utils/print'
 
+const Tabs = createNativeBottomTabNavigator()
+
 const Stack = createNativeStackNavigator<StackProps>()
-const Tabs = createBottomTabNavigator<StackProps>()
+// const Tabs = createBottomTabNavigator<StackProps>()
 
 const initI18n = async (): Promise<void> => {
   const lng = SecureStore.getItem('language') ?? 'en_US'
@@ -51,10 +55,12 @@ SplashScreen.setOptions({
   duration: 1000,
   fade: true,
 })
+SplashScreen.hideAsync()
 
 const Router = (): React.ReactNode => {
   const [appReady, setAppReady] = React.useState(false)
-  const { semantics } = useTheme()
+  const { semantics, primitives, fonts } = useTheme()
+  const { setViewMode, viewMode } = useSettings()
   const styles = useStyles()
   const { t } = useTranslation()
 
@@ -76,149 +82,195 @@ const Router = (): React.ReactNode => {
 
   if (!appReady) return null
 
-  const renderTabs = (): React.ReactElement => {
+  const HomeStack = (): React.ReactElement => {
     return (
-      <Tabs.Navigator
-        backBehavior="none"
+      <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          sceneStyle: {
+          contentStyle: {
             backgroundColor: semantics.background.base.default,
           },
         }}
-        tabBar={(props) => (
-          <NavBar
-            tabs={[
-              { icon: <IconFilm />, label: t('overall:watched'), id: 'watched' },
-              { icon: <IconBookmarks />, label: t('overall:watchlist'), id: 'watchlist' },
-            ]}
-            {...props}
-          />
-        )}
       >
-        <Tabs.Screen
-          key={'watched'}
-          name={'watched'}
+        <Stack.Screen
+          options={{
+            headerTitle: '',
+            headerShown: true,
+            headerTransparent: true,
+            unstable_headerRightItems: () => [
+              {
+                type: 'menu',
+                label: 'View Mode',
+                icon: {
+                  type: 'sfSymbol',
+                  name: viewMode === 'gallery' ? 'rectangle.grid.3x2' : 'rectangle.grid.1x2',
+                },
+                menu: {
+                  items: [
+                    {
+                      type: 'action',
+                      label: 'List',
+                      icon: {
+                        type: 'sfSymbol',
+                        name: 'rectangle.grid.1x2',
+                      },
+                      onPress: (): void => setViewMode('list'),
+                    },
+                    {
+                      type: 'action',
+                      label: 'Gallery',
+                      icon: {
+                        type: 'sfSymbol',
+                        name: 'rectangle.grid.3x2',
+                      },
+                      onPress: (): void => setViewMode('gallery'),
+                    },
+                  ],
+                },
+              },
+            ],
+          }}
           component={WatchedMovies}
+          name={'movies'}
         />
-        <Tabs.Screen
-          key={'watchlist'}
-          name={'watchlist'}
-          component={Watchlist}
+
+        <Stack.Screen
+          name={'movie'}
+          component={Movie}
         />
-      </Tabs.Navigator>
+
+        <Stack.Screen
+          name={'password_recovery'}
+          component={PasswordRecovery}
+        />
+
+        <Stack.Screen
+          name={'watched_movie'}
+          component={WatchedMovie}
+          options={{
+            presentation: 'formSheet',
+            sheetAllowedDetents: 'fitToContents',
+            contentStyle: {
+              backgroundColor: semantics.container.base.original,
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name={'auth'}
+          component={Auth}
+          options={{
+            presentation: 'formSheet',
+            sheetAllowedDetents: 'fitToContents',
+            contentStyle: {
+              backgroundColor: semantics.container.base.original,
+            },
+          }}
+        />
+        <Stack.Screen
+          name={'onboarding'}
+          component={Onboarding}
+          options={{
+            animation: 'slide_from_left',
+          }}
+        />
+      </Stack.Navigator>
+    )
+  }
+
+  const ProfileStack = (): React.ReactElement => {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: semantics.background.base.default,
+          },
+        }}
+      >
+        <Stack.Screen
+          name={'profile'}
+          component={Profile}
+          options={
+            {
+              // presentation: 'formSheet',
+              // sheetAllowedDetents: 'fitToContents',
+              // contentStyle: {
+              //   backgroundColor: semantics.container.base.original,
+              // },
+            }
+          }
+        />
+      </Stack.Navigator>
+    )
+  }
+
+  const SearchStack = (): React.ReactElement => {
+    return (
+      <Stack.Navigator
+        screenOptions={
+          {
+            // headerShown: false,
+            // contentStyle: {
+            //   backgroundColor: semantics.background.base.default,
+            // },
+          }
+        }
+      >
+        <Stack.Screen
+          name={'search'}
+          component={Search}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack.Navigator>
     )
   }
 
   return (
     <NavigationContainer>
-      <StatusBar
-        animated={true}
-        backgroundColor={semantics.background.base.default}
-        barStyle={'light-content'}
-      />
+      {/* <StatusBar
+      // backgroundColor={semantics.background.base.default}
+      // barStyle={'dark-content'}
+      /> */}
 
-      <View
-        style={styles.container}
-        onLayout={SplashScreen.hideAsync}
+      <Tabs.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: 'white',
+          tabBarMinimizeBehavior: 'onScrollDown',
+        }}
       >
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            contentStyle: {
-              backgroundColor: semantics.background.base.default,
-            },
+        <Tabs.Screen
+          name={'home'}
+          component={HomeStack}
+          options={{
+            tabBarLabel: t('overall:movies'),
+            tabBarIcon: ({ focused }) => ({
+              type: 'sfSymbol',
+              name: focused ? 'movieclapper.fill' : 'movieclapper',
+            }),
           }}
-        >
-          <Stack.Screen name={'home'}>{renderTabs}</Stack.Screen>
-
-          <Stack.Screen
-            name={'movie'}
-            component={Movie}
-          />
-
-          <Stack.Screen
-            name={'password_recovery'}
-            component={PasswordRecovery}
-          />
-
-          <Stack.Screen
-            name={'search'}
-            component={Search}
-            options={{
-              presentation: 'formSheet',
-              sheetExpandsWhenScrolledToEdge: false,
-              sheetInitialDetentIndex: 'last',
-              sheetAllowedDetents: 'fitToContents',
-
-              contentStyle: {
-                backgroundColor: semantics.container.base.original,
-              },
-            }}
-          />
-
-          <Stack.Screen
-            name={'watched_movie'}
-            component={WatchedMovie}
-            options={{
-              presentation: 'formSheet',
-              sheetAllowedDetents: 'fitToContents',
-              contentStyle: {
-                backgroundColor: semantics.container.base.original,
-              },
-            }}
-          />
-          <Stack.Screen
-            name={'profile'}
-            component={Profile}
-            options={{
-              presentation: 'formSheet',
-              sheetAllowedDetents: 'fitToContents',
-              contentStyle: {
-                backgroundColor: semantics.container.base.original,
-              },
-            }}
-          />
-
-          <Stack.Screen
-            name={'auth'}
-            component={Auth}
-            options={{
-              presentation: 'formSheet',
-              sheetAllowedDetents: 'fitToContents',
-              contentStyle: {
-                backgroundColor: semantics.container.base.original,
-              },
-            }}
-          />
-          <Stack.Screen
-            name={'onboarding'}
-            component={Onboarding}
-            options={{
-              animation: 'slide_from_left',
-            }}
-          />
-        </Stack.Navigator>
-
-        <LinearGradient
-          colors={[
-            'rgba(0, 0, 0, 0.60)',
-            'rgba(0, 0, 0, 0.30)',
-            'rgba(0, 0, 0, 0.15)',
-            'rgba(0, 0, 0, 0)',
-          ]}
-          style={styles.topBlur}
         />
-        <LinearGradient
-          colors={[
-            'rgba(0, 0, 0, 0)',
-            'rgba(0, 0, 0, 0.15)',
-            'rgba(0, 0, 0, 0.30)',
-            'rgba(0, 0, 0, 0.60)',
-          ]}
-          style={styles.bottomBlur}
+        <Tabs.Screen
+          name={'profile'}
+          component={ProfileStack}
+          options={{
+            tabBarLabel: t('overall:profile'),
+            tabBarIcon: ({ focused }) => ({
+              type: 'sfSymbol',
+              name: focused ? 'person.fill' : 'person',
+            }),
+          }}
         />
-      </View>
+        <Tabs.Screen
+          name={'search'}
+          component={SearchStack}
+          options={{
+            tabBarSystemItem: 'search',
+          }}
+        />
+      </Tabs.Navigator>
     </NavigationContainer>
   )
 }

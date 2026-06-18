@@ -5,6 +5,7 @@ import { ConvexProvider, ConvexReactClient } from 'convex/react'
 import * as SecureStore from 'expo-secure-store'
 
 import { ConvexAuthProvider } from '@convex-dev/auth/react'
+import { SettingsProvider } from '@providers/settings'
 import { StringsProvider } from '@providers/strings'
 import { ThemeProvider } from '@providers/theme'
 import Router from '@router/router'
@@ -27,18 +28,20 @@ export default function App(): React.ReactElement {
   return (
     <StringsProvider>
       <KeyboardProvider>
-        <ThemeProvider>
-          <SafeAreaProvider>
-            <ConvexAuthProvider
-              client={convex}
-              storage={secureStorage}
-            >
-              <ConvexProvider client={convex}>
-                <Router />
-              </ConvexProvider>
-            </ConvexAuthProvider>
-          </SafeAreaProvider>
-        </ThemeProvider>
+        <SettingsProvider>
+          <ThemeProvider>
+            <SafeAreaProvider>
+              <ConvexAuthProvider
+                client={convex}
+                storage={secureStorage}
+              >
+                <ConvexProvider client={convex}>
+                  <Router />
+                </ConvexProvider>
+              </ConvexAuthProvider>
+            </SafeAreaProvider>
+          </ThemeProvider>
+        </SettingsProvider>
       </KeyboardProvider>
     </StringsProvider>
   )
