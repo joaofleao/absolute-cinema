@@ -1,6 +1,5 @@
 import React from 'react'
 import { ActivityIndicator, Image, Pressable, View } from 'react-native'
-import { useTranslation } from 'react-i18next'
 
 import useStyle from './styles'
 import { ListViewItemProps } from './types'
@@ -11,9 +10,9 @@ import { useTheme } from '@providers/theme'
 
 const ListViewItem = ({
   _id,
-  title: titleProp,
+  title,
   date,
-  posterPath: posterProp,
+  posterPath,
   style,
   voteAverage,
   language,
@@ -25,14 +24,6 @@ const ListViewItem = ({
 }: ListViewItemProps): React.ReactElement => {
   const styles = useStyle()
   const theme = useTheme()
-  const { i18n } = useTranslation()
-  const title = typeof titleProp === 'string' ? titleProp : titleProp[i18n.language]
-  const posterPath =
-    posterProp === undefined
-      ? undefined
-      : typeof posterProp === 'string'
-        ? posterProp
-        : posterProp[i18n.language]
 
   const renderButton = (
     button: typeof topButton,

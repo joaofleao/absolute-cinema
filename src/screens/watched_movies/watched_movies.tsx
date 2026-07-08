@@ -4,27 +4,24 @@ import { Alert, Dimensions, Image, View } from 'react-native'
 import RadialGradient from 'react-native-radial-gradient'
 import { Authenticated, Unauthenticated, useMutation, useQuery } from 'convex/react'
 import { GenericId } from 'convex/values'
+import { api } from 'convex_api'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
-import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
-import Avatar from '@components/avatar'
 import Bar from '@components/bar'
-import Button from '@components/button'
 import DottedText from '@components/dotted_text'
-import Dropdown from '@components/dropdown'
 import GalleryView from '@components/gallery_view'
 import ListView from '@components/list_view'
 import { ListViewItemActionProps } from '@components/list_view/list_view_item'
 import Select from '@components/select'
 import { TinyArrow, TinyCheckmark, TinyChevron, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
+import { useSettings } from '@providers/settings'
 import { useTheme } from '@providers/theme'
-import { TabType } from '@router/types'
-import { LanguageCode, languages } from '@utils/languages'
+import { ScreenType } from '@router/types'
 
-const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
+const WatchedMovies: ScreenType<'movies'> = ({ navigation, route }) => {
   const styles = useStyles()
   const { t, i18n } = useTranslation()
   const theme = useTheme()
@@ -37,7 +34,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
   const [selectedMovie, setSelectedMovie] = useState<GenericId<'movies'>>()
   const catchConvexError = useConvexErrorHandler()
 
-  const watchedMovies = useQuery(api.movies.getUserWatchedMovies) || []
+  const watchedMovies = useQuery(api.movies.getUserWatchedMovies, { language: i18n.language }) || []
   const uniqueYears = watchedMovies
     .map((movie) => new Date(movie.watchedAt).getFullYear())
     .filter((year, index, self) => self.indexOf(year) === index)
@@ -46,7 +43,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
       name: year.toString(),
     }))
 
-  const [viewMode, setViewMode] = useState<'gallery' | 'list'>('gallery')
+  const { viewMode } = useSettings()
   const [year, setYear] = useState<number>(uniqueYears.length === 0 ? 0 : new Date().getFullYear())
 
   const [sort, setSort] = useState<'ascending' | 'descending'>('ascending')
@@ -98,7 +95,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
       posterPath: movie.posterPath,
       date: new Date(movie.watchedAt).toLocaleDateString(),
       voteAverage: movie.voteAverage,
-      language: languages[movie.originalLanguage as LanguageCode][i18n.language],
+      language: movie.originalLanguage,
       onPress: (): void => navigation.navigate('watched_movie', { movie }),
     }))
 
@@ -117,7 +114,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
 
       <View style={styles.banner}>
         <Image
-          style={styles.logo}
+          style={{ height: 90, aspectRatio: 159 / 118 }}
           source={require('@assets/mascot.png')}
         />
         <View style={styles.title}>
@@ -153,12 +150,6 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
                 </Bar.Item>
               )}
             />
-
-            <Bar.Item
-              onPress={() => setViewMode((prev) => (prev === 'gallery' ? 'list' : 'gallery'))}
-            >
-              {viewMode === 'gallery' ? t('home:list') : t('home:gallery')}
-            </Bar.Item>
 
             <Bar.Item
               onPress={() => setSort((prev) => (prev === 'ascending' ? 'descending' : 'ascending'))}
@@ -216,7 +207,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
         />
       )}
 
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <View />
 
         <Authenticated>
@@ -229,9 +220,9 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
             label={t('auth:sign_in')}
           />
         </Unauthenticated>
-      </View>
+      </View> */}
 
-      <Dropdown
+      {/* <Dropdown
         visible={calendarDropdown}
         setVisible={setCalendarDropdown}
       >
@@ -257,7 +248,7 @@ const WatchedMovies: TabType<'watched'> = ({ navigation, route }) => {
             onPress={watchMovie}
           />
         </View>
-      </Dropdown>
+      </Dropdown> */}
     </>
   )
 }

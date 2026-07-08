@@ -1,24 +1,29 @@
 import { ConfigContext, ExpoConfig } from 'expo/config'
 
+const APP_NAME = process.env.APP_NAME || 'Absolute Cinema'
+const IOS_BUNDLE_IDENTIFIER = process.env.IOS_BUNDLE_IDENTIFIER || 'com.joaofleao.absolute-cinema'
+const ANDROID_PACKAGE = process.env.ANDROID_PACKAGE || 'com.joaofleao.absolute_cinema'
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
-    name: 'Absolute Cinema',
+    name: APP_NAME,
+    backgroundColor: '#1a0000',
+    userInterfaceStyle: 'dark',
     slug: 'absolute-cinema',
     scheme: 'absolute-cinema',
-    version: '1.0',
+    version: '1.1',
     orientation: 'portrait',
     icon: './src/assets/app/icon.png',
-    newArchEnabled: true,
     plugins: [
-      'expo-apple-authentication',
-      'expo-web-browser',
+      'expo-sharing',
+      '@react-native-community/datetimepicker',
+      'expo-font',
       'expo-secure-store',
-
       [
-        '@react-native-google-signin/google-signin',
+        'expo-image-picker',
         {
-          iosUrlScheme: 'com.googleusercontent.apps.674386239678-bnrobvq969mockak51tqpbgpjb0lu1qq',
+          photosPermission: 'The app accesses your photos to let you share them with your friends.',
         },
       ],
       [
@@ -38,7 +43,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ios: {
       usesAppleSignIn: true,
       supportsTablet: true,
-      bundleIdentifier: 'com.joaofleao.absolute-cinema',
+      bundleIdentifier: IOS_BUNDLE_IDENTIFIER,
 
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
@@ -60,8 +65,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         foregroundImage: './src/assets/app/adaptive-icon.png',
         backgroundColor: '#660000',
       },
-      edgeToEdgeEnabled: true,
-      package: 'com.joaofleao.absolute-cinema',
+      package: ANDROID_PACKAGE,
     },
     web: {
       favicon: './src/assets/app/favicon.png',
@@ -73,3 +77,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
   }
 }
+
+// [
+//   '@react-native-google-signin/google-signin',
+//   {
+//     iosUrlScheme: 'com.googleusercontent.apps.674386239678-bnrobvq969mockak51tqpbgpjb0lu1qq',
+//   },
+// ],

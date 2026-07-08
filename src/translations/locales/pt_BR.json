@@ -12,11 +12,14 @@
     "feature_not_implemented": "Este recurso não está implementado ainda.",
     "add_watchlist": "Salvo na sua lista",
     "remove_watchlist": "Removido da sua lista",
-    "watched": "Assistidos",
-    "watchlist": "Lista",
+    "movies": "Filmes",
+    "profile": "Perfil",
     "tmdb_error": "Erro ao buscar filme. Verifique a chave do TMDB."
   },
   "home": {
+    "new_version": "Nova Versão Disponível",
+    "update": "Uma nova versão do aplicativo está disponível. Por favor, atualize para a versão mais recente para a melhor experiência.",
+    "update_now": "Atualize agora",
     "watched": "Assistidos",
     "watchlist": "Lista",
     "by_date": "Por Data",

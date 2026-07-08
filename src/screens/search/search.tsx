@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { ActivityIndicator, Alert, View } from 'react-native'
 import { useAction, useConvexAuth, useMutation } from 'convex/react'
+import { api } from 'convex_api'
 import { useTranslation } from 'react-i18next'
 import useConvexErrorHandler from 'src/hooks/useConvexErrorHandler'
 
-import { api } from '../../../convex/_generated/api'
 import useStyles from './styles'
 import Button from '@components/button'
 import DottedText from '@components/dotted_text'
@@ -19,7 +19,6 @@ import { TinyCheckmark, TinyPlus } from '@components/tiny_icon'
 import Typography from '@components/typography'
 import { useTheme } from '@providers/theme'
 import { ScreenType } from '@router/types'
-import { LanguageCode, languages } from '@utils/languages'
 
 const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const styles = useStyles()
@@ -38,19 +37,19 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   const [calendarDropdown, setCalendarDropdown] = useState(false)
   const [date, setDate] = useState<Date>(new Date(Date.now()))
   const [loading, setLoading] = useState(false)
-  const [saveLoading, setSaveLoading] = useState<number>()
-  const [selectedMovie, setSelectedMovie] = useState<number>()
+  const [saveLoading, setSaveLoading] = useState<string>()
+  const [selectedMovie, setSelectedMovie] = useState<string>()
 
   const refinedResults: ListViewItemProps[] = (results ?? []).map((movie) => ({
-    _id: movie.id,
+    _id: `${movie.id}`,
     title: movie.title,
     posterPath: movie.poster_path,
     date:
-      movie.release_date === ''
+      movie.release_date && movie.release_date === ''
         ? t('search:unrelesed')
-        : new Date(movie.release_date).getFullYear().toString(),
+        : new Date(movie.release_date ?? '').getFullYear().toString(),
     voteAverage: movie.vote_average,
-    language: languages[movie.original_language as LanguageCode][i18n.language],
+    language: movie.original_language,
   }))
 
   const handleSearch = async (query: string): Promise<void> => {
@@ -78,7 +77,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     if (!results) return
     setSaveLoading(movie)
     try {
-      const tmdbMovie = results.find((original) => original.id === movie)
+      const tmdbMovie = results.find((original) => `${original.id}` === movie)
       if (!tmdbMovie) throw Error
 
       const movieId = await getOrCreateMovie({
@@ -108,7 +107,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
 
     try {
       const tmdbMovie = results.find((original) => {
-        return original.id === selectedMovie
+        return `${original.id}` === selectedMovie
       })
       if (!tmdbMovie) throw Error
 
@@ -125,10 +124,20 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
     }
   }
 
+  const [search, setSearch] = React.useState('')
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        onSearchButtonPress: (event) => setSearch(event?.nativeEvent?.text),
+      },
+    })
+  }, [navigation])
+
   const footer = (
     <View style={[styles.footer]}>
       <SearchInput
-        autoFocus
+        // autoFocus
         style={styles.input}
         debounce={2000}
         onChangeText={() => {
@@ -167,11 +176,11 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
   return (
     <>
       <ListView
-        style={styles.list}
+        style={styles.root}
+        contentContainerStyle={styles.container}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"
         automaticallyAdjustKeyboardInsets
-        header={footer}
         data={refinedResults}
         empty={results?.length === 0 ? noResultsState : emptyState}
         topButton={{
@@ -187,7 +196,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
         }}
       />
 
-      <Dropdown
+      {/* <Dropdown
         visible={calendarDropdown}
         setVisible={setCalendarDropdown}
       >
@@ -213,7 +222,7 @@ const Search: ScreenType<'search'> = ({ navigation, route }) => {
             onPress={watchMovie}
           />
         </View>
-      </Dropdown>
+      </Dropdown> */}
     </>
   )
 }

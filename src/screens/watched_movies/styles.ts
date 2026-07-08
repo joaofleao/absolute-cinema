@@ -1,6 +1,8 @@
 import { Dimensions, ImageStyle, StyleSheet, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { useTheme } from '@providers/theme'
+
 type StylesReturn = {
   logo: ImageStyle
   title: ViewStyle
@@ -8,13 +10,13 @@ type StylesReturn = {
   content: ViewStyle
   gradient: ViewStyle
   gradientContainer: ViewStyle
-  header: ViewStyle
   datepicker: ViewStyle
   flatlists: ViewStyle
 }
 
 const useStyles = (): StylesReturn => {
   const { width } = Dimensions.get('window')
+  const { semantics } = useTheme()
   const { top, bottom, right, left } = useSafeAreaInsets()
 
   return StyleSheet.create({
@@ -29,7 +31,6 @@ const useStyles = (): StylesReturn => {
       position: 'relative',
       alignItems: 'center',
       gap: 8,
-      paddingTop: 60,
     },
     title: {
       alignItems: 'center',
@@ -50,21 +51,10 @@ const useStyles = (): StylesReturn => {
       height: width * 2,
       width: width,
     },
-
-    header: {
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      width: '100%',
-      position: 'absolute',
-      top,
-      paddingHorizontal: 20,
-      paddingBottom: 20,
-      maxWidth: '100%',
-      alignSelf: 'flex-end',
-    },
     flatlists: {
-      paddingTop: top + 16,
-      paddingBottom: bottom + 88,
+      backgroundColor: semantics.background.base.default,
+      paddingTop: top,
+      paddingBottom: bottom,
       paddingRight: right + 16,
       paddingLeft: left + 16,
     },
